@@ -3,8 +3,8 @@
 import type { Library } from "@cms/browser/file-library/library";
 import { chooseFiles, folderIdOf } from "@cms/browser/files/file-api";
 import { chooseFolder } from "@cms/browser/files/folder-dialog";
-import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/shared/dialog";
-import { json, request } from "@cms/browser/shared/http";
+import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/utils/dialog";
+import { json, request } from "@cms/browser/utils/http";
 import { plural } from "@cms/core/text";
 import { MAX_FILE_NAME } from "@cms/media/file-url";
 

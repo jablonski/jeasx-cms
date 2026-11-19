@@ -26,7 +26,7 @@ import { createSideDialogs } from "@cms/browser/editor/side-dialogs";
 import type { Editor, EditorState } from "@cms/browser/editor/state";
 import Toolbar from "@cms/browser/editor/toolbar";
 import { createUploads } from "@cms/browser/editor/uploads";
-import { toHtml } from "@cms/browser/shared/to-html";
+import { toHtml } from "@cms/browser/utils/to-html";
 import { registerBlocks, type Schema } from "@cms/content/blocks";
 import type { Page } from "@cms/content/pages";
 

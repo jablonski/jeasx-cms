@@ -1,4 +1,4 @@
-import { formatTime } from "@cms/browser/shared/format-time";
+import { formatTime } from "@cms/browser/utils/format-time";
 import { ROLE_LABELS, type User } from "@cms/browser/user-admin/user-roles";
 
 /** What GET api/users answers. */

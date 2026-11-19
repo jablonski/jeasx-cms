@@ -9,7 +9,7 @@ import {
   uploadFile,
 } from "@cms/browser/files/file-api";
 import { Breadcrumb, FileBrowser } from "@cms/browser/files/file-browser";
-import { toHtml } from "@cms/browser/shared/to-html";
+import { toHtml } from "@cms/browser/utils/to-html";
 
 /** The picker reopens in the folder used last (per page load). */
 let lastPickerFolder: number | null = null;

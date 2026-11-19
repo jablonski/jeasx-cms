@@ -346,7 +346,7 @@ Page fields are available as `page.meta` in the core and shown in the editor's p
 | Rendering of pages and file downloads         | `render/render-blocks.tsx`, `media/file-download.ts`                                                   |
 | Editor canvas                                 | `render/render-canvas.tsx`, `render/canvas-controls.tsx`                                               |
 | Admin pages, login, JSON APIs                 | `[*].tsx`, `api/[*].ts`                                                                                |
-| Admin in the browser                          | `browser/editor/`, `browser/file-library/`, `browser/user-admin/`, `browser/files/`, `browser/shared/` |
+| Admin in the browser                          | `browser/editor/`, `browser/file-library/`, `browser/user-admin/`, `browser/files/`, `browser/utils/` |
 | Icons and other modules shared by admin and canvas | `shared/icons.tsx`                                                                                |
 
 ### Architecture

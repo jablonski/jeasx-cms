@@ -3,7 +3,7 @@
 import type { Editor } from "@cms/browser/editor/state";
 import { isImageFile, uploadFile } from "@cms/browser/files/file-api";
 import { lastFileFolder } from "@cms/browser/files/file-picker";
-import { alertDialog } from "@cms/browser/shared/dialog";
+import { alertDialog } from "@cms/browser/utils/dialog";
 
 export function createUploads({ state, setAt, fieldAt, markDirty, render }: Editor) {
   function setFileUrl(path: string, url: string) {

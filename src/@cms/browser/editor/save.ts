@@ -1,8 +1,8 @@
 /** Saving the page being edited. */
 
 import type { EditorState } from "@cms/browser/editor/state";
-import { confirmDialog } from "@cms/browser/shared/dialog";
-import { json } from "@cms/browser/shared/http";
+import { confirmDialog } from "@cms/browser/utils/dialog";
+import { json } from "@cms/browser/utils/http";
 import type { StoredPage } from "@cms/content/pages";
 
 export function createSave({

@@ -1,7 +1,7 @@
 /** The "move to folder" dialog. */
 
-import { openModal } from "@cms/browser/shared/dialog";
-import { request } from "@cms/browser/shared/http";
+import { openModal } from "@cms/browser/utils/dialog";
+import { request } from "@cms/browser/utils/http";
 import type { FolderSummary } from "@cms/media/folders";
 
 /** The folder a button of the dialog stands for; undefined if it was cancelled. */

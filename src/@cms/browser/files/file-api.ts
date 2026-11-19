@@ -1,6 +1,6 @@
 /** Uploading, listing and choosing files (browser). */
 
-import { request } from "@cms/browser/shared/http";
+import { request } from "@cms/browser/utils/http";
 import type { Listing, UploadedFile } from "@cms/media/files";
 
 /** A folder as shown in the admin; `error` says why its contents could not be loaded. */

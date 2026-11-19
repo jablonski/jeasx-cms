@@ -1,7 +1,7 @@
 /** Events of the admin page around the editor: the save shortcut and leaving with changes. */
 
 import type { EditorState } from "@cms/browser/editor/state";
-import { confirmDialog } from "@cms/browser/shared/dialog";
+import { confirmDialog } from "@cms/browser/utils/dialog";
 
 /** Ctrl/⌘ + S saves; bound to the admin page and to the canvas, which is its own document. */
 export function bindSaveShortcut(doc: Document, save: () => void) {

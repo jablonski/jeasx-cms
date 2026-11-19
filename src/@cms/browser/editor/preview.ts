@@ -1,7 +1,7 @@
 /** The editor's canvas: an iframe showing the page, rendered on the server. */
 import { bindCanvas } from "@cms/browser/editor/canvas-events";
 import type { Editor } from "@cms/browser/editor/state";
-import { type ApiFailure, json } from "@cms/browser/shared/http";
+import { type ApiFailure, json } from "@cms/browser/utils/http";
 
 /** Shown on the canvas instead of the page. */
 function previewError({ status, error }: ApiFailure) {

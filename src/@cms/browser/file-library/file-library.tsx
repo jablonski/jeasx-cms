@@ -8,7 +8,7 @@ import { createLibraryActions } from "@cms/browser/file-library/actions";
 import { bindLibraryDragDrop } from "@cms/browser/file-library/drag-drop";
 import LibraryView from "@cms/browser/file-library/view";
 import { browseFolderOrTop, type FolderView, uploadFile } from "@cms/browser/files/file-api";
-import { toHtml } from "@cms/browser/shared/to-html";
+import { toHtml } from "@cms/browser/utils/to-html";
 
 export default async function initFileLibrary(root: HTMLElement) {
   let listing: FolderView = { folder: null, path: [], folders: [], files: [] };

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { formatTime } from "@cms/browser/shared/format-time";
+import { formatTime } from "@cms/browser/utils/format-time";
 import { resultOf } from "@cms/core/result";
 
 test("resultOf names the item or explains what is missing", () => {

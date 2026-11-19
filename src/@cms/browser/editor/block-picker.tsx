@@ -1,4 +1,4 @@
-import { openModal } from "@cms/browser/shared/dialog";
+import { openModal } from "@cms/browser/utils/dialog";
 import { XIcon } from "@cms/shared/icons";
 import { BLOCKS } from "@cms/content/blocks";
 

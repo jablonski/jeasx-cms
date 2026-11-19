@@ -1,5 +1,5 @@
 /** The editor's side dialog ("drawer") for block fields, page settings and the history. */
-import { toHtml } from "@cms/browser/shared/to-html";
+import { toHtml } from "@cms/browser/utils/to-html";
 
 /** What the drawer needs from the editor. */
 export interface DrawerHost {

@@ -1,5 +1,5 @@
 /** Modal dialogs for the admin (replacement for window.confirm / alert). */
-import { toHtml } from "@cms/browser/shared/to-html";
+import { toHtml } from "@cms/browser/utils/to-html";
 
 export interface DialogOptions {
   title: string;

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { request } from "@cms/browser/shared/http";
+import { request } from "@cms/browser/utils/http";
 import { bodyOf, queryOf, splitUrl } from "@cms/core/http";
 import { parseId } from "@cms/core/id";
 

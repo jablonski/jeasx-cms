@@ -1,7 +1,7 @@
 /** User management page of the admin: holds the page's state, its parts live in this folder. */
-import { alertDialog, confirmDialog } from "@cms/browser/shared/dialog";
-import { json, request } from "@cms/browser/shared/http";
-import { toHtml } from "@cms/browser/shared/to-html";
+import { alertDialog, confirmDialog } from "@cms/browser/utils/dialog";
+import { json, request } from "@cms/browser/utils/http";
+import { toHtml } from "@cms/browser/utils/to-html";
 import { editUser, type SaveUser } from "@cms/browser/user-admin/user-form";
 import type { User } from "@cms/browser/user-admin/user-roles";
 import UserTable, { type UserList } from "@cms/browser/user-admin/user-table";

@@ -1,6 +1,6 @@
 import DrawerLayout from "@cms/browser/editor/drawer-layout";
 import { RevertIcon } from "@cms/shared/icons";
-import { formatTime } from "@cms/browser/shared/format-time";
+import { formatTime } from "@cms/browser/utils/format-time";
 import type { Revision } from "@cms/content/revisions";
 
 /**
