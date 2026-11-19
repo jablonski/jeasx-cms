@@ -12,7 +12,7 @@ export default defineBlock({
     text: {
       type: "richtext",
       label: "Text",
-      help: "Blank line = paragraph, - list item, **bold**, *italic*, [label](url)",
+      help: "Blank line = paragraph",
     },
   },
   Component({ heading, text, field }) {

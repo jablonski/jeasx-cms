@@ -1,5 +1,6 @@
 /** Wires form inputs, [data-action] buttons and file drops of the toolbar and dialogs. */
 
+import { bindRichTextEditing, htmlToMarkdown } from "@cms/browser/editor/rich-text-editing";
 import type { Editor } from "@cms/browser/editor/state";
 import { normalizeSlug } from "@cms/content/slug";
 
@@ -41,9 +42,9 @@ export function createFieldBinding(
   }
 
   /** Editing a field clears its error (the server checks again on save). */
-  function clearError(input: HTMLInputElement) {
+  function clearError(path: string, input: HTMLElement) {
     const before = state.errors.length;
-    state.errors = state.errors.filter((err) => err.path !== input.name);
+    state.errors = state.errors.filter((err) => err.path !== path);
     if (state.errors.length === before) {
       return;
     }
@@ -51,7 +52,40 @@ export function createFieldBinding(
     renderToolbar();
   }
 
+  /** Rich text fields of the dialogs: formatted text, stored as markdown (like on the canvas). */
+  const richTextAt = (node: EventTarget | Node | null) =>
+    (node as HTMLElement | null)?.closest?.<HTMLElement>("[data-richtext]") ?? null;
+  const richText = bindRichTextEditing(document, () => richTextAt(document.activeElement));
+  document.addEventListener("focusin", (e) => {
+    const el = richTextAt(e.target);
+    if (el) {
+      richText.focus(el);
+    }
+  });
+  document.addEventListener("focusout", (e) => {
+    const el = richTextAt(e.target);
+    if (el && !richText.inToolbar(e.relatedTarget as Node | null)) {
+      richText.hide();
+      // left empty: drop leftover markup (<p><br></p>), so it shows its placeholder
+      if (!htmlToMarkdown(el)) {
+        el.replaceChildren();
+      }
+    }
+  });
+
+  function handleRichTextInput(el: HTMLElement) {
+    const path = el.dataset.richtext!;
+    setAt(path, htmlToMarkdown(el));
+    clearError(path, el);
+    markDirty();
+    updatePreview(120);
+  }
+
   function handleInput(e: Event) {
+    const rich = richTextAt(e.target);
+    if (rich) {
+      return handleRichTextInput(rich);
+    }
     const input = e.target as HTMLInputElement;
     if (!input.name) {
       return;
@@ -71,7 +105,7 @@ export function createFieldBinding(
     if (input.dataset.kind === "image") {
       updateThumbnail(input);
     }
-    clearError(input);
+    clearError(input.name, input);
     markDirty();
     updatePreview(120);
   }

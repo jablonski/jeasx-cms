@@ -60,6 +60,14 @@ test("markdown survives the round trip through the rendered HTML", async () => {
     "intro\n\n- a\n- b\n\noutro",
     "see [the docs](https://example.com/docs?a=1&b=2) now",
     "**bold with [a link](/x) inside**",
+    "aos***apo***sdi",
+    "**a***b* c",
+    "***a* b**",
+    "*a* ***b*** *c*",
+    "2 \\* 3 \\[not a link\\](/x) C:\\\\temp",
+    "\\- not a list",
+    "[label \\[1\\]](/x)",
+    "**bold and *italic***",
     "mail [us](mailto:team@example.com)",
     "<script>stays text</script> & more",
   ]) {
@@ -82,7 +90,18 @@ test("markup from contenteditable becomes the format", () => {
   assert.equal(toMarkdown("<p><strong><strong>x</strong></strong></p>"), "**x**");
   assert.equal(toMarkdown("<div><p>nested</p><p>blocks</p></div>"), "nested\n\nblocks");
   assert.equal(toMarkdown("<h2>Heading</h2>"), "Heading");
-  assert.equal(toMarkdown("<p><em>a <b>b</b> c</em></p>"), "*a b c*");
+  // bold inside italic is split into italic and bold italic runs
+  assert.equal(toMarkdown("<p><em>a <b>b</b> c</em></p>"), "*a* ***b*** *c*");
+  assert.equal(toMarkdown("<p>x <i><b>SQLite</b></i>.</p>"), "x ***SQLite***.");
+});
+
+test("typed markers are escaped, so they stay text", () => {
+  assert.equal(toMarkdown("<p>2 * 3 = 6</p>"), "2 \\* 3 = 6");
+  assert.equal(toMarkdown("<p>[x](/y)</p>"), "\\[x\\](/y)");
+  assert.equal(toMarkdown("<p>C:\\temp</p>"), "C:\\\\temp");
+  assert.equal(toMarkdown("<p>- not a list<br>- again</p>"), "\\- not a list\n\\- again");
+  assert.equal(toMarkdown("<ul><li>- item</li></ul>"), "- - item");
+  assert.equal(toMarkdown("<p><b>*</b></p>"), "**\\***");
 });
 
 test("lists are flattened to one level of single lines", () => {
@@ -94,7 +113,7 @@ test("lists are flattened to one level of single lines", () => {
 test("links the format can't hold keep their label only", () => {
   assert.equal(toMarkdown('<p><a href="javascript:alert(1)">x</a></p>'), "x");
   assert.equal(toMarkdown('<p><a href="/a b">x</a></p>'), "x");
-  assert.equal(toMarkdown('<p><a href="/x">[x]</a></p>'), "[x]");
+  assert.equal(toMarkdown('<p><a href="/x">[x]</a></p>'), "[\\[x\\]](/x)");
   assert.equal(toMarkdown('<p><a href="/x"><b>bold</b> label</a></p>'), "[bold label](/x)");
   assert.equal(toMarkdown('<p>go <a href="/x"> here </a>!</p>'), "go [here](/x) !");
 });

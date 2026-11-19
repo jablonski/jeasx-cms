@@ -283,7 +283,7 @@ The editor dialog, validation, inline editing and preview pick it up automatical
 | Type                   | Value            | Notes                                                                                                                |
 | ---------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `text`, `textarea`     | string           | editable on the page via `field()`                                                                                   |
-| `richtext`             | string           | `**bold**`, `*italic*`, `[link](/url)`, `- ` lists; render with `<RichText text={…} />` from `@cms/render/rich-text` |
+| `richtext`             | string           | `**bold**`, `*italic*`, `[link](/url)`, `- ` lists, `\*` keeps a marker as text; render with `<RichText text={…} />` from `@cms/render/rich-text` |
 | `url`, `image`, `file` | string           | only http(s), mailto and relative URLs; `image` and `file` get upload and file picker (`image` offers images only)   |
 | `number`, `boolean`    | number, boolean  |                                                                                                                      |
 | `date`                 | string           | `YYYY-MM-DD` (empty if not set); edited with the browser's date picker                                               |

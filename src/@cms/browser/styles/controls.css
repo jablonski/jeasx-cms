@@ -73,7 +73,8 @@ button,
 
 input,
 textarea,
-select {
+select,
+.richtext-input {
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
@@ -105,6 +106,41 @@ select {
 textarea {
   resize: vertical;
   line-height: 1.55;
+}
+
+/* rich text in dialogs: formatted text, edited with the formatting toolbar */
+.richtext-input {
+  min-height: calc(5lh + 0.9rem);
+  max-height: 24rem;
+  overflow-y: auto;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  cursor: text;
+
+  & > p,
+  & > ul {
+    margin: 0 0 0.6em;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  & ul {
+    padding-left: 1.25em;
+  }
+
+  & a {
+    color: var(--accent);
+  }
+
+  /* empty: its label as placeholder (also for the empty paragraph made on focus) */
+  &:empty::after,
+  & > p:only-child:empty::after {
+    content: attr(data-placeholder) "…";
+    color: var(--text-3);
+    pointer-events: none;
+  }
 }
 
 select {
@@ -171,4 +207,26 @@ input[type="checkbox"] {
   padding: 4rem 1rem;
   color: var(--text-3);
   text-align: center;
+}
+
+/* rich text being edited: a hint in its label row that selected text can be formatted
+   (hidden while the formatting toolbar is open, like on the canvas). Not on the field
+   itself: it scrolls, which would clip a label on its border. */
+.field:has(> .richtext-input) {
+  position: relative;
+}
+
+.field:has(> .richtext-input:focus:not(.cms-formatting))::after {
+  content: "Select text to format";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  padding: 2px 8px;
+  color: var(--accent-text);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  pointer-events: none;
 }

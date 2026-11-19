@@ -28,6 +28,7 @@ const BROWSER_SAFE = new Set([
   "core/shared",
   "core/text",
   "media/file-url",
+  "render/rich-text",
 ]);
 
 const sources = readdirSync(CORE, { recursive: true, encoding: "utf8" })

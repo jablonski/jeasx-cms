@@ -3,6 +3,9 @@
  * markdown (the format of src/@cms/render/rich-text.tsx): blank line = paragraph,
  * "- " = list item, line break inside a paragraph, **bold**, *italic*, [label](url).
  *
+ * Typed markers are escaped (\* \[ \] \\, and "- " at the start of a paragraph line),
+ * so text never turns into formatting.
+ *
  * contenteditable produces all kinds of markup (<div>, <b>, <span style>, nested lists,
  * stray <br>), so any HTML is accepted: what the format can't express is kept as text.
  */
@@ -114,12 +117,19 @@ function collectItems(list: NodeLike, items: string[]) {
 
 /** A paragraph: lines separated by <br>, each trimmed, no blank lines inside. */
 function paragraph(nodes: NodeLike[]) {
-  return inline(nodes)
-    .split("\n")
-    .map((line) => line.replace(/[ \t]+/g, " ").trim())
-    .filter(Boolean)
-    .join("\n");
+  return (
+    inline(nodes)
+      .split("\n")
+      .map((line) => line.replace(/[ \t]+/g, " ").trim())
+      .filter(Boolean)
+      // a typed "- " at the start of a line would make the paragraph a list
+      .map((line) => (line.startsWith("- ") ? `\\${line}` : line))
+      .join("\n")
+  );
 }
+
+/** Escapes the characters of typed text that the format reads as markup. */
+const escape = (text: string) => text.replace(/[\\*[\]]/g, "\\$&");
 
 /** Inline markdown of `nodes`; <br> becomes "\n". */
 function inline(nodes: NodeLike[], format: Format = { bold: false, italic: false, link: false }) {
@@ -129,7 +139,7 @@ function inline(nodes: NodeLike[], format: Format = { bold: false, italic: false
 function inlineNode(node: NodeLike, format: Format): string {
   if (node.nodeType === TEXT) {
     // contenteditable keeps typed spaces as non-breaking spaces
-    return (node.textContent ?? "").replace(/ /g, " ").replace(/[\r\n]+/g, " ");
+    return escape((node.textContent ?? "").replace(/\u00A0/g, " ").replace(/[\r\n]+/g, " "));
   }
   if (node.nodeType !== ELEMENT) {
     return "";
@@ -145,24 +155,55 @@ function inlineNode(node: NodeLike, format: Format): string {
   if (name === "A" && !format.link) {
     return link(node, format);
   }
-  const style = node.getAttribute?.("style") ?? "";
-  const bold =
-    name === "STRONG" ||
-    name === "B" ||
-    /font-weight:\s*(bold|[6-9]00)/i.test(style);
-  const italic = name === "EM" || name === "I" || /font-style:\s*italic/i.test(style);
   if (format.link) {
     // link labels are plain text in the format
     return inline(children(node), format);
   }
-  // bold inside italic can't be expressed: "*a **b** c*" ends the italic at "**"
-  if (bold && !format.bold && !format.italic) {
+  if (isBold(node) && !format.bold && !format.italic) {
     return wrap("**", inline(children(node), { ...format, bold: true }));
   }
-  if (italic && !format.italic) {
-    return wrap("*", inline(children(node), { ...format, italic: true }));
+  if (isItalic(node) && !format.italic) {
+    // bold inside italic: "*a **b** c*" would end the italic at "**", so the italic is
+    // split around it: "*a* ***b*** *c*" (format.bold: already inside bold, no split)
+    return format.bold
+      ? wrap("*", inline(children(node), { ...format, italic: true }))
+      : italicParts(children(node), format);
   }
   return inline(children(node), format);
+}
+
+const style = (node: NodeLike) => node.getAttribute?.("style") ?? "";
+const isBold = (node: NodeLike) =>
+  node.nodeType === ELEMENT &&
+  (["STRONG", "B"].includes(tag(node)) || /font-weight:\s*(bold|[6-9]00)/i.test(style(node)));
+const isItalic = (node: NodeLike) =>
+  node.nodeType === ELEMENT &&
+  (["EM", "I"].includes(tag(node)) || /font-style:\s*italic/i.test(style(node)));
+const hasBold = (node: NodeLike): boolean =>
+  node.nodeType === ELEMENT && (isBold(node) || children(node).some(hasBold));
+
+/** Italic content as italic runs, with its bold parts as bold italic ("***b***"). */
+function italicParts(nodes: NodeLike[], format: Format): string {
+  const italic = { ...format, italic: true };
+  let out = "";
+  let run: NodeLike[] = [];
+  const flush = () => {
+    out += wrap("*", inline(run, italic));
+    run = [];
+  };
+  for (const node of nodes) {
+    if (isBold(node)) {
+      flush();
+      out += wrap("**", wrap("*", inline(children(node), { ...italic, bold: true })));
+    } else if (hasBold(node) && tag(node) !== "A" && !isBlock(node) && tag(node) !== "BR") {
+      flush();
+      out += italicParts(children(node), format); // e.g. a <span> holding the bold part
+    } else {
+      run.push(node);
+    }
+  }
+  flush();
+  return out;
 }
 
 /** Wraps text in a marker; surrounding whitespace stays outside, so "** b**" can't happen. */
@@ -181,7 +222,8 @@ function wrap(marker: string, text: string) {
 function link(node: NodeLike, format: Format) {
   const label = inline(children(node), { ...format, link: true }).replace(/\s+/g, " ");
   const url = (node.getAttribute?.("href") ?? "").trim();
-  const fits = url && isSafeUrl(url) && !/[\s)]/.test(url) && !label.includes("]");
+  // the label's "]" is escaped like all typed markers, so only the URL can rule a link out
+  const fits = url && isSafeUrl(url) && !/[\s)]/.test(url);
   if (!fits || !label.trim()) {
     return label;
   }

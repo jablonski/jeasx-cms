@@ -4,8 +4,7 @@
  * toolbar; every change is stored as its markdown (see rich-text-markdown.ts).
  */
 
-import { htmlToMarkdown } from "@cms/browser/editor/rich-text-markdown";
-import { createRichTextToolbar } from "@cms/browser/editor/rich-text-toolbar";
+import { bindRichTextEditing, htmlToMarkdown } from "@cms/browser/editor/rich-text-editing";
 import type { Editor } from "@cms/browser/editor/state";
 
 /** Inline editing uses plain-text contenteditable where supported (pasting can't insert markup). */
@@ -32,47 +31,10 @@ function inlineValue(el: HTMLElement) {
   if (isRichText(el)) {
     return htmlToMarkdown(el);
   }
-  const text = el.innerText.replace(/ /g, " ");
+  const text = el.innerText.replace(/\u00A0/g, " ");
   return el.getAttribute("data-cms-kind") === "text"
     ? text.replace(/\s*\n\s*/g, " ").trim()
     : text.replace(/\n$/, "");
-}
-
-function placeCaretIn(doc: Document, el: Node) {
-  const range = doc.createRange();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  const sel = doc.getSelection();
-  sel?.removeAllRanges();
-  sel?.addRange(range);
-}
-
-/** The paragraph (or list item) holding the caret inside `field`. */
-function blockAtCaret(doc: Document, field: HTMLElement) {
-  const node = doc.getSelection()?.anchorNode;
-  const el = node?.nodeType === Node.TEXT_NODE ? node.parentElement : (node as Element | null);
-  const block = el?.closest?.("p, li, div");
-  return block && field.contains(block) && block !== field ? block : null;
-}
-
-/** Pastes plain text into rich text: blank lines start paragraphs, line breaks stay. */
-function pasteText(doc: Document, text: string) {
-  text
-    .replace(/\r\n?/g, "\n")
-    .split(/\n\s*\n/)
-    .forEach((chunk, i) => {
-      if (i) {
-        doc.execCommand("insertParagraph");
-      }
-      chunk.split("\n").forEach((line, j) => {
-        if (j) {
-          doc.execCommand("insertLineBreak");
-        }
-        if (line) {
-          doc.execCommand("insertText", false, line);
-        }
-      });
-    });
 }
 
 export function bindInlineEditing(doc: Document, editor: Editor) {
@@ -84,7 +46,7 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
 
   /** Ends editing of `el`: stores nothing new (input did), re-renders the canvas. */
   function finish(el: HTMLElement) {
-    toolbar.update(null);
+    richText.hide();
     el.classList.remove("cms-editing", "cms-formatting");
     // Left empty: drop leftover markup (<p><br></p>), so the field shows its placeholder.
     if (isRichText(el) && !inlineValue(el).trim()) {
@@ -103,16 +65,12 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     }
   }
 
-  const toolbar = createRichTextToolbar(doc, () => {
-    if (editor.inlineEl) {
-      finish(editor.inlineEl);
-    }
-  });
-
-  doc.addEventListener("selectionchange", () => {
-    const el = editor.inlineEl;
-    toolbar.update(el && isRichText(el) ? el : null);
-  });
+  // toolbar, paste, shortcuts and allowed formats of rich text (shared with the drawer)
+  const richText = bindRichTextEditing(
+    doc,
+    () => (editor.inlineEl && isRichText(editor.inlineEl) ? editor.inlineEl : null),
+    () => editor.inlineEl && finish(editor.inlineEl),
+  );
 
   doc.addEventListener("focusin", (e) => {
     const el = (e.target as HTMLElement).closest?.<HTMLElement>("[data-cms-field]");
@@ -123,16 +81,7 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     original = editor.textAt(inlinePath(el));
     el.classList.add("cms-editing");
     if (isRichText(el)) {
-      // Enter starts a <p> (not a <div>); formatting adds <b>/<i>, not inline styles.
-      doc.execCommand("defaultParagraphSeparator", false, "p");
-      doc.execCommand("styleWithCSS", false, "false");
-      if (!el.firstElementChild) {
-        // Empty: type into a paragraph, so the site's paragraph styles apply.
-        const paragraph = doc.createElement("p");
-        paragraph.setAttribute("data-placeholder", el.getAttribute("data-placeholder") ?? "");
-        el.replaceChildren(paragraph);
-        placeCaretIn(doc, paragraph);
-      }
+      richText.focus(el);
     }
     editor.select(el.closest(".cms-block")?.getAttribute("data-block-id") ?? null);
   });
@@ -141,19 +90,6 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     const el = (e.target as HTMLElement).closest?.<HTMLElement>("[data-cms-field]");
     if (!el || el !== editor.inlineEl) {
       return;
-    }
-    // "- " at the start of a paragraph starts a list, as in the stored format.
-    const ie = e as InputEvent;
-    if (isRichText(el) && ie.inputType === "insertText" && ie.data === " ") {
-      const block = blockAtCaret(doc, el);
-      if (block?.tagName === "P" && /^-[\s ]$/.test(block.textContent ?? "")) {
-        const range = doc.createRange();
-        range.selectNodeContents(block);
-        doc.getSelection()?.removeAllRanges();
-        doc.getSelection()?.addRange(range);
-        doc.execCommand("delete");
-        doc.execCommand("insertUnorderedList");
-      }
     }
     editor.setAt(inlinePath(el), inlineValue(el));
     editor.markDirty();
@@ -164,7 +100,7 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     if (!el || el !== editor.inlineEl) {
       return;
     }
-    if (toolbar.contains(e.relatedTarget as Node | null)) {
+    if (richText.inToolbar(e.relatedTarget as Node | null)) {
       return; // into the link input: still editing this field
     }
     finish(el);
@@ -174,7 +110,7 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     "keydown",
     (e) => {
       const el = editor.inlineEl;
-      if (!el || toolbar.contains(e.target as Node)) {
+      if (!el || richText.inToolbar(e.target as Node)) {
         return;
       }
       const kind = el.getAttribute("data-cms-kind");
@@ -193,39 +129,26 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
         // Fallback editors would insert <div>/<br> markup: insert a plain line break instead.
         e.preventDefault();
         doc.execCommand("insertText", false, "\n");
-      } else if (kind === "richtext" && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        toolbar.openLink();
       }
     },
     true,
   );
 
-  // Paste plain text only: no foreign markup in the page (rich text keeps paragraphs).
+  // Plain text fields in browsers without plaintext-only: paste plain text only
+  // (rich text pastes via bindRichTextEditing).
   doc.addEventListener("paste", (e) => {
     const el = editor.inlineEl;
-    if (!el || toolbar.contains(e.target as Node)) {
+    if (!el || isRichText(el) || editor.editable === "plaintext-only") {
       return;
     }
-    const text = e.clipboardData?.getData("text/plain") ?? "";
-    if (isRichText(el)) {
-      e.preventDefault();
-      pasteText(doc, text);
-    } else if (editor.editable !== "plaintext-only") {
-      e.preventDefault();
-      doc.execCommand("insertText", false, text);
-    }
+    e.preventDefault();
+    doc.execCommand("insertText", false, e.clipboardData?.getData("text/plain") ?? "");
   });
 
-  // Formatting: only bold and italic in rich text (the others can't be stored);
-  // dropped content could bring foreign markup.
+  // No formatting in plain text fields (fallback mode would add markup).
   doc.addEventListener("beforeinput", (e) => {
     const el = editor.inlineEl;
-    if (!el || toolbar.contains(e.target as Node)) {
-      return;
-    }
-    const allowed = isRichText(el) && ["formatBold", "formatItalic"].includes(e.inputType);
-    if ((e.inputType.startsWith("format") && !allowed) || e.inputType === "insertFromDrop") {
+    if (el && !isRichText(el) && e.inputType.startsWith("format")) {
       e.preventDefault();
     }
   });

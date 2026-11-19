@@ -127,14 +127,18 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
     }
     const link = r.collapsed ? linkAt(r) : null;
     const rect = (link ?? r).getBoundingClientRect();
-    const view = doc.defaultView!;
     bar.hidden = false;
-    const top = rect.top + view.scrollY - bar.offsetHeight - 10;
-    const maxLeft = view.scrollX + doc.documentElement.clientWidth - bar.offsetWidth - 8;
-    const left = Math.min(Math.max(rect.left + view.scrollX, view.scrollX + 8), maxLeft);
-    bar.style.top = `${top < view.scrollY ? rect.bottom + view.scrollY + 10 : top}px`;
+    // fixed, in view coordinates: also right inside a scrolling drawer
+    const top = rect.top - bar.offsetHeight - 10;
+    const maxLeft = doc.documentElement.clientWidth - bar.offsetWidth - 8;
+    const left = Math.min(Math.max(rect.left, 8), maxLeft);
+    bar.style.top = `${top < 8 ? rect.bottom + 10 : top}px`;
     bar.style.left = `${left}px`;
   }
+
+  // follows the text while the page or a drawer scrolls
+  doc.addEventListener("scroll", () => !bar.hidden && position(), { capture: true, passive: true });
+  doc.defaultView?.addEventListener("resize", () => !bar.hidden && position());
 
   function hide() {
     field?.classList.remove("cms-formatting");
@@ -234,6 +238,11 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
         field?.classList.remove("cms-formatting");
       }
       field = next;
+      // inside a modal dialog (the drawer), only the dialog's content is visible on top
+      const host = field?.closest("dialog") ?? doc.body;
+      if (field && bar.parentElement !== host) {
+        host.append(bar);
+      }
       if (bar.classList.contains("editing-link")) {
         return; // the link input has focus
       }

@@ -1,0 +1,13 @@
+/* The canvas' formatting toolbar (canvas/text-toolbar.css) in the admin's dialogs,
+   with the admin's tokens. */
+@import "../canvas/text-toolbar.css";
+
+.cms-text-toolbar {
+  --cms-accent: var(--accent);
+  --cms-accent-text: var(--accent-text);
+  --cms-font-sans: var(--font-sans);
+  --cms-surface: var(--surface);
+  --cms-text: var(--text);
+  --cms-err: var(--err);
+  z-index: 100;
+}

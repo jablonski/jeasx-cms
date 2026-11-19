@@ -1,6 +1,7 @@
 import type { Field, ListField } from "@cms/content/fields";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/shared/icons";
 import { plural } from "@cms/core/text";
+import RichText from "@cms/render/rich-text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
 interface FieldProps<F extends Field = Field> {
@@ -97,7 +98,7 @@ function LabelledInput({ path, field, value }: FieldProps) {
   const id = `f-${path.replaceAll(".", "-")}`;
   return (
     <div class="field">
-      <label for={id}>
+      <label for={id} id={`${id}-label`}>
         {field.label}
         {field.required && <span class="required"> *</span>}
       </label>
@@ -120,11 +121,26 @@ function Control({
 }) {
   switch (field.type) {
     case "textarea":
-    case "richtext":
       return (
         <textarea id={id} name={path} rows={5}>
           {value}
         </textarea>
+      );
+    case "richtext":
+      // formatted like on the page; edited with the formatting toolbar (rich-text-editing.ts)
+      return (
+        <div
+          id={id}
+          class="richtext-input"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          aria-labelledby={`${id}-label`}
+          data-richtext={path}
+          data-placeholder={field.label}
+        >
+          <RichText text={value} />
+        </div>
       );
     case "number":
       return <input id={id} type="number" name={path} data-kind="number" value={value} />;
