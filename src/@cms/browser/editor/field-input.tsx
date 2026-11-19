@@ -128,6 +128,8 @@ function Control({
       );
     case "number":
       return <input id={id} type="number" name={path} data-kind="number" value={value} />;
+    case "date":
+      return <input id={id} type="date" name={path} value={value} />;
     case "select":
       return (
         <select id={id} name={path}>

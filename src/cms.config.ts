@@ -74,7 +74,7 @@ export default {
         navOrder: { type: "number", label: "Navigation order" },
         image: { type: "image", label: "Teaser image" },
         author: { type: "text", label: "Author" },
-        date: { type: "text", label: "Date (YYYY-MM-DD)" },
+        date: { type: "date", label: "Date" },
       },
       blocks: [Text, Image, Gallery, Quote, Notice, Accordion, Download, Table].map(
         (block) => block.type,

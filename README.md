@@ -285,6 +285,7 @@ The editor dialog, validation, inline editing and preview pick it up automatical
 | `richtext`             | string           | `**bold**`, `*italic*`, `[link](/url)`, `- ` lists; render with `<RichText text={…} />` from `@cms/render/rich-text` |
 | `url`, `image`, `file` | string           | only http(s), mailto and relative URLs; `image` and `file` get upload and file picker (`image` offers images only)   |
 | `number`, `boolean`    | number, boolean  |                                                                                                                      |
+| `date`                 | string           | `YYYY-MM-DD` (empty if not set); edited with the browser's date picker                                               |
 | `select`               | string           | needs `options: [{ value, label }]`                                                                                  |
 | `list`                 | array of objects | item fields in `fields`, optional `itemLabel`                                                                        |
 | `blocks`               | array of blocks  | nested blocks, allowed types in `blocks: [...]`                                                                      |

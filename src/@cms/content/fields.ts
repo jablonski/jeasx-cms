@@ -11,6 +11,7 @@ export const FIELD_TYPES = [
   "image",
   "file",
   "number",
+  "date",
   "boolean",
   "select",
   "list",
@@ -170,6 +171,13 @@ function sanitizeValue(field: Field, raw: unknown, where: FieldLocation): unknow
       errors.push(...result.errors);
       return result.value;
     }
+    case "date": {
+      const date = typeof raw === "string" ? raw.trim() : "";
+      if (date && !isDate(date)) {
+        errors.push({ message: `${label}: invalid date (YYYY-MM-DD)`, path });
+      }
+      return date;
+    }
     case "url":
     case "image":
     case "file": {
@@ -183,6 +191,15 @@ function sanitizeValue(field: Field, raw: unknown, where: FieldLocation): unknow
     default:
       return String(raw ?? "");
   }
+}
+
+/** A calendar date as stored by "date" fields: YYYY-MM-DD, and a day that exists. */
+export function isDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
 }
 
 /** Allows relative, http(s) and mailto URLs only (no javascript: etc). */
