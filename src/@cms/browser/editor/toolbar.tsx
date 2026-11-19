@@ -33,8 +33,9 @@ export default function Toolbar({ state }: { state: EditorState }) {
             type="button"
             class={state.dirty ? "save unsaved" : "save"}
             data-action="save"
-            disabled={state.busy}
-            title={state.dirty ? "Save unsaved changes (Ctrl/⌘ + S)" : "Ctrl/⌘ + S"}
+            // nothing to save until something changed (a new page can always be saved)
+            disabled={state.busy || (!state.dirty && !!page.id)}
+            title={state.dirty ? "Save unsaved changes (Ctrl/⌘ + S)" : "No unsaved changes"}
           >
             Save
           </button>

@@ -182,8 +182,19 @@ function insertPage({ type, slug, title, status, meta, blocks }: PageValues): nu
   );
 }
 
-/** Replaces an existing page and keeps the replaced version as a revision. */
+/**
+ * Replaces an existing page and keeps the replaced version as a revision. Saving it
+ * unchanged changes nothing: no revision, same version and time of the last change.
+ */
 function updatePage(id: number, { type, slug, title, status, meta, blocks }: PageValues): number {
+  const stored = queryOne<PageValues>(
+    "SELECT type, slug, title, status, meta, blocks FROM pages WHERE id = ?",
+    id,
+  );
+  const values: PageValues = { type, slug, title, status, meta, blocks };
+  if (stored && (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])) {
+    return id;
+  }
   keepRevision(id, getPage(id));
   execute(
     `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, meta = ?, blocks = ?,

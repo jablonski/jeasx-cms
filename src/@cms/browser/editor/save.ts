@@ -56,7 +56,9 @@ export function createSave({
 
   /** @param overwrite replaces a version someone else saved since this one was loaded */
   async function save(status = state.page.status, overwrite = false) {
-    if (state.busy) {
+    // nothing to save (Ctrl/⌘ + S on an unchanged page); publishing changes the status
+    const unchanged = !state.dirty && state.page.id && status === state.page.status;
+    if (state.busy || (unchanged && !overwrite)) {
       return;
     }
     state.busy = true;

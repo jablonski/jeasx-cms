@@ -99,6 +99,17 @@ test("every save keeps the replaced version", () => {
   assert.equal(getRevision(page!.id, revision.id)?.title, "First");
 });
 
+test("saving an unchanged page keeps no revision", () => {
+  const { page } = savePage(input("/unchanged"));
+  const again = savePage({ ...page, baseVersion: page!.version });
+  assert.equal(listRevisions(page!.id).length, 0);
+  assert.equal(again.page?.version, page!.version);
+  assert.equal(again.page?.updatedAt, page!.updatedAt);
+  // publishing is a change, even without edits
+  savePage({ ...page, status: "published" });
+  assert.equal(listRevisions(page!.id).length, 1);
+});
+
 test("only the latest revisions are kept", () => {
   const { page } = savePage(input("/limit", { title: "v0" }));
   for (let i = 1; i <= MAX_REVISIONS + 2; i++) {
