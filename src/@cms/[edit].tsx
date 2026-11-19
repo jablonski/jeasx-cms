@@ -27,16 +27,13 @@ function pageToEdit({ id, type = "page" }: Record<string, string>) {
  * server (/@cms/api/preview), so block components never run in the browser.
  */
 export default async function ({ request }: RouteProps) {
-  const query = queryOf(request);
-  const page = pageToEdit(query);
+  const page = pageToEdit(queryOf(request));
   if (!page) {
     return; // unknown page or page type: ends in the 404 page
   }
-  // one-time status from e.g. the page list's Duplicate action
-  const notice = query.notice;
 
   return (
-    <Layout title={page.title || "New page"} wide>
+    <Layout title={page.title || "New page"} wide pageId={page.id}>
       <div id="editor" class="editor">
         <p class="loading">Loading editor…</p>
       </div>
@@ -45,7 +42,6 @@ export default async function ({ request }: RouteProps) {
           page,
           schema: blockSchema(),
           stylesheets: SITE.stylesheets.map(cacheBuster),
-          notice,
         })}
       </script>
     </Layout>

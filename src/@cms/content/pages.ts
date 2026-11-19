@@ -203,7 +203,11 @@ export function deletePage(id: number | null): boolean {
   return execute("DELETE FROM pages WHERE id = ?", id) > 0;
 }
 
-/** A draft copy: "… (copy)" title, own unique path, never published. Returns the new id. */
+/**
+ * A draft copy: "… (copy)" title, never published. Its path is the original's plus
+ * "-copy" ("/blog/post" → "/blog/post-copy"), so it stays in the same section and next
+ * to the original in the path-sorted page list. Returns the new id.
+ */
 export function duplicatePage(id: number | null): number | undefined {
   const page = getPage(id);
   if (!page) {
@@ -213,7 +217,7 @@ export function duplicatePage(id: number | null): number | undefined {
   const taken = new Set(
     queryAll<{ slug: string }>("SELECT slug FROM pages").map((r) => r.slug),
   );
-  const base = normalizeSlug(title);
+  const base = normalizeSlug(`${page.slug}-copy`);
   let slug = base;
   for (let n = 2; taken.has(slug); n++) {
     slug = `${base}-${n}`;

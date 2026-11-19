@@ -136,7 +136,8 @@ An empty database starts with the user `admin`. Its password is `CMS_ADMIN_PASSW
 
 The **Pages** overview lists every page with path, type and status. **Duplicate** copies a page
 in one click: the copy gets the title `… (copy)`, its own path, and always starts as a draft
-(even when duplicating a published page), opened in the editor ready to review and publish.
+(even when duplicating a published page). You stay on the overview and choose whether to
+edit the copy or the original.
 
 ## File library
 

@@ -34,6 +34,12 @@ table.pages {
     &:hover {
       background: var(--surface-2);
     }
+
+    /* the copy just made by Duplicate (linked by its anchor): kept in view, highlighted */
+    &:target {
+      scroll-margin-block: 40vh;
+      background: var(--accent-soft);
+    }
   }
 
   & td a:not(.button) {
@@ -51,23 +57,29 @@ table.pages {
     background: var(--surface-3);
     padding: 0.15rem 0.45rem;
     color: var(--text-2);
+    overflow-wrap: anywhere; /* long paths wrap instead of widening the table */
   }
 
   & time {
+    white-space: nowrap;
     color: var(--text-3);
     font-variant-numeric: tabular-nums;
   }
 
+  /* stays a table cell (display: flex would make it only as tall as its buttons, cutting
+     its border short in taller rows); the buttons sit side by side inline */
   & .page-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
     padding-block: 0.5rem;
     white-space: nowrap; /* let the cell claim its width instead of overflowing left */
+    text-align: right;
 
-    & form {
-      display: flex; /* keep the submit button from stacking below the Edit link */
+    & > * {
+      display: inline-flex;
+      vertical-align: middle;
+    }
+
+    & > * + * {
+      margin-left: 0.5rem;
     }
   }
 }

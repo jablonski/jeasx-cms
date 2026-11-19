@@ -46,6 +46,11 @@ export function createSave({
     keepSlug();
     if (isNew) {
       window.history.replaceState(null, "", `edit?id=${stored.id}`);
+      // "Pages" in the header now leads back to this page's row
+      const pages = document.querySelector<HTMLAnchorElement>("[data-pages-link]");
+      if (pages) {
+        pages.hash = `page-${stored.id}`;
+      }
     }
   }
 

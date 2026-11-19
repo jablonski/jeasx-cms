@@ -8,10 +8,13 @@ export default function Layout(
   {
     title,
     wide,
+    pageId,
     children,
   }: {
     title: string;
     wide?: boolean;
+    /** page being edited: "Pages" links to its row, so the list scrolls back to it */
+    pageId?: number;
     children?: unknown;
   },
 ) {
@@ -26,7 +29,9 @@ export default function Layout(
               <Logo size={24} /> JeasxCMS
             </a>
             <nav>
-              <a href={this.cmsPath}>Pages</a>
+              <a href={pageId ? `${this.cmsPath}#page-${pageId}` : this.cmsPath} data-pages-link>
+                Pages
+              </a>
               <a href="files">Files</a>
               <a href="users">{this.session?.role === "admin" ? "Users" : "Account"}</a>
             </nav>
