@@ -22,6 +22,19 @@ function updateThumbnail(input: HTMLInputElement) {
   img.src = input.value;
 }
 
+/**
+ * The path as the server stores it ("/Mäuse Polizei" → "/mause-polizei"), so the editor
+ * shows it while typing. Empty stays empty (the path then comes from the title); text
+ * without usable characters stays as typed, so saving reports it instead of making it "/".
+ */
+function editedSlug(value: string) {
+  if (!value.trim()) {
+    return "";
+  }
+  const slug = normalizeSlug(value);
+  return slug === "/" && !/^[\s/]+$/.test(value) ? value : slug;
+}
+
 export function createFieldBinding(
   { state, setAt, renderToolbar, markDirty, updatePreview, runAction }: Editor,
   upload: (path: string, file: File) => void,
@@ -94,6 +107,7 @@ export function createFieldBinding(
 
     if (input.name === "slug") {
       slugTouched = input.value !== "";
+      state.page.slug = editedSlug(input.value);
     }
     if (input.name === "title" && !slugTouched && !state.page.id) {
       suggestSlug(input);
@@ -112,6 +126,14 @@ export function createFieldBinding(
 
   function bindEditing(container: HTMLElement) {
     container.addEventListener("input", handleInput);
+    // the path field shows the normalized path once it's left (normalizing while typing
+    // would e.g. drop a "-" just typed)
+    container.addEventListener("change", (e) => {
+      const input = e.target as HTMLInputElement;
+      if (input.name === "slug") {
+        input.value = state.page.slug;
+      }
+    });
     container.addEventListener("click", (e: MouseEvent) => {
       const button = (e.target as HTMLElement).closest?.<HTMLElement>("[data-action]");
       if (!button) {
