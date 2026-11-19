@@ -26,9 +26,9 @@ move, duplicate, delete) and the ＋ buttons to insert a block before or after i
 
 ![Editor with the toolbar and a selected block](docs/screenshots/editor.webp)
 
-| Inline editing: click a text and type                         | Block dialog for all other fields                           |
-| ------------------------------------------------------------- | ----------------------------------------------------------- |
-| ![Editing a heading in place](docs/screenshots/inline-editing.webp) | ![Block dialog of the Hero block](docs/screenshots/block-dialog.webp) |
+| Inline editing: click a text and type, select it to format         | Block dialog for all other fields                                     |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| ![Formatting selected text in place](docs/screenshots/inline-editing.webp) | ![Block dialog of the Hero block](docs/screenshots/block-dialog.webp) |
 
 | Block picker                                              | Container blocks: blocks inside sections and columns                  |
 | --------------------------------------------------------- | --------------------------------------------------------------------- |
