@@ -303,6 +303,10 @@ editable directly on the page:
 <span {...field(`items.${i}.title`)}>{item.title}</span>   // fields inside lists
 ```
 
+Rich text is passed to its component instead, `<RichText text={body} {...field("body")} />`,
+and edited as formatted text: selecting text shows a toolbar for bold, italic, links and
+lists (also Ctrl/⌘ + B, I, K; `- ` starts a list), and the field stores its markdown.
+
 On the public site `field()` returns nothing. `field.editing` is `true` in the editor, so
 optional elements can be shown even when empty, which lets editors fill them in on the page.
 All other field types are edited in the block's dialog.

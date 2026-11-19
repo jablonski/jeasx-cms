@@ -99,6 +99,43 @@ export function TrashIcon() {
   );
 }
 
+/** Bold text */
+export function BoldIcon() {
+  return (
+    <Icon>
+      <path d="M4.5 2.75h4.25a2.6 2.6 0 0 1 0 5.2H4.5zM4.5 7.95h5a2.65 2.65 0 0 1 0 5.3h-5z" />
+    </Icon>
+  );
+}
+
+/** Italic text */
+export function ItalicIcon() {
+  return (
+    <Icon>
+      <path d="M6.5 2.75h6M3.5 13.25h6M9.75 2.75l-3.5 10.5" />
+    </Icon>
+  );
+}
+
+/** Link */
+export function LinkIcon() {
+  return (
+    <Icon>
+      <path d="M6.75 9.25a3 3 0 0 0 4.25 0l2-2a3 3 0 0 0-4.25-4.25l-.75.75" />
+      <path d="M9.25 6.75a3 3 0 0 0-4.25 0l-2 2a3 3 0 0 0 4.25 4.25l.75-.75" />
+    </Icon>
+  );
+}
+
+/** Bulleted list */
+export function ListIcon() {
+  return (
+    <Icon>
+      <path d="M6 4h7.5M6 8h7.5M6 12h7.5M2.75 4h.01M2.75 8h.01M2.75 12h.01" />
+    </Icon>
+  );
+}
+
 /** Drag grip: filled dots, so they read as dots rather than outlined circles */
 export function GripIcon() {
   const dots: JSX.Element[] = [];

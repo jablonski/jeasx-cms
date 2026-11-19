@@ -36,7 +36,8 @@ function createField(def: BlockDefinition, editable: string) {
       "data-cms-field": name,
       "data-cms-kind": f.type,
       "data-placeholder": f.label,
-      contenteditable: editable,
+      // rich text is edited as rendered HTML (formatting via the canvas' text toolbar)
+      contenteditable: f.type === "richtext" ? "true" : editable,
       spellcheck: "true",
     };
   };

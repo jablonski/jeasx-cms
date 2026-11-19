@@ -12,6 +12,7 @@
 @import "./insert.css";
 @import "./empty.css";
 @import "./inline-editing.css";
+@import "./text-toolbar.css";
 @import "./drag-drop.css";
 @import "./containers.css";
 @import "./states.css";

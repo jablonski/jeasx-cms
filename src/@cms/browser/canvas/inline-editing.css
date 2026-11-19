@@ -22,9 +22,33 @@
   caret-color: currentColor;
 }
 
-/* formatted text is edited as its source, in the site's font; line breaks stay visible */
+/* rich text being edited: a hint on its outline that selected text can be formatted
+   (hidden while the formatting toolbar is open) */
 .rich-text.cms-editing {
-  white-space: pre-wrap;
+  position: relative;
+
+  &::before {
+    content: "Select text to format";
+    position: absolute;
+    top: -6px;
+    right: 8px;
+    z-index: 1;
+    transform: translateY(-50%);
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--cms-accent);
+    color: var(--cms-accent-text);
+    font: 600 11px/1.2 var(--cms-font-sans);
+    font-style: normal;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  &.cms-formatting::before {
+    display: none;
+  }
 }
 
 /* empty fields show their label; drawn after the (empty) content, so the caret
