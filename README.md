@@ -104,6 +104,24 @@ Back up `data/` (or the two paths above): it holds all content. Behind a reverse
 `trustProxy` in `jeasx.config.js` so login limits see the real client address. Security
 headers (CSP, HSTS on HTTPS, …) are set in `jeasx.config.js`, too.
 
+### Docker
+
+The `Dockerfile` builds a production image on `node:lts-alpine` that runs as the user `node`
+and checks `/health` on its own:
+
+```sh
+docker build -t jeasx-cms .
+docker run -d --name jeasx-cms -p 3000:3000 \
+  -e CMS_ADMIN_PASSWORD='a-long-password' \
+  -v ./data:/home/node/data \
+  jeasx-cms
+```
+
+Content is stored in `/home/node/data` inside the container, so mount a volume there or it is
+lost when the container is replaced. A bind mount (`-v "$PWD/data:/home/node/data"`) must be
+writable by the container user (UID 1000). The settings above can be passed with `-e`; since
+the configuration is bundled at build time, rebuild the image after changing `jeasx.config.js`.
+
 ## Users and sign-in
 
 Sign in at `/@cms/login`. Sessions last 7 days and are stored in the database.
