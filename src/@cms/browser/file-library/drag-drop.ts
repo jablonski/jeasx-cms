@@ -49,6 +49,11 @@ export function bindLibraryDragDrop(
     dragging = moved;
     e.dataTransfer!.effectAllowed = "move";
     e.dataTransfer!.setData("text/plain", moved.id);
+    if ((e.target as HTMLElement).closest(".drag-handle")) {
+      // drag the whole card, not just the grip, held where the pointer is
+      const box = item.getBoundingClientRect();
+      e.dataTransfer!.setDragImage(item, e.clientX - box.left, e.clientY - box.top);
+    }
     requestAnimationFrame(() => {
       item.classList.add("dragging");
       root.classList.add("is-moving");

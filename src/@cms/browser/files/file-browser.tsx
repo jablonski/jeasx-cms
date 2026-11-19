@@ -1,5 +1,5 @@
 /** The folder browser, shared by the library page and the picker dialog. */
-import { XIcon } from "@cms/shared/icons";
+import { GripIcon, XIcon } from "@cms/shared/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";
@@ -96,6 +96,7 @@ function FolderItem({ folder: f, manage }: { folder: FolderSummary; manage: bool
       draggable={manage ? "true" : undefined}
       data-drag-folder={manage ? f.id : undefined}
     >
+      {manage && <DragHandle name={f.name} />}
       <button
         type="button"
         class="file-thumb folder-thumb"
@@ -142,6 +143,7 @@ function FileItem({ file, manage }: { file: StoredFile; manage: boolean }) {
       draggable={manage ? "true" : undefined}
       data-drag-file={manage ? file.id : undefined}
     >
+      {manage && <DragHandle name={file.name} />}
       {manage ? (
         <a
           class="file-thumb"
@@ -184,6 +186,15 @@ function FileItem({ file, manage }: { file: StoredFile; manage: boolean }) {
         </button>
       )}
     </li>
+  );
+}
+
+/** Grip in the card's corner: always starts a drag, whatever the card contains. */
+function DragHandle({ name }: { name: string }) {
+  return (
+    <span class="drag-handle" draggable="true" title="Drag to a folder" aria-label={`Move ${name}`}>
+      <GripIcon />
+    </span>
   );
 }
 
