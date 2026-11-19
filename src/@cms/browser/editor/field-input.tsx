@@ -1,4 +1,5 @@
 import type { Field, ListField } from "@cms/content/fields";
+import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/browser/shared/icons";
 import { plural } from "@cms/core/text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
@@ -73,7 +74,7 @@ function ListItemTools({ path, index, count }: { path: string; index: number; co
         disabled={index === 0}
         title="Move up"
       >
-        ↑
+        <ChevronUpIcon />
       </button>
       <button
         type="button"
@@ -83,10 +84,10 @@ function ListItemTools({ path, index, count }: { path: string; index: number; co
         disabled={index === count - 1}
         title="Move down"
       >
-        ↓
+        <ChevronDownIcon />
       </button>
       <button type="button" data-action="remove-item" {...at} title="Remove">
-        ✕
+        <XIcon />
       </button>
     </span>
   );

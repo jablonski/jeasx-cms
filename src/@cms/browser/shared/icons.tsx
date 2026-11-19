@@ -1,0 +1,123 @@
+/** Shared icon set, drawn with one recipe: 16px grid, 1.5px stroke, currentColor.
+    Icons are authored at display size (no downscaling), so all share the same
+    stroke weight on every platform. Decorative only — buttons keep labels/titles. */
+
+/** Wrapper for stroke icons; pass the shapes as children. */
+export function Icon({ children }: { children: JSX.Element }) {
+  const shared = {
+    viewBox: "0 0 16 16",
+    width: "1em",
+    height: "1em",
+    fill: "none",
+    stroke: "currentColor",
+    "stroke-width": "1.5",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+    style: "vertical-align: -0.125em",
+    "aria-hidden": "true",
+  } as const;
+  return <svg {...shared}>{children}</svg>;
+}
+
+export function ChevronUpIcon() {
+  return (
+    <Icon>
+      <path d="M3.5 10 8 5.5 12.5 10" />
+    </Icon>
+  );
+}
+
+export function ChevronDownIcon() {
+  return (
+    <Icon>
+      <path d="M3.5 6 8 10.5 12.5 6" />
+    </Icon>
+  );
+}
+
+/** Close / remove */
+export function XIcon() {
+  return (
+    <Icon>
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </Icon>
+  );
+}
+
+/** Add / insert */
+export function PlusIcon() {
+  return (
+    <Icon>
+      <path d="M8 3v10M3 8h10" />
+    </Icon>
+  );
+}
+
+/** Settings (sliders: reads as settings at small sizes, unlike a sun-like cog) */
+export function SlidersIcon() {
+  return (
+    <Icon>
+      <path d="M1.75 4.75h4.5M9.25 4.75h5M1.75 11.25h6.5M11.25 11.25h3" />
+      <circle cx="7.75" cy="4.75" r="1.6" />
+      <circle cx="9.75" cy="11.25" r="1.6" />
+    </Icon>
+  );
+}
+
+/** Revert to an earlier version */
+export function RevertIcon() {
+  return (
+    <Icon>
+      <path d="M3 8a5 5 0 1 1 1.5 3.5" />
+      <path d="M3 4.5V8h3.5" />
+    </Icon>
+  );
+}
+
+export function PencilIcon() {
+  return (
+    <Icon>
+      <path d="M9.5 3.5 12.5 6.5M3 13l.8-3.8 7-7a1.3 1.3 0 0 1 1.9 0l1.1 1.1a1.3 1.3 0 0 1 0 1.9l-7 7L3 13z" />
+    </Icon>
+  );
+}
+
+export function CopyIcon() {
+  return (
+    <Icon>
+      <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
+      <path d="M3 10.5h-.25a.75.75 0 0 1-.75-.75v-7A.75.75 0 0 1 2.75 2h7a.75.75 0 0 1 .75.75V3" />
+    </Icon>
+  );
+}
+
+export function TrashIcon() {
+  return (
+    <Icon>
+      <path d="M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.75 7v3.5M9.25 7v3.5" />
+    </Icon>
+  );
+}
+
+/** Drag grip: filled dots, so they read as dots rather than outlined circles */
+export function GripIcon() {
+  const dots: JSX.Element[] = [];
+  for (const x of [6, 10]) {
+    for (const y of [4, 8, 12]) {
+      dots.push(<circle cx={x} cy={y} r="1.4" />);
+    }
+  }
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width="1em"
+      height="1em"
+      fill="currentColor"
+      stroke="none"
+      style="vertical-align: -0.125em"
+      aria-hidden="true"
+    >
+      {dots}
+    </svg>
+  );
+}

@@ -1,4 +1,5 @@
 import DrawerLayout from "@cms/browser/editor/drawer-layout";
+import { RevertIcon } from "@cms/browser/shared/icons";
 import { formatTime } from "@cms/browser/shared/format-time";
 import type { Revision } from "@cms/content/revisions";
 
@@ -20,7 +21,7 @@ export default function HistoryDialog({
 }) {
   return (
     <DrawerLayout
-      icon="↺"
+      icon={<RevertIcon />}
       title="History"
       description="Every save keeps the version it replaces. Choose one to preview it on the page."
       closeAction="drawer-cancel"

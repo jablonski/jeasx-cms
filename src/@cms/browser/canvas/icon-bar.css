@@ -24,8 +24,10 @@
   }
 
   & button {
-    display: inline-grid;
-    place-items: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     min-width: 26px;
     height: 26px;
     padding: 0 7px;

@@ -1,4 +1,5 @@
 import DrawerLayout, { CancelAndDone } from "@cms/browser/editor/drawer-layout";
+import { SlidersIcon } from "@cms/browser/shared/icons";
 import FieldInput from "@cms/browser/editor/field-input";
 import { PAGE_TYPES } from "@cms/content/blocks";
 import type { Page } from "@cms/content/pages";
@@ -8,7 +9,7 @@ export default function SettingsDialog({ page }: { page: Page }) {
   const type = PAGE_TYPES[page.type];
   return (
     <DrawerLayout
-      icon="⚙"
+      icon={<SlidersIcon />}
       title="Page settings"
       description={type?.label ?? page.type}
       footer={

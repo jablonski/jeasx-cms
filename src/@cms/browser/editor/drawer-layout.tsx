@@ -1,4 +1,5 @@
 /** Header, scrolling body and footer shared by the editor's side dialogs. */
+import { XIcon } from "@cms/browser/shared/icons";
 export default function DrawerLayout({
   icon,
   title,
@@ -7,7 +8,7 @@ export default function DrawerLayout({
   footer,
   children,
 }: {
-  icon: string;
+  icon: JSX.Element;
   title: string;
   description?: string;
   /** what the close button in the header does */
@@ -26,7 +27,7 @@ export default function DrawerLayout({
           {description && <p>{description}</p>}
         </div>
         <button type="button" class="drawer-close" data-action={closeAction} title="Close">
-          ✕
+          <XIcon />
         </button>
       </header>
       <div class="drawer-body">{children}</div>

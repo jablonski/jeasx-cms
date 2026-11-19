@@ -1,4 +1,5 @@
 import { openModal } from "@cms/browser/shared/dialog";
+import { XIcon } from "@cms/browser/shared/icons";
 import { BLOCKS } from "@cms/content/blocks";
 
 /** Grid of block types to insert. */
@@ -8,7 +9,7 @@ function BlockPicker({ allowed }: { allowed: readonly string[] }) {
       <header class="picker-header">
         <h2 id="picker-title">Add a block</h2>
         <button type="submit" value="" class="drawer-close" title="Close">
-          ✕
+          <XIcon />
         </button>
       </header>
       <div class="picker-grid">

@@ -1,4 +1,5 @@
 /** The folder browser, shared by the library page and the picker dialog. */
+import { XIcon } from "@cms/browser/shared/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";
@@ -127,7 +128,7 @@ function FolderItem({ folder: f, manage }: { folder: FolderSummary; manage: bool
           title="Delete folder"
           aria-label={`Delete folder ${f.name}`}
         >
-          ✕
+          <XIcon />
         </button>
       )}
     </li>
@@ -179,7 +180,7 @@ function FileItem({ file, manage }: { file: StoredFile; manage: boolean }) {
           title="Delete"
           aria-label={`Delete ${file.name}`}
         >
-          ✕
+          <XIcon />
         </button>
       )}
     </li>

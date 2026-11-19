@@ -1,4 +1,5 @@
 import type { EditorState } from "@cms/browser/editor/state";
+import { SlidersIcon } from "@cms/browser/shared/icons";
 import { plural } from "@cms/core/text";
 
 /** Top bar of the editor: page title (opens settings), status, save/publish. */
@@ -14,11 +15,11 @@ export default function Toolbar({ state }: { state: EditorState }) {
             data-action="page-settings"
             title="Page settings"
           >
+            <span class="gear" aria-hidden="true">
+              <SlidersIcon />
+            </span>
             <span class="page-title-text">{page.title || "Untitled page"}</span>
             <code>{page.slug || "/…"}</code>
-            <span class="gear" aria-hidden="true">
-              ⚙
-            </span>
           </button>
           <span class={`badge ${page.status}`}>{page.status}</span>
           <span class="dirty" hidden={!state.dirty}>

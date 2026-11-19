@@ -1,5 +1,14 @@
 /** The editor's controls around the blocks on the canvas (rendered on the server). */
 import type { Block } from "@cms/content/blocks";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CopyIcon,
+  GripIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@cms/browser/shared/icons";
 
 /** Position of a block in its list, as attributes for the controls acting on it. */
 export type BlockAt = { "data-path": string; "data-index": number };
@@ -15,7 +24,9 @@ export function EmptyList({ path }: { path: string }) {
       data-path={path}
       data-index="0"
     >
-      <span>＋</span> {isPage ? "Add your first block" : "Add block"}
+      <span>
+        <PlusIcon />
+      </span> {isPage ? "Add your first block" : "Add block"}
     </button>
   );
 }
@@ -61,11 +72,11 @@ export function BlockBar({
   return (
     <div class="cms-bar">
       <span class="cms-grip" draggable="true" {...at} title="Drag to move">
-        ⠿
+        <GripIcon />
       </span>
       <span class="cms-label">{label}</span>
       <button type="button" data-action="edit-block" {...at} title="Edit (double-click)">
-        ✎ Edit
+        <PencilIcon /> Edit
       </button>
       <button
         type="button"
@@ -75,7 +86,7 @@ export function BlockBar({
         disabled={isFirst}
         title="Move up"
       >
-        ↑
+        <ChevronUpIcon />
       </button>
       <button
         type="button"
@@ -85,10 +96,10 @@ export function BlockBar({
         disabled={isLast}
         title="Move down"
       >
-        ↓
+        <ChevronDownIcon />
       </button>
       <button type="button" data-action="duplicate-block" {...at} title="Duplicate">
-        ⧉
+        <CopyIcon />
       </button>
       <button type="button" data-action="remove-block" {...at} title="Delete">
         <TrashIcon />
@@ -118,26 +129,7 @@ export function InsertButton({
       data-index={index}
       title={`Add block ${side === "before" ? "above" : "below"} ${label}`}
     >
-      ＋
+      <PlusIcon />
     </button>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="1em"
-      height="1em"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      style="vertical-align: -0.125em"
-      aria-hidden="true"
-    >
-      <path d="M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.75 7v3.5M9.25 7v3.5" />
-    </svg>
   );
 }
