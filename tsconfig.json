@@ -22,6 +22,6 @@
       "@cms/*": ["./src/@cms/*"]
     }
   },
-  "include": ["src", "test", "seed", "e2e", "playwright.config.ts"],
+  "include": ["src", "test", "seed"],
   "exclude": ["dist", "node_modules"]
 }
