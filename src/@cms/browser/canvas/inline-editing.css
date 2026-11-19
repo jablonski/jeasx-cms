@@ -16,8 +16,10 @@
 [data-cms-field].cms-editing {
   outline: 2px solid var(--cms-accent);
   outline-offset: 4px;
-  background: color-mix(in oklch, var(--cms-accent) 6%, transparent);
-  caret-color: var(--cms-accent);
+  /* no background tint: it would replace the element's own background (e.g. a
+     button's color or gradient) and leave its text unreadable */
+  /* the text color contrasts with the element's background; the accent may not */
+  caret-color: currentColor;
 }
 
 /* formatted text is edited as its source, in the site's font; line breaks stay visible */
@@ -25,14 +27,22 @@
   white-space: pre-wrap;
 }
 
-/* empty fields show their label */
-[data-cms-field]:empty::before,
-.rich-text.cms-editing > p:empty::before {
+/* empty fields show their label; drawn after the (empty) content, so the caret
+   sits in front of it, on the placeholder's line */
+[data-cms-field]:empty::after,
+.rich-text.cms-editing > p:empty::after {
   content: attr(data-placeholder) "…";
   color: currentColor;
   opacity: 0.4;
   font-style: italic;
   pointer-events: none;
+}
+
+/* flex/grid fields (e.g. buttons) have no line box while empty, so the caret would
+   span the whole element: edit them as inline-blocks */
+a[data-cms-field].cms-editing:empty,
+span[data-cms-field].cms-editing:empty {
+  display: inline-block;
 }
 
 /* placeholders must keep inline elements clickable */
