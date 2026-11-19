@@ -1,4 +1,4 @@
-import type { ValidationError } from "@cms/content/fields";
+import type { ValidationError } from "@cms/shared/fields";
 import type { FileUsage } from "@cms/media/files";
 
 export interface ApiSuccess<T> {

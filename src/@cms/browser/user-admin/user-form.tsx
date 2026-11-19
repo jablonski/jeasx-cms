@@ -1,5 +1,5 @@
 /** The dialog for creating a user or changing an account. */
-import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/auth/limits";
+import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/shared/account-limits";
 import { openModal } from "@cms/browser/utils/dialog";
 import type { ApiResponse } from "@cms/browser/utils/http";
 import { ROLE_LABELS, type User } from "@cms/browser/user-admin/user-roles";

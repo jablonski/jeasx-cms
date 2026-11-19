@@ -5,7 +5,7 @@
  * The hash keeps URLs unique and cacheable forever; the name is for people,
  * downloads and search engines.
  */
-import { truncate } from "@cms/core/text";
+import { truncate } from "@cms/shared/text";
 
 /** Longest display name of a file. */
 export const MAX_FILE_NAME = 200;

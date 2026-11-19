@@ -1,7 +1,7 @@
 /** Creating blocks and coercing untrusted block data. Keep this file free of Node.js imports. */
-import { MAX_DEPTH } from "@cms/content/block-tree";
-import { BLOCKS, type Block } from "@cms/content/blocks";
-import { defaults, sanitize, type ValidationError } from "@cms/content/fields";
+import { MAX_DEPTH } from "@cms/shared/block-tree";
+import { BLOCKS, type Block } from "@cms/shared/blocks";
+import { defaults, sanitize, type ValidationError } from "@cms/shared/fields";
 
 /** Where walking the blocks of a page starts. */
 const PAGE_LEVEL = { prefix: "", depth: 0, at: "blocks" };

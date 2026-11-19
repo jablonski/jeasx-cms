@@ -1,6 +1,6 @@
 import DrawerLayout, { CancelAndDone } from "@cms/browser/editor/drawer-layout";
 import FieldInput from "@cms/browser/editor/field-input";
-import { BLOCKS, type Block } from "@cms/content/blocks";
+import { BLOCKS, type Block } from "@cms/shared/blocks";
 
 /** Side dialog to edit the fields of one block. Inputs update the page live. */
 export default function BlockDialog({

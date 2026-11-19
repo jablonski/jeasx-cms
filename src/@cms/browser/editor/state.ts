@@ -1,6 +1,6 @@
 import type { BlockPosition } from "@cms/browser/editor/paths";
-import type { Block } from "@cms/content/blocks";
-import type { Field, ValidationError } from "@cms/content/fields";
+import type { Block } from "@cms/shared/blocks";
+import type { Field, ValidationError } from "@cms/shared/fields";
 import type { Page } from "@cms/content/pages";
 
 /** Everything the editor's parts share about the page being edited. */

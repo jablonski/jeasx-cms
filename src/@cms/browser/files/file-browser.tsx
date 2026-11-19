@@ -3,7 +3,7 @@ import { GripIcon, XIcon } from "@cms/shared/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";
-import { formatSize, plural } from "@cms/core/text";
+import { formatSize, plural } from "@cms/shared/text";
 import type { StoredFile } from "@cms/media/files";
 import type { Folder, FolderSummary } from "@cms/media/folders";
 

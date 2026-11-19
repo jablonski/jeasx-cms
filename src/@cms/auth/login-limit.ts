@@ -3,7 +3,7 @@
  * account. The higher account limit stops guessing from many addresses, while a single
  * client can't lock an account out as quickly as it locks itself out.
  */
-import { shared } from "@cms/core/shared";
+import { shared } from "@cms/shared/global";
 
 const MAX_CLIENT_FAILURES = 5;
 const MAX_ACCOUNT_FAILURES = 20;

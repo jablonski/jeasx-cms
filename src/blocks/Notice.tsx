@@ -1,5 +1,5 @@
-import { defineBlock } from "@cms/content/blocks";
-import RichText from "@cms/render/rich-text";
+import { defineBlock } from "@cms/shared/blocks";
+import RichText from "@cms/shared/rich-text";
 import OptionalText from "./OptionalText";
 
 export default defineBlock({

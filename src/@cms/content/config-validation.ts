@@ -4,7 +4,7 @@
  * type fails fast with a clear message instead of misbehaving in the editor.
  */
 
-import { FIELD_TYPES as TYPES } from "@cms/content/fields";
+import { FIELD_TYPES as TYPES } from "@cms/shared/fields";
 
 // biome-ignore lint/suspicious/noExplicitAny: this file exists to inspect values of unknown shape
 type Unchecked = any;

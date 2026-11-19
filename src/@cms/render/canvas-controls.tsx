@@ -1,5 +1,5 @@
 /** The editor's controls around the blocks on the canvas (rendered on the server). */
-import type { Block } from "@cms/content/blocks";
+import type { Block } from "@cms/shared/blocks";
 import {
   ChevronDownIcon,
   ChevronUpIcon,

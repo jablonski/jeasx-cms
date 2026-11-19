@@ -3,7 +3,7 @@ import { safeNext } from "@cms/auth/safe-next";
 import { currentSession, isCrossSite, startSession } from "@cms/auth/sessions";
 import { ensureInitialUser, verifyCredentials } from "@cms/auth/users";
 import { queryOf } from "@cms/core/http";
-import { plural } from "@cms/core/text";
+import { plural } from "@cms/shared/text";
 import type { RouteProps, ThisContext } from "@cms/core/types";
 import LoginPage from "@cms/render/login-page";
 

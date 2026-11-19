@@ -8,7 +8,7 @@
  * the stored markdown by rich-text-markdown.ts.
  */
 import { toHtml } from "@cms/browser/utils/to-html";
-import { isSafeUrl } from "@cms/content/fields";
+import { isSafeUrl } from "@cms/shared/fields";
 import { BoldIcon, ItalicIcon, LinkIcon, ListIcon, XIcon } from "@cms/shared/icons";
 
 export interface RichTextToolbar {

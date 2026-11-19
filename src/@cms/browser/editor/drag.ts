@@ -5,7 +5,7 @@
 
 import { applyMove, checkDrop, type Drag } from "@cms/browser/editor/block-moves";
 import type { Editor } from "@cms/browser/editor/state";
-import { BLOCKS } from "@cms/content/blocks";
+import { BLOCKS } from "@cms/shared/blocks";
 
 export function bindCanvasDrag(doc: Document, editor: Editor) {
   let drag: Drag | null = null;

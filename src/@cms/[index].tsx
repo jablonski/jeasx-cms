@@ -1,4 +1,4 @@
-import { PAGE_TYPES } from "@cms/content/blocks";
+import { PAGE_TYPES } from "@cms/shared/blocks";
 import { duplicatePage, listPages } from "@cms/content/pages";
 import { parseId } from "@cms/core/id";
 import { isCrossSite } from "@cms/auth/sessions";

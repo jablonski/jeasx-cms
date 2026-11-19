@@ -1,6 +1,6 @@
 /** The site's configuration as the core sees it (server only); filled by `configureCms()`. */
-import type { BlockDefinition, PageType } from "@cms/content/blocks";
-import { shared } from "@cms/core/shared";
+import type { BlockDefinition, PageType } from "@cms/shared/blocks";
+import { shared } from "@cms/shared/global";
 
 export interface SiteConfig {
   /** stylesheets of the site, shown in the editor canvas (URLs starting with "/") */

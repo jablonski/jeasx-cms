@@ -1,5 +1,5 @@
 import type { EditorData } from "@cms/browser/editor/start-editor";
-import { blockSchema } from "@cms/content/blocks";
+import { blockSchema } from "@cms/shared/blocks";
 import { getPage, newPage, normalizePage } from "@cms/content/pages";
 import { queryOf } from "@cms/core/http";
 import { parseId } from "@cms/core/id";

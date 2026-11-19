@@ -1,6 +1,6 @@
 /**
  * Converts the HTML of a rich text field edited on the canvas back into its stored
- * markdown (the format of src/@cms/render/rich-text.tsx): blank line = paragraph,
+ * markdown (the format of src/@cms/shared/rich-text.tsx): blank line = paragraph,
  * "- " = list item, line break inside a paragraph, **bold**, *italic*, [label](url).
  *
  * Typed markers are escaped (\* \[ \] \\, and "- " at the start of a paragraph line),
@@ -9,7 +9,7 @@
  * contenteditable produces all kinds of markup (<div>, <b>, <span style>, nested lists,
  * stray <br>), so any HTML is accepted: what the format can't express is kept as text.
  */
-import { isSafeUrl } from "@cms/content/fields";
+import { isSafeUrl } from "@cms/shared/fields";
 
 /** The part of the DOM the conversion reads (a DOM Node; plain objects in tests). */
 export interface NodeLike {

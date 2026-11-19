@@ -6,7 +6,7 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
 import { SCHEMA } from "@cms/core/schema";
-import { shared } from "@cms/core/shared";
+import { shared } from "@cms/shared/global";
 import { dbPath } from "@cms/core/storage";
 
 export default function db(): DatabaseSync {

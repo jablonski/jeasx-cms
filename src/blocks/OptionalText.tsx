@@ -1,4 +1,4 @@
-import type { FieldHelper } from "@cms/content/blocks";
+import type { FieldHelper } from "@cms/shared/blocks";
 
 /** Text element that is hidden on the site while empty, but stays editable in the editor. */
 export default function OptionalText({

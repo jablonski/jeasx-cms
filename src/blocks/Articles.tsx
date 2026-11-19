@@ -1,4 +1,4 @@
-import { defineBlock } from "@cms/content/blocks";
+import { defineBlock } from "@cms/shared/blocks";
 import { latestArticles } from "../queries";
 import Heading from "./Heading";
 

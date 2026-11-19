@@ -1,4 +1,4 @@
-import { PAGE_TYPES } from "@cms/content/blocks";
+import { PAGE_TYPES } from "@cms/shared/blocks";
 import { bodyOf, dispatch, fail, jsonOnly } from "@cms/core/http";
 import type { RouteProps } from "@cms/core/types";
 import { renderCanvas } from "@cms/render/render-canvas";

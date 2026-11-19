@@ -2,7 +2,7 @@
  * The composition root of the core: connects the site's configuration to the block registry.
  * The site calls it in src/[...guard].ts; the core never imports site code.
  */
-import { registerBlocks } from "@cms/content/blocks";
+import { registerBlocks } from "@cms/shared/blocks";
 import { assertValid, validateBlocks, validateSite } from "@cms/content/config-validation";
 import { SITE, type SiteConfig } from "@cms/core/site";
 

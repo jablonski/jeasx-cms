@@ -5,8 +5,8 @@ import { chooseFiles, folderIdOf } from "@cms/browser/files/file-api";
 import { chooseFolder } from "@cms/browser/files/folder-dialog";
 import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/utils/dialog";
 import { json, request } from "@cms/browser/utils/http";
-import { plural } from "@cms/core/text";
-import { MAX_FILE_NAME } from "@cms/media/file-url";
+import { plural } from "@cms/shared/text";
+import { MAX_FILE_NAME } from "@cms/shared/file-url";
 
 export function createLibraryActions({
   listing,

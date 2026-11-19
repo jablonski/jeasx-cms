@@ -193,7 +193,7 @@ The CMS uses the standard Jeasx routing:
 | `src/[...path].tsx`      | published pages                                            | `@cms/content/pages`, `@cms/render/render-blocks` |
 
 Your code uses the core via the `@cms/…` alias (set in `jeasx.config.js` and `tsconfig.json`),
-e.g. `@cms/render/rich-text` or `@cms/content/pages`. That works in any route, e.g. `[404].tsx` or your own
+e.g. `@cms/shared/rich-text` or `@cms/content/pages`. That works in any route, e.g. `[404].tsx` or your own
 `[sitemap].xml.ts`: the root guard runs first for every request, so the core is configured
 for all routes. Updating the CMS means replacing `src/@cms/`; the core never imports anything
 outside `src/@cms/`.
@@ -237,7 +237,7 @@ export default {
 1. Create `src/blocks/Gallery.tsx`:
 
    ```tsx
-   import { defineBlock } from "@cms/content/blocks";
+   import { defineBlock } from "@cms/shared/blocks";
 
    export default defineBlock({
      type: "gallery", // stored in the database, don't change later
@@ -283,7 +283,7 @@ The editor dialog, validation, inline editing and preview pick it up automatical
 | Type                   | Value            | Notes                                                                                                                |
 | ---------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `text`, `textarea`     | string           | editable on the page via `field()`                                                                                   |
-| `richtext`             | string           | `**bold**`, `*italic*`, `[link](/url)`, `- ` lists, `\*` keeps a marker as text; render with `<RichText text={…} />` from `@cms/render/rich-text` |
+| `richtext`             | string           | `**bold**`, `*italic*`, `[link](/url)`, `- ` lists, `\*` keeps a marker as text; render with `<RichText text={…} />` from `@cms/shared/rich-text` |
 | `url`, `image`, `file` | string           | only http(s), mailto and relative URLs; `image` and `file` get upload and file picker (`image` offers images only)   |
 | `number`, `boolean`    | number, boolean  |                                                                                                                      |
 | `date`                 | string           | `YYYY-MM-DD` (empty if not set); edited with the browser's date picker                                               |
@@ -340,20 +340,20 @@ Page fields are available as `page.meta` in the core and shown in the editor's p
 
 | What                                          | Where                                                                                                  |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Block and page type registry, nesting rules   | `content/blocks.ts`, `content/block-tree.ts`, `content/block-data.ts`                                  |
-| Field types and validation of content         | `content/fields.ts`                                                                                    |
+| Block and page type registry, nesting rules   | `shared/blocks.ts`, `shared/block-tree.ts`, `shared/block-data.ts`                                  |
+| Field types and validation of content         | `shared/fields.ts`                                                                                    |
 | Validation of the site configuration          | `content/config-validation.ts`                                                                         |
 | Pages, their validation and revisions         | `content/pages.ts`, `content/page-validation.ts`, `content/revisions.ts`                               |
 | Database connection, helpers and schema       | `core/db.ts`, `core/schema.ts`, `core/storage.ts`                                                      |
 | Applying the site's configuration             | `configure.ts`, `core/site.ts`                                                                         |
-| Files, folders, URLs (`/files/<hash>/<name>`) | `media/files.ts`, `media/folders.ts`, `media/mime.ts`, `media/file-url.ts`                             |
+| Files, folders, URLs (`/files/<hash>/<name>`) | `media/files.ts`, `media/folders.ts`, `media/mime.ts`, `shared/file-url.ts`                             |
 | Admin guards: sessions, CSRF protection       | `[...guard].ts`, `api/[...guard].ts`, `auth/sessions.ts`                                               |
 | User accounts and the rules for changing them | `auth/users.ts`, `auth/account-changes.ts`                                                             |
 | Rendering of pages and file downloads         | `render/render-blocks.tsx`, `media/file-download.ts`                                                   |
 | Editor canvas                                 | `render/render-canvas.tsx`, `render/canvas-controls.tsx`                                               |
 | Admin pages, login, JSON APIs                 | `[*].tsx`, `api/[*].ts`                                                                                |
 | Admin in the browser                          | `browser/editor/`, `browser/file-library/`, `browser/user-admin/`, `browser/files/`, `browser/utils/` |
-| Icons and other modules shared by admin and canvas | `shared/icons.tsx`                                                                                |
+| Used by server and browser alike              | `shared/`: the above plus `rich-text.tsx`, `slug.ts`, `text.ts`, `account-limits.ts`, `icons.tsx` |
 
 ### Architecture
 
@@ -365,16 +365,16 @@ form layers, and `test/architecture.test.ts` fails when a dependency points the 
 | routes         | HTTP: `[*].tsx`, `api/[*].ts`, guards         | every layer except `browser`       |
 | `configure.ts` | connects the site's configuration to the core | every layer except `browser`       |
 | `render/`      | server-side JSX for pages, canvas and admin   | `content/`, `core/`, `shared/`     |
-| `content/`     | blocks, fields, pages and revisions           | `core/`, `shared/`                 |
+| `content/`     | pages, revisions, configuration checks        | `core/`, `shared/`                 |
 | `media/`       | uploaded files and folders                    | `core/`, `shared/`                 |
 | `auth/`        | users, sessions and login limits              | `core/`, `shared/`                 |
 | `core/`        | database, HTTP helpers, configuration         | `shared/`                          |
-| `browser/`     | the admin's browser apps, one folder per app  | its own code, browser-safe modules |
-| `shared/`      | modules without server or browser code, e.g. the shared icons | only itself        |
+| `browser/`     | the admin's browser apps, one folder per app  | `shared/`                          |
+| `shared/`      | everything server and browser both use: blocks, fields, rich text, icons | only itself, no Node.js or packages |
 
 Browser code reaches the server only through the JSON APIs; it may import types from
-every layer, but runtime code only from the modules listed as `BROWSER_SAFE` in the test.
-Modules in `shared/` are usable by server and browser code alike.
+every layer, but runtime code only from `shared/`. Whatever both sides need lives there,
+so a module is usable in the browser exactly when it is in `shared/`.
 
 The editor canvas is rendered on the server, so the editor shows a page with exactly the
 components the site uses.
@@ -385,7 +385,7 @@ These rules keep a larger Jeasx application predictable:
 
 - **Share state explicitly.** Jeasx bundles every route on its own, so each route gets its own
   copy of a module and its variables. State that all routes must see, such as a cache or a
-  counter, belongs in `shared()` from `core/shared.ts`. The architecture test rejects a
+  counter, belongs in `shared()` from `shared/global.ts`. The architecture test rejects a
   module-level `Map` or `let` in server code.
 - **Keep routes thin.** A route reads the request, calls a module and answers. Rules and SQL
   live in the layers below, where tests can reach them without HTTP.

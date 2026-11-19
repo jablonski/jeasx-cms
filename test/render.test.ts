@@ -1,11 +1,11 @@
 import "./setup";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/auth/limits";
+import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/shared/account-limits";
 import { ROLE_LABELS } from "@cms/browser/user-admin/user-roles";
 import { toHtml } from "@cms/browser/utils/to-html";
 import { cacheBuster } from "@cms/core/cache-buster";
-import { shared } from "@cms/core/shared";
+import { shared } from "@cms/shared/global";
 import { dbPath, filesDir } from "@cms/core/storage";
 import RenderBlocks from "@cms/render/render-blocks";
 import { renderCanvas } from "@cms/render/render-canvas";

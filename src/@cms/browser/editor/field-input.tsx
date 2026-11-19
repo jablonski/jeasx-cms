@@ -1,7 +1,7 @@
-import type { Field, ListField } from "@cms/content/fields";
+import type { Field, ListField } from "@cms/shared/fields";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/shared/icons";
-import { plural } from "@cms/core/text";
-import RichText from "@cms/render/rich-text";
+import { plural } from "@cms/shared/text";
+import RichText from "@cms/shared/rich-text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
 interface FieldProps<F extends Field = Field> {
@@ -10,7 +10,7 @@ interface FieldProps<F extends Field = Field> {
   value: unknown;
 }
 
-/** Renders an editor control for a field definition (see src/@cms/content/fields.ts). */
+/** Renders an editor control for a field definition (see src/@cms/shared/fields.ts). */
 export default function FieldInput({ path, field, value }: FieldProps) {
   switch (field.type) {
     case "boolean":

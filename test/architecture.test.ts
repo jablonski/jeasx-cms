@@ -6,7 +6,11 @@ import { test } from "node:test";
 
 const CORE = "src/@cms";
 
-/** The layers each layer may use at runtime (imports of types are always fine). `shared` holds modules without server or browser dependencies: every layer may use it. */
+/**
+ * The layers each layer may use at runtime (imports of types are always fine).
+ * `shared` holds everything used by both server and browser code: only from there may
+ * browser code take runtime code, and it depends on nothing but itself.
+ */
 const ALLOWED_LAYERS: Record<string, string[]> = {
   core: ["core", "shared"],
   content: ["content", "core", "shared"],
@@ -16,20 +20,6 @@ const ALLOWED_LAYERS: Record<string, string[]> = {
   browser: ["browser", "shared"],
   shared: ["shared"],
 };
-
-/** Modules free of Node.js code, which the admin's browser code may use. */
-const BROWSER_SAFE = new Set([
-  "auth/limits",
-  "content/block-data",
-  "content/block-tree",
-  "content/blocks",
-  "content/fields",
-  "content/slug",
-  "core/shared",
-  "core/text",
-  "media/file-url",
-  "render/rich-text",
-]);
 
 const sources = readdirSync(CORE, { recursive: true, encoding: "utf8" })
   .filter((file) => /\.tsx?$/.test(file) && !file.endsWith(".d.ts"))
@@ -43,7 +33,6 @@ function runtimeImports(code: string): string[] {
     .map(([, , , specifier]) => specifier);
 }
 
-const moduleName = (file: string) => file.replace(/\.tsx?$/, "");
 const coreModule = (specifier: string) => specifier.replace(/^@cms\//, "");
 
 test("the core only imports the core, never site code", () => {
@@ -65,14 +54,12 @@ test("layers only depend on the layers below them", () => {
     return runtimeImports(code)
       .filter((specifier) => specifier.startsWith("@cms/"))
       .map(coreModule)
-      .filter((target) => !allowed.includes(target.split("/")[0]) && !isBrowserSafe(layer, target))
+      .filter((target) => !allowed.includes(target.split("/")[0]))
       .map((target) => `${file} imports ${target}`);
   });
   assert.deepEqual(violations, []);
 });
 
-const isBrowserSafe = (layer: string, target: string) =>
-  layer === "browser" && BROWSER_SAFE.has(target);
 
 test("server code never imports browser code at runtime", () => {
   const violations = sources
@@ -91,16 +78,16 @@ test("state of server modules is shared between the route bundles", () => {
     .filter(({ code }) =>
       /^(?:export\s+)?(?:let\s|const\s+\w+[^=\n]*=\s*new (?:Weak)?Map\b)/m.test(code),
     )
-    .map(({ file }) => `${file} keeps state per route bundle: use shared() from core/shared`);
+    .map(({ file }) => `${file} keeps state per route bundle: use shared() from shared/global`);
   assert.deepEqual(violations, []);
 });
 
-test("browser-safe modules stay free of server code", () => {
+test("shared modules use neither Node.js nor packages", () => {
   const violations = sources
-    .filter(({ file }) => BROWSER_SAFE.has(moduleName(file)))
+    .filter(({ file }) => file.split("/")[0] === "shared")
     .flatMap(({ file, code }) =>
       runtimeImports(code)
-        .filter((specifier) => !BROWSER_SAFE.has(coreModule(specifier)))
+        .filter((specifier) => !specifier.startsWith("@cms/shared/"))
         .map((specifier) => `${file} imports ${specifier}`),
     );
   assert.deepEqual(violations, []);
