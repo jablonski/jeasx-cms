@@ -57,9 +57,17 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
       // Blurred by a press on another control (e.g. the block's "edit" button):
       // re-rendering now would replace that button before its click fires.
       // Wait until the click is through (fallback, if released outside the canvas).
-      const render = () => editor.updatePreview();
+      // Only the first of the two renders runs.
+      let done = false;
+      const render = () => {
+        if (!done) {
+          done = true;
+          clearTimeout(fallback);
+          editor.updatePreview();
+        }
+      };
+      const fallback = setTimeout(render, 1000);
       doc.addEventListener("pointerup", () => setTimeout(render), { once: true });
-      setTimeout(render, 1000);
     } else {
       editor.updatePreview();
     }
