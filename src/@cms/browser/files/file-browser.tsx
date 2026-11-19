@@ -10,8 +10,27 @@ import type { Folder, FolderSummary } from "@cms/media/folders";
 export function Breadcrumb({ path }: { path: Folder[] }) {
   return (
     <nav class="file-breadcrumb" aria-label="Folder">
-      <button type="button" data-open-folder="" data-drop-folder="">
-        Files
+      <button
+        type="button"
+        data-open-folder=""
+        data-drop-folder=""
+        title="All files"
+        aria-label="All files"
+      >
+        <svg
+          class="crumb-home"
+          aria-hidden="true"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.25"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M1.5 7.5 8 2l6.5 5.5" />
+          <path d="M3.5 6.8V14h9V6.8" />
+          <path d="M6.5 14V9.5h3V14" />
+        </svg>
       </button>
       {path.map((f, i) => (
         <>

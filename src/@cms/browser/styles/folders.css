@@ -11,29 +11,48 @@
   & strong {
     height: 1.9rem;
     padding: 0 0.6rem;
-    border: 1px solid transparent;
+    border: none;
     border-radius: var(--radius-sm);
     background: transparent;
     box-shadow: none;
     color: var(--text-2);
-    font-weight: 500;
+    font-weight: 450;
   }
 
   & strong {
     display: inline-flex;
     align-items: center;
     color: var(--text);
-    font-weight: 650;
+    font-weight: 600;
   }
 
   & button:hover:not([disabled]) {
     background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--border);
     color: var(--text);
   }
 
+  /* align the first crumb's text with the page heading:
+     cancel the padding, so the pill extends left instead of the text shifting right */
+  & > button:first-child,
+  & > strong:first-child {
+    margin-left: -0.6rem;
+  }
+
+  /* home glyph as the root crumb */
+  & .crumb-home {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  & > button:first-child:hover .crumb-home {
+    transform: translateY(-1px);
+  }
+
   & .drop-target {
-    border-color: var(--accent);
     background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--accent);
     color: var(--accent);
   }
 }
