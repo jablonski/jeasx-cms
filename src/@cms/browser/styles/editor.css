@@ -74,6 +74,8 @@
   }
 
   & .gear {
+    display: inline-flex;
+    flex-shrink: 0; /* long titles and paths shrink, the icon keeps its size */
     color: var(--text-3);
   }
 }
