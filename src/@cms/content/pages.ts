@@ -4,6 +4,7 @@ import { type Block, PAGE_TYPES } from "@cms/content/blocks";
 import { defaults, sanitize, type ValidationError } from "@cms/content/fields";
 import { type PageInput, type PageValues, validatePage } from "@cms/content/page-validation";
 import { keepRevision } from "@cms/content/revisions";
+import { normalizeSlug } from "@cms/content/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
 import { parseId } from "@cms/core/id";
 
@@ -200,4 +201,30 @@ function updatePage(id: number, { type, slug, title, status, meta, blocks }: Pag
 
 export function deletePage(id: number | null): boolean {
   return execute("DELETE FROM pages WHERE id = ?", id) > 0;
+}
+
+/** A draft copy: "… (copy)" title, own unique path, never published. Returns the new id. */
+export function duplicatePage(id: number | null): number | undefined {
+  const page = getPage(id);
+  if (!page) {
+    return undefined;
+  }
+  const title = `${page.title || "Untitled page"} (copy)`;
+  const taken = new Set(
+    queryAll<{ slug: string }>("SELECT slug FROM pages").map((r) => r.slug),
+  );
+  const base = normalizeSlug(title);
+  let slug = base;
+  for (let n = 2; taken.has(slug); n++) {
+    slug = `${base}-${n}`;
+  }
+  const { page: copy, errors } = savePage({
+    type: page.type,
+    title,
+    slug,
+    status: "draft",
+    meta: page.meta,
+    blocks: page.blocks,
+  });
+  return copy?.id ?? (errors && console.error(errors), undefined);
 }

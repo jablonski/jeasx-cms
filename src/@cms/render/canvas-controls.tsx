@@ -8,7 +8,7 @@ import {
   PencilIcon,
   PlusIcon,
   TrashIcon,
-} from "@cms/browser/shared/icons";
+} from "@cms/shared/icons";
 
 /** Position of a block in its list, as attributes for the controls acting on it. */
 export type BlockAt = { "data-path": string; "data-index": number };

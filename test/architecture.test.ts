@@ -6,14 +6,15 @@ import { test } from "node:test";
 
 const CORE = "src/@cms";
 
-/** The layers each layer may use at runtime (imports of types are always fine). */
+/** The layers each layer may use at runtime (imports of types are always fine). `shared` holds modules without server or browser dependencies: every layer may use it. */
 const ALLOWED_LAYERS: Record<string, string[]> = {
-  core: ["core"],
-  content: ["content", "core"],
-  auth: ["auth", "core"],
-  media: ["media", "core"],
-  render: ["render", "content", "core"],
-  browser: ["browser"],
+  core: ["core", "shared"],
+  content: ["content", "core", "shared"],
+  auth: ["auth", "core", "shared"],
+  media: ["media", "core", "shared"],
+  render: ["render", "content", "core", "shared"],
+  browser: ["browser", "shared"],
+  shared: ["shared"],
 };
 
 /** Modules free of Node.js code, which the admin's browser code may use. */

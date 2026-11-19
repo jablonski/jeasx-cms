@@ -7,7 +7,7 @@ the rendered page.
 - **Edit on the page.** The editor shows the real site, rendered on the server with your own components.
 - **Blocks in plain JSX.** One file per block; fields, validation, editor dialog and inline editing follow from its definition.
 - **No extra services.** One SQLite file and a folder of uploads. No database server, no build pipeline beyond Jeasx.
-- **Batteries included.** Revisions, drafts, a file library, users with roles and a complete demo site.
+- **Batteries included.** Revisions, drafts, page duplication, a file library, users with roles and a complete demo site.
 
 ## Screenshots
 
@@ -131,6 +131,12 @@ pages and files and can only change their own password.
 An empty database starts with the user `admin`. Its password is `CMS_ADMIN_PASSWORD` if set,
 `admin` under `npm run dev`, and otherwise a random password written once to the server log.
 **Change this password right after the first sign-in.**
+
+## Pages
+
+The **Pages** overview lists every page with path, type and status. **Duplicate** copies a page
+in one click: the copy gets the title `… (copy)`, its own path, and always starts as a draft
+(even when duplicating a published page), opened in the editor ready to review and publish.
 
 ## File library
 
@@ -341,6 +347,7 @@ Page fields are available as `page.meta` in the core and shown in the editor's p
 | Editor canvas                                 | `render/render-canvas.tsx`, `render/canvas-controls.tsx`                                               |
 | Admin pages, login, JSON APIs                 | `[*].tsx`, `api/[*].ts`                                                                                |
 | Admin in the browser                          | `browser/editor/`, `browser/file-library/`, `browser/user-admin/`, `browser/files/`, `browser/shared/` |
+| Icons and other modules shared by admin and canvas | `shared/icons.tsx`                                                                                |
 
 ### Architecture
 
@@ -351,15 +358,17 @@ form layers, and `test/architecture.test.ts` fails when a dependency points the 
 | -------------- | --------------------------------------------- | ---------------------------------- |
 | routes         | HTTP: `[*].tsx`, `api/[*].ts`, guards         | every layer except `browser`       |
 | `configure.ts` | connects the site's configuration to the core | every layer except `browser`       |
-| `render/`      | server-side JSX for pages, canvas and admin   | `content/`, `core/`                |
-| `content/`     | blocks, fields, pages and revisions           | `core/`                            |
-| `media/`       | uploaded files and folders                    | `core/`                            |
-| `auth/`        | users, sessions and login limits              | `core/`                            |
-| `core/`        | database, HTTP helpers, configuration         | nothing above it                   |
+| `render/`      | server-side JSX for pages, canvas and admin   | `content/`, `core/`, `shared/`     |
+| `content/`     | blocks, fields, pages and revisions           | `core/`, `shared/`                 |
+| `media/`       | uploaded files and folders                    | `core/`, `shared/`                 |
+| `auth/`        | users, sessions and login limits              | `core/`, `shared/`                 |
+| `core/`        | database, HTTP helpers, configuration         | `shared/`                          |
 | `browser/`     | the admin's browser apps, one folder per app  | its own code, browser-safe modules |
+| `shared/`      | modules without server or browser code, e.g. the shared icons | only itself        |
 
 Browser code reaches the server only through the JSON APIs; it may import types from
 every layer, but runtime code only from the modules listed as `BROWSER_SAFE` in the test.
+Modules in `shared/` are usable by server and browser code alike.
 
 The editor canvas is rendered on the server, so the editor shows a page with exactly the
 components the site uses.

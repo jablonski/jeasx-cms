@@ -36,17 +36,19 @@ export interface EditorData {
   schema: Schema;
   /** the site's stylesheets (for the canvas) */
   stylesheets: string[];
+  /** one-time status, e.g. shown after duplicating a page */
+  notice?: string;
 }
 
 /** Starts the visual editor in `root`. */
-export function startEditor(root: HTMLElement, { page, schema, stylesheets }: EditorData) {
+export function startEditor(root: HTMLElement, { page, schema, stylesheets, notice }: EditorData) {
   registerBlocks(schema);
   const state: EditorState = {
     page,
     dirty: false,
     busy: false,
     errors: [],
-    message: "",
+    message: notice ?? "",
     selected: null,
   };
 

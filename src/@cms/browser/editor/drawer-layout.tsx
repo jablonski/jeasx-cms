@@ -1,5 +1,5 @@
 /** Header, scrolling body and footer shared by the editor's side dialogs. */
-import { XIcon } from "@cms/browser/shared/icons";
+import { XIcon } from "@cms/shared/icons";
 export default function DrawerLayout({
   icon,
   title,

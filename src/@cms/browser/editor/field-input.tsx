@@ -1,5 +1,5 @@
 import type { Field, ListField } from "@cms/content/fields";
-import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/browser/shared/icons";
+import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/shared/icons";
 import { plural } from "@cms/core/text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */

@@ -1,5 +1,5 @@
 /** The folder browser, shared by the library page and the picker dialog. */
-import { XIcon } from "@cms/browser/shared/icons";
+import { XIcon } from "@cms/shared/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";

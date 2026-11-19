@@ -1,5 +1,5 @@
 import { openModal } from "@cms/browser/shared/dialog";
-import { XIcon } from "@cms/browser/shared/icons";
+import { XIcon } from "@cms/shared/icons";
 import { BLOCKS } from "@cms/content/blocks";
 
 /** Grid of block types to insert. */

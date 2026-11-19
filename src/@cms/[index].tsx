@@ -1,8 +1,31 @@
 import { PAGE_TYPES } from "@cms/content/blocks";
-import { listPages } from "@cms/content/pages";
+import { duplicatePage, getPage, listPages } from "@cms/content/pages";
+import { parseId } from "@cms/core/id";
+import { isCrossSite } from "@cms/auth/sessions";
+import { CopyIcon, PencilIcon } from "@cms/shared/icons";
 import Layout from "@cms/render/admin-layout";
+import type { RouteProps, ThisContext } from "@cms/core/types";
 
-export default function () {
+/** Page list; POST duplicates a page and opens the copy in the editor. */
+export default function (this: ThisContext, { request, reply }: RouteProps) {
+  const cmsPath = this.cmsPath!;
+  if (request.method === "POST") {
+    if (isCrossSite(request)) {
+      return reply.status(403).send("Forbidden");
+    }
+    const form = new URLSearchParams(typeof request.body === "string" ? request.body : "");
+    const sourceId = parseId(form.get("duplicate"));
+    const source = getPage(sourceId);
+    const copy = source && duplicatePage(sourceId);
+    if (!copy) {
+      return reply.redirect(`${cmsPath}/`, 303);
+    }
+    const notice = encodeURIComponent(
+      `Duplicated from “${source.title || "Untitled page"}”. The copy is a draft — review and publish it when it is ready.`,
+    );
+    // absolute: an HTTP Location header ignores the page's <base> tag
+    return reply.redirect(`${cmsPath}/edit?id=${copy}&notice=${notice}`, 303);
+  }
   const pages = listPages();
   return (
     <Layout title="Pages">
@@ -50,9 +73,26 @@ export default function () {
                   <time data-local-time>{p.updatedAt}</time>
                 </td>
                 <td class="page-actions">
-                  <a class="button" href={`edit?id=${p.id}`} aria-label={`Edit ${p.title}`}>
-                    Edit
+                  <a
+                    class="button icon"
+                    href={`edit?id=${p.id}`}
+                    aria-label={`Edit ${p.title}`}
+                    title={`Edit ${p.title}`}
+                  >
+                    <PencilIcon />
                   </a>
+                  <form method="post" class="inline-form">
+                    <button
+                      type="submit"
+                      name="duplicate"
+                      value={p.id}
+                      class="icon"
+                      aria-label={`Duplicate ${p.title}`}
+                      title={`Duplicate ${p.title}`}
+                    >
+                      <CopyIcon />
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}

@@ -59,8 +59,15 @@ table.pages {
   }
 
   & .page-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
     padding-block: 0.5rem;
-    width: 1%;
-    text-align: right;
+    white-space: nowrap; /* let the cell claim its width instead of overflowing left */
+
+    & form {
+      display: flex; /* keep the submit button from stacking below the Edit link */
+    }
   }
 }

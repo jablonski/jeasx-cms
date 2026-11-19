@@ -31,6 +31,17 @@ button,
     transform: translateY(1px);
   }
 
+  /* square icon-only variant (tooltip + aria-label supply the name) */
+  &.icon {
+    width: 2.125rem;
+    padding: 0;
+
+    & svg {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+  }
+
   &[disabled] {
     opacity: 0.4;
     cursor: not-allowed;
