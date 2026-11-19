@@ -7,7 +7,7 @@
     "dev": "jeasx dev",
     "clean": "jeasx clean",
     "tscheck": "tsc -p . --noEmit",
-    "test": "rm -rf .build && npm run -s bundle -- test/*.test.ts && node --test .build/*.test.js",
+    "test": "npm run -s bundle -- test/*.test.ts && node --test .build/*.test.js",
     "seed": "npm run -s bundle -- seed/seed.ts && node .build/seed.js",
     "bundle": "esbuild --bundle --alias:@cms=./src/@cms --platform=node --format=esm --packages=external --log-level=warning --outdir=.build"
   },
