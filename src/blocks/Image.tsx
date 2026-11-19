@@ -1,4 +1,4 @@
-import { defineBlock } from "@cms/shared/blocks";
+import { defineBlock } from "@cms/universal/blocks";
 import OptionalText from "./OptionalText";
 
 export default defineBlock({

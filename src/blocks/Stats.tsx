@@ -1,4 +1,4 @@
-import { defineBlock } from "@cms/shared/blocks";
+import { defineBlock } from "@cms/universal/blocks";
 import Heading from "./Heading";
 
 export default defineBlock({

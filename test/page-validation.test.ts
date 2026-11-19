@@ -1,7 +1,7 @@
 import "./setup";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { PageType } from "@cms/shared/blocks";
+import type { PageType } from "@cms/universal/blocks";
 import { savePage } from "@cms/content/pages";
 import { validatePage } from "@cms/content/page-validation";
 

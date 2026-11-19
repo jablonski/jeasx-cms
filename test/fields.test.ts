@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { validateBlocks } from "@cms/content/config-validation";
-import { type Fields, isSafeUrl, sanitize } from "@cms/shared/fields";
-import { normalizeSlug } from "@cms/shared/slug";
+import { type Fields, isSafeUrl, sanitize } from "@cms/universal/fields";
+import { normalizeSlug } from "@cms/universal/slug";
 
 test("page types can't have blocks fields, which could not be stored", () => {
   const block = { type: "text", label: "Text", fields: {}, Component: () => null };

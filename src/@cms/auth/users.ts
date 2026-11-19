@@ -1,12 +1,12 @@
 /** User accounts of the admin (server only, table "users"). */
 
 import { randomBytes } from "node:crypto";
-import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/shared/account-limits";
+import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/universal/account-limits";
 import { limitedAttempt } from "@cms/auth/login-limit";
 import { hashPassword, hashPasswordSync, matchesHash } from "@cms/auth/passwords";
 import { execute, insert, queryAll, queryOne } from "@cms/core/db";
 import { type Result, resultOf } from "@cms/core/result";
-import { shared } from "@cms/shared/global";
+import { shared } from "@cms/universal/global";
 
 const ROLES = ["admin", "editor"] as const;
 export type Role = (typeof ROLES)[number];

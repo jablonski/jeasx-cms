@@ -5,7 +5,7 @@
  * for typed characters, so they never turn into formatting).
  * Everything is rendered as JSX, so it is escaped by jsx-async-runtime.
  */
-import { isSafeUrl } from "@cms/shared/fields";
+import { isSafeUrl } from "@cms/universal/fields";
 
 /**
  * Without extra props, renders the paragraphs only. Extra props (inline editing

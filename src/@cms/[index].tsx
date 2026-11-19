@@ -1,8 +1,8 @@
-import { PAGE_TYPES } from "@cms/shared/blocks";
+import { PAGE_TYPES } from "@cms/universal/blocks";
 import { duplicatePage, listPages } from "@cms/content/pages";
 import { parseId } from "@cms/core/id";
 import { isCrossSite } from "@cms/auth/sessions";
-import { CopyIcon, PencilIcon } from "@cms/shared/icons";
+import { CopyIcon, PencilIcon } from "@cms/universal/icons";
 import Layout from "@cms/render/admin-layout";
 import type { RouteProps, ThisContext } from "@cms/core/types";
 

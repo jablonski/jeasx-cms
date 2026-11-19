@@ -1,9 +1,9 @@
 /** Checks untrusted page data from the editor before it is stored (server only). */
-import { sanitizeBlocks } from "@cms/shared/block-data";
-import type { PageType } from "@cms/shared/blocks";
-import { sanitize, type ValidationError } from "@cms/shared/fields";
+import { sanitizeBlocks } from "@cms/universal/block-data";
+import type { PageType } from "@cms/universal/blocks";
+import { sanitize, type ValidationError } from "@cms/universal/fields";
 import type { Page } from "@cms/content/pages";
-import { normalizeSlug } from "@cms/shared/slug";
+import { normalizeSlug } from "@cms/universal/slug";
 import { queryOne } from "@cms/core/db";
 
 /** Untrusted page data from the editor. */

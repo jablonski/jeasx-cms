@@ -1,7 +1,7 @@
 import DrawerLayout, { CancelAndDone } from "@cms/browser/editor/drawer-layout";
-import { SlidersIcon } from "@cms/shared/icons";
+import { SlidersIcon } from "@cms/universal/icons";
 import FieldInput from "@cms/browser/editor/field-input";
-import { PAGE_TYPES } from "@cms/shared/blocks";
+import { PAGE_TYPES } from "@cms/universal/blocks";
 import type { Page } from "@cms/content/pages";
 
 /** Side dialog with the title, the path and the page type's meta fields. */

@@ -1,5 +1,5 @@
 /** Database queries of this site's own templates and blocks (server only). */
-import type { FieldValues } from "@cms/shared/blocks";
+import type { FieldValues } from "@cms/universal/blocks";
 import { queryAll } from "@cms/core/db";
 import type config from "./cms.config";
 

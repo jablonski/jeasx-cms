@@ -10,10 +10,10 @@ import { chooseFiles } from "@cms/browser/files/file-api";
 import { pickFile } from "@cms/browser/files/file-picker";
 import { alertDialog, confirmDialog } from "@cms/browser/utils/dialog";
 import { request } from "@cms/browser/utils/http";
-import { createBlock } from "@cms/shared/block-data";
-import { innerLevels, isContainer } from "@cms/shared/block-tree";
-import { BLOCKS } from "@cms/shared/blocks";
-import { defaults } from "@cms/shared/fields";
+import { createBlock } from "@cms/universal/block-data";
+import { innerLevels, isContainer } from "@cms/universal/block-tree";
+import { BLOCKS } from "@cms/universal/blocks";
+import { defaults } from "@cms/universal/fields";
 
 /** The clicked element's data attributes (data-path, data-index, …). */
 export type ActionData = Record<string, string>;

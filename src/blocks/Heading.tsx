@@ -1,4 +1,4 @@
-import type { FieldHelper } from "@cms/shared/blocks";
+import type { FieldHelper } from "@cms/universal/blocks";
 import OptionalText from "./OptionalText";
 
 /** Optional block heading: hidden on the site while empty, always editable in the editor. */

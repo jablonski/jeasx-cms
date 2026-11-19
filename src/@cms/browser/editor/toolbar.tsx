@@ -1,6 +1,6 @@
 import type { EditorState } from "@cms/browser/editor/state";
-import { SlidersIcon } from "@cms/shared/icons";
-import { plural } from "@cms/shared/text";
+import { SlidersIcon } from "@cms/universal/icons";
+import { plural } from "@cms/universal/text";
 
 /** Top bar of the editor: page title (opens settings), status, save/publish. */
 export default function Toolbar({ state }: { state: EditorState }) {

@@ -1,5 +1,5 @@
 /** The editor's controls around the blocks on the canvas (rendered on the server). */
-import type { Block } from "@cms/shared/blocks";
+import type { Block } from "@cms/universal/blocks";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -8,7 +8,7 @@ import {
   PencilIcon,
   PlusIcon,
   TrashIcon,
-} from "@cms/shared/icons";
+} from "@cms/universal/icons";
 
 /** Position of a block in its list, as attributes for the controls acting on it. */
 export type BlockAt = { "data-path": string; "data-index": number };

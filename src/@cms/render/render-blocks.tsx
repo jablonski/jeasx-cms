@@ -1,5 +1,5 @@
-import { normalizeBlocks } from "@cms/shared/block-data";
-import { BLOCKS, type Block } from "@cms/shared/blocks";
+import { normalizeBlocks } from "@cms/universal/block-data";
+import { BLOCKS, type Block } from "@cms/universal/blocks";
 
 /** Field helper for the public site: no inline editing attributes. */
 const NO_FIELD = Object.assign(() => ({}), { editing: false });

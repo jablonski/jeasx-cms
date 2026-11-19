@@ -5,8 +5,8 @@
  * icons) as JSON via `blockSchema()` and registers those; block components only ever run
  * on the server. Keep this file free of Node.js imports.
  */
-import type { Field, Fields } from "@cms/shared/fields";
-import { shared } from "@cms/shared/global";
+import type { Field, Fields } from "@cms/universal/fields";
+import { shared } from "@cms/universal/global";
 
 export interface BlockDefinition {
   /** unique key stored in the database */

@@ -1,6 +1,6 @@
 /** Reading the structure of nested blocks. Keep this file free of Node.js imports. */
-import { BLOCKS, type Block } from "@cms/shared/blocks";
-import type { Fields } from "@cms/shared/fields";
+import { BLOCKS, type Block } from "@cms/universal/blocks";
+import type { Fields } from "@cms/universal/fields";
 
 /**
  * Safety limit for nested blocks (page level = 0). Nesting is defined by the content

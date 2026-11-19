@@ -1,7 +1,7 @@
-import { normalizeBlocks } from "@cms/shared/block-data";
-import { type BlockLists, indexBlockLists, isContainer } from "@cms/shared/block-tree";
-import { BLOCKS, type Block, type BlockDefinition } from "@cms/shared/blocks";
-import type { Field, Fields } from "@cms/shared/fields";
+import { normalizeBlocks } from "@cms/universal/block-data";
+import { type BlockLists, indexBlockLists, isContainer } from "@cms/universal/block-tree";
+import { BLOCKS, type Block, type BlockDefinition } from "@cms/universal/blocks";
+import type { Field, Fields } from "@cms/universal/fields";
 import { BlockBar, EmptyList, InsertButton, UnknownBlock } from "@cms/render/canvas-controls";
 import { jsxToString } from "jsx-async-runtime";
 

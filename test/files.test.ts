@@ -2,8 +2,8 @@ import "./setup";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { savePage } from "@cms/content/pages";
-import { truncate } from "@cms/shared/text";
-import { fileSlug } from "@cms/shared/file-url";
+import { truncate } from "@cms/universal/text";
+import { fileSlug } from "@cms/universal/file-url";
 import {
   browse,
   deleteFile,

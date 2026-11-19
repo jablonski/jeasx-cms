@@ -1,4 +1,4 @@
-import { defineBlock } from "@cms/shared/blocks";
+import { defineBlock } from "@cms/universal/blocks";
 
 export default defineBlock({
   type: "columns",

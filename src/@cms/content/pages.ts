@@ -1,10 +1,10 @@
 /** Page repository (server only). Input checks: page-validation.ts, history: revisions.ts. */
-import { createBlock, normalizeBlocks } from "@cms/shared/block-data";
-import { type Block, PAGE_TYPES } from "@cms/shared/blocks";
-import { defaults, sanitize, type ValidationError } from "@cms/shared/fields";
+import { createBlock, normalizeBlocks } from "@cms/universal/block-data";
+import { type Block, PAGE_TYPES } from "@cms/universal/blocks";
+import { defaults, sanitize, type ValidationError } from "@cms/universal/fields";
 import { type PageInput, type PageValues, validatePage } from "@cms/content/page-validation";
 import { keepRevision } from "@cms/content/revisions";
-import { normalizeSlug } from "@cms/shared/slug";
+import { normalizeSlug } from "@cms/universal/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
 import { parseId } from "@cms/core/id";
 

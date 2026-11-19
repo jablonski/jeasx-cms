@@ -2,10 +2,10 @@
  * Data paths into a page being edited, e.g. "blocks.0.data.columns.1.blocks.2.data.title"
  * or "meta.description". Pure functions without DOM access: the page is always passed in.
  */
-import { newId } from "@cms/shared/block-data";
-import { indexBlockLists, isBlock } from "@cms/shared/block-tree";
-import { BLOCKS, type Block, PAGE_TYPES } from "@cms/shared/blocks";
-import type { BlocksField, Field, Fields } from "@cms/shared/fields";
+import { newId } from "@cms/universal/block-data";
+import { indexBlockLists, isBlock } from "@cms/universal/block-tree";
+import { BLOCKS, type Block, PAGE_TYPES } from "@cms/universal/blocks";
+import type { BlocksField, Field, Fields } from "@cms/universal/fields";
 
 /** The parts of a page the editor works on. */
 export interface DraftPage {

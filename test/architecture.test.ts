@@ -8,17 +8,17 @@ const CORE = "src/@cms";
 
 /**
  * The layers each layer may use at runtime (imports of types are always fine).
- * `shared` holds everything used by both server and browser code: only from there may
+ * `universal` holds everything used by both server and browser code: only from there may
  * browser code take runtime code, and it depends on nothing but itself.
  */
 const ALLOWED_LAYERS: Record<string, string[]> = {
-  core: ["core", "shared"],
-  content: ["content", "core", "shared"],
-  auth: ["auth", "core", "shared"],
-  media: ["media", "core", "shared"],
-  render: ["render", "content", "core", "shared"],
-  browser: ["browser", "shared"],
-  shared: ["shared"],
+  core: ["core", "universal"],
+  content: ["content", "core", "universal"],
+  auth: ["auth", "core", "universal"],
+  media: ["media", "core", "universal"],
+  render: ["render", "content", "core", "universal"],
+  browser: ["browser", "universal"],
+  universal: ["universal"],
 };
 
 const sources = readdirSync(CORE, { recursive: true, encoding: "utf8" })
@@ -78,16 +78,16 @@ test("state of server modules is shared between the route bundles", () => {
     .filter(({ code }) =>
       /^(?:export\s+)?(?:let\s|const\s+\w+[^=\n]*=\s*new (?:Weak)?Map\b)/m.test(code),
     )
-    .map(({ file }) => `${file} keeps state per route bundle: use shared() from shared/global`);
+    .map(({ file }) => `${file} keeps state per route bundle: use shared() from universal/global`);
   assert.deepEqual(violations, []);
 });
 
-test("shared modules use neither Node.js nor packages", () => {
+test("universal modules use neither Node.js nor packages", () => {
   const violations = sources
-    .filter(({ file }) => file.split("/")[0] === "shared")
+    .filter(({ file }) => file.split("/")[0] === "universal")
     .flatMap(({ file, code }) =>
       runtimeImports(code)
-        .filter((specifier) => !specifier.startsWith("@cms/shared/"))
+        .filter((specifier) => !specifier.startsWith("@cms/universal/"))
         .map((specifier) => `${file} imports ${specifier}`),
     );
   assert.deepEqual(violations, []);

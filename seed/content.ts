@@ -1,7 +1,7 @@
 /** The demo website's pages. */
-import { newId } from "@cms/shared/block-data";
-import { BLOCKS } from "@cms/shared/blocks";
-import { defaults } from "@cms/shared/fields";
+import { newId } from "@cms/universal/block-data";
+import { BLOCKS } from "@cms/universal/blocks";
+import { defaults } from "@cms/universal/fields";
 import type { SeedAssets } from "./assets";
 
 /** Block with defaults for all fields not given. */

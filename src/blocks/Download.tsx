@@ -1,5 +1,5 @@
-import { defineBlock } from "@cms/shared/blocks";
-import { formatSize } from "@cms/shared/text";
+import { defineBlock } from "@cms/universal/blocks";
+import { formatSize } from "@cms/universal/text";
 import { getFileByUrl } from "@cms/media/files";
 import Heading from "./Heading";
 import OptionalText from "./OptionalText";

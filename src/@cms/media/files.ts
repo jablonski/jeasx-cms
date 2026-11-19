@@ -6,8 +6,8 @@ import { execute, insert, queryAll, queryOne } from "@cms/core/db";
 import { type Result, resultOf } from "@cms/core/result";
 import { SITE } from "@cms/core/site";
 import { filesDir } from "@cms/core/storage";
-import { truncate } from "@cms/shared/text";
-import { fileSlug, fileUrl, MAX_FILE_NAME } from "@cms/shared/file-url";
+import { truncate } from "@cms/universal/text";
+import { fileSlug, fileUrl, MAX_FILE_NAME } from "@cms/universal/file-url";
 import {
   cleanName,
   type Folder,

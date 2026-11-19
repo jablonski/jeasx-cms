@@ -8,8 +8,8 @@
  * the stored markdown by rich-text-markdown.ts.
  */
 import { toHtml } from "@cms/browser/utils/to-html";
-import { isSafeUrl } from "@cms/shared/fields";
-import { BoldIcon, ItalicIcon, LinkIcon, ListIcon, XIcon } from "@cms/shared/icons";
+import { isSafeUrl } from "@cms/universal/fields";
+import { BoldIcon, ItalicIcon, LinkIcon, ListIcon, XIcon } from "@cms/universal/icons";
 
 export interface RichTextToolbar {
   /** Shows the toolbar for the selection in `field` (the rich text being edited), or hides it. */

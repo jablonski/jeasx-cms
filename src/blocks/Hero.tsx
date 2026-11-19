@@ -1,5 +1,5 @@
-import { defineBlock } from "@cms/shared/blocks";
-import RichText from "@cms/shared/rich-text";
+import { defineBlock } from "@cms/universal/blocks";
+import RichText from "@cms/universal/rich-text";
 
 /**
  * A URL for use in CSS. URLs may be encoded already: their % signs must not be encoded a

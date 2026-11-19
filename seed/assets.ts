@@ -5,7 +5,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { filesDir } from "@cms/core/storage";
-import { fileUrl } from "@cms/shared/file-url";
+import { fileUrl } from "@cms/universal/file-url";
 import config from "../src/cms.config";
 import { type GradientOptions, gradientPng, pdf, zip } from "./formats";
 

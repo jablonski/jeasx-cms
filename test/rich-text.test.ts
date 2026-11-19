@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import RichText from "@cms/shared/rich-text";
+import RichText from "@cms/universal/rich-text";
 import { jsxToString } from "jsx-async-runtime";
 
 const render = (text: string) => jsxToString(RichText({ text }) as any);

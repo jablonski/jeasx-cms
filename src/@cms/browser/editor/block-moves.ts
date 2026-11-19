@@ -5,8 +5,8 @@ import {
   blocksAt,
   type DraftPage,
 } from "@cms/browser/editor/paths";
-import { innerLevels, listDepth, MAX_DEPTH } from "@cms/shared/block-tree";
-import type { Block } from "@cms/shared/blocks";
+import { innerLevels, listDepth, MAX_DEPTH } from "@cms/universal/block-tree";
+import type { Block } from "@cms/universal/blocks";
 
 /** A block being dragged: where it comes from, and the block itself. */
 export interface Drag extends BlockPosition {

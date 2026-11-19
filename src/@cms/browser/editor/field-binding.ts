@@ -2,7 +2,7 @@
 
 import { bindRichTextEditing, htmlToMarkdown } from "@cms/browser/editor/rich-text-editing";
 import type { Editor } from "@cms/browser/editor/state";
-import { normalizeSlug } from "@cms/shared/slug";
+import { normalizeSlug } from "@cms/universal/slug";
 
 /** The value of an input in the type its field stores. */
 function inputValue(input: HTMLInputElement) {
