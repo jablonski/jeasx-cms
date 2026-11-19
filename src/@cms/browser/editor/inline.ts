@@ -179,7 +179,16 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
       el.replaceChildren();
     }
     editor.inlineEl = null;
-    editor.updatePreview();
+    if (pointerDown) {
+      // Blurred by a press on another control (e.g. the block's "edit" button):
+      // re-rendering now would replace that button before its click fires.
+      // Wait until the click is through (fallback, if released outside the canvas).
+      const render = () => editor.updatePreview();
+      doc.addEventListener("pointerup", () => setTimeout(render), { once: true });
+      setTimeout(render, 1000);
+    } else {
+      editor.updatePreview();
+    }
   });
 
   doc.addEventListener(
