@@ -1,0 +1,102 @@
+.modal {
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px oklch(0% 0 0 / 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: 0;
+  width: min(28rem, calc(100vw - 2rem));
+  color: var(--text);
+
+  &[open] {
+    animation: dialog-in 0.18s var(--ease);
+  }
+
+  &::backdrop {
+    backdrop-filter: blur(4px);
+    animation: backdrop-in 0.18s ease;
+    background: oklch(15% 0.02 270 / 0.45);
+  }
+
+  & .modal-body {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+
+  & .modal-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    box-shadow: 0 0 0 6px color-mix(in oklch, var(--err) 6%, transparent);
+    border-radius: 50%;
+    background: var(--err-soft);
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--err);
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  & h2 {
+    margin: 0.35rem 0 0.4rem;
+    color: var(--text);
+    font-weight: 650;
+    font-size: 1.0625rem;
+    letter-spacing: -0.015em;
+    text-transform: none;
+  }
+
+  & .modal-message {
+    color: var(--text-2);
+    font-size: 0.875rem;
+    line-height: 1.55;
+
+    & p {
+      margin: 0 0 0.5rem;
+    }
+
+    & ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    & li + li {
+      margin-top: 0.25rem;
+    }
+
+    & code {
+      color: var(--text-3);
+    }
+  }
+
+  & .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+button.danger-solid {
+  box-shadow:
+    0 1px 2px oklch(0% 0 0 / 0.1),
+    inset 0 1px 0 oklch(100% 0 0 / 0.15);
+  border-color: transparent;
+  background: var(--err);
+  color: oklch(100% 0 0);
+
+  &:hover:not([disabled]) {
+    border-color: transparent;
+    background: color-mix(in oklch, var(--err) 88%, black);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}

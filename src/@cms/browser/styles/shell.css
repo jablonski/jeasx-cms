@@ -1,0 +1,167 @@
+body.admin {
+  min-height: 100dvh;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+h2 {
+  margin: 0 0 1rem;
+  color: var(--text-3);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  align-items: center;
+  gap: 2rem;
+  z-index: 20;
+  backdrop-filter: saturate(180%) blur(12px);
+  background: color-mix(in oklch, var(--surface) 85%, transparent);
+  padding: 0 1.25rem;
+  height: 3.5rem;
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+
+  & .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+
+    & svg {
+      display: block;
+      flex: none;
+    }
+  }
+
+  & nav {
+    display: flex;
+    flex: 1;
+    gap: 0.25rem;
+  }
+
+  & nav a {
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.75rem;
+    color: var(--text-2);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+  }
+}
+
+.login-page {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1rem;
+  min-height: 100dvh;
+}
+
+.login-card {
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: 2rem;
+  width: min(100%, 24rem);
+
+  & img {
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+
+  & h1 {
+    margin: 0 0 1.25rem;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+  }
+
+  & .errors {
+    margin: 0 0 1rem;
+  }
+
+  & form {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  & label {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  & input + label {
+    margin-top: 0.75rem;
+  }
+
+  & button {
+    justify-content: center;
+    margin-top: 1.25rem;
+    width: 100%;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  clip-path: inset(50%);
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.user-self {
+  color: var(--text-2);
+}
+
+.admin-main {
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  max-width: 72rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+
+  & select {
+    width: auto;
+  }
+}

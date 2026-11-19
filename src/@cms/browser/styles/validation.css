@@ -1,0 +1,41 @@
+.editor-errors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding: 0.6rem 1rem;
+
+  & ul {
+    display: contents;
+    list-style: none;
+  }
+}
+
+.error-link {
+  box-shadow: none;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--err) 12%, transparent);
+  padding: 0.15rem 0.5rem;
+  height: auto;
+  color: var(--err);
+  font-weight: 500;
+  text-align: left;
+  white-space: normal;
+
+  &:hover:not([disabled]) {
+    border-color: transparent;
+    background: color-mix(in oklch, var(--err) 22%, transparent);
+  }
+}
+
+.field.invalid {
+  & > label {
+    color: var(--err);
+  }
+
+  & :is(input, textarea, select) {
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--err) 18%, transparent);
+    border-color: var(--err);
+  }
+}

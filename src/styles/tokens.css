@@ -1,0 +1,69 @@
+/* Design tokens shared by site and admin. Light/dark follows the OS. */
+:root {
+  color-scheme: light dark;
+
+  --font-sans:
+    "Inter var", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  /* neutral (zinc) */
+  --bg: oklch(98.5% 0.002 270);
+  --surface: oklch(100% 0 0);
+  --surface-2: oklch(96.5% 0.004 270);
+  --surface-3: oklch(93% 0.006 270);
+  --border: oklch(91% 0.006 270);
+  --border-strong: oklch(84% 0.01 270);
+  --text: oklch(21% 0.02 270);
+  --text-2: oklch(45% 0.02 270);
+  --text-3: oklch(60% 0.015 270);
+
+  /* accent (indigo → violet) */
+  --accent: oklch(55% 0.22 275);
+  --accent-2: oklch(60% 0.24 305);
+  --accent-text: oklch(100% 0 0);
+  --accent-soft: color-mix(in oklch, var(--accent) 10%, var(--surface));
+  --accent-ring: color-mix(in oklch, var(--accent) 35%, transparent);
+  --gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
+
+  --ok: oklch(58% 0.15 155);
+  --ok-soft: color-mix(in oklch, var(--ok) 12%, var(--surface));
+  --warn: oklch(70% 0.16 70);
+  --err: oklch(58% 0.21 25);
+  --err-soft: color-mix(in oklch, var(--err) 10%, var(--surface));
+
+  --radius-sm: 0.5rem;
+  --radius: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.05);
+  --shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 4px 12px -2px oklch(0% 0 0 / 0.06);
+  --shadow-lg: 0 2px 4px oklch(0% 0 0 / 0.04), 0 16px 40px -8px oklch(0% 0 0 / 0.14);
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(16% 0.01 270);
+    --surface: oklch(20% 0.012 270);
+    --surface-2: oklch(23.5% 0.014 270);
+    --surface-3: oklch(28% 0.016 270);
+    --border: oklch(29% 0.014 270);
+    --border-strong: oklch(37% 0.016 270);
+    --text: oklch(96% 0.005 270);
+    --text-2: oklch(75% 0.012 270);
+    --text-3: oklch(60% 0.012 270);
+
+    --accent: oklch(68% 0.18 275);
+    --accent-2: oklch(70% 0.2 305);
+    --accent-text: oklch(15% 0.02 275);
+
+    --ok: oklch(74% 0.15 155);
+    --err: oklch(70% 0.18 25);
+
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+    --shadow: 0 1px 2px oklch(0% 0 0 / 0.3), 0 4px 12px -2px oklch(0% 0 0 / 0.35);
+    --shadow-lg: 0 2px 4px oklch(0% 0 0 / 0.3), 0 16px 40px -8px oklch(0% 0 0 / 0.55);
+  }
+}

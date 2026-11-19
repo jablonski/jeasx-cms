@@ -1,0 +1,16 @@
+/* Admin stylesheet. Import order is the cascade order: keep it. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./shell.css";
+@import "./controls.css";
+@import "./page-list.css";
+@import "./editor.css";
+@import "./fields.css";
+@import "./files.css";
+@import "./modal.css";
+@import "./drawer.css";
+@import "./picker.css";
+@import "./validation.css";
+@import "./folders.css";
+@import "./history.css";
+@import "./not-found.css";

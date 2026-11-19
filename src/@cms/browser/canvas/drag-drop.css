@@ -1,0 +1,67 @@
+.cms-grip {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: 15px;
+  cursor: grab;
+  opacity: 0.85;
+
+  &:hover {
+    background: oklch(100% 0 0 / 0.2);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.cms-dragging {
+  opacity: 0.35;
+}
+
+/* while dragging: no hover chrome, empty lists highlighted as targets */
+.cms-is-dragging {
+  & .cms-bar,
+  & .cms-insert {
+    display: none !important;
+  }
+
+  & .cms-block::after {
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & .cms-empty {
+    border-color: var(--cms-accent);
+  }
+}
+
+.cms-drop-before::before,
+.cms-drop-after::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  z-index: 40;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--cms-accent);
+  box-shadow: 0 0 0 4px var(--cms-accent-ring);
+  pointer-events: none;
+}
+
+.cms-drop-before::before {
+  top: -14px;
+}
+
+.cms-drop-after::before {
+  bottom: -14px;
+}
+
+.cms-empty.cms-drop-into {
+  border-style: solid;
+  background: var(--cms-accent-soft);
+  box-shadow: 0 0 0 4px var(--cms-accent-ring);
+}

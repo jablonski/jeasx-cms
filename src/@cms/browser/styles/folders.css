@@ -1,0 +1,235 @@
+.file-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin: -0.5rem 0 1.25rem;
+  color: var(--text-3);
+  font-size: 0.9375rem;
+
+  & button,
+  & strong {
+    height: 1.9rem;
+    padding: 0 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    box-shadow: none;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  & strong {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text);
+    font-weight: 650;
+  }
+
+  & button:hover:not([disabled]) {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+
+  & .drop-target {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+}
+
+.file-dialog .file-breadcrumb {
+  margin: 0 0 1rem;
+}
+
+/* folder icon drawn with CSS (no image assets) */
+.folder-icon {
+  position: relative;
+  display: inline-block;
+  width: 3.25rem;
+  height: 2.5rem;
+  border-radius: 0.35rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--accent) 55%, white),
+    color-mix(in oklch, var(--accent) 75%, white)
+  );
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.4);
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -0.35rem;
+    width: 45%;
+    height: 0.6rem;
+    border-radius: 0.3rem 0.3rem 0 0;
+    background: color-mix(in oklch, var(--accent) 45%, white);
+  }
+
+  &.small {
+    width: 1.1rem;
+    height: 0.85rem;
+    border-radius: 0.15rem;
+    vertical-align: -0.1rem;
+
+    &::before {
+      top: -0.15rem;
+      height: 0.25rem;
+      border-radius: 0.15rem 0.15rem 0 0;
+    }
+  }
+}
+
+.folder-thumb {
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  cursor: pointer;
+
+  &:hover .folder-icon {
+    transform: scale(1.06);
+  }
+
+  & .folder-icon {
+    transition: transform 0.2s var(--ease);
+  }
+}
+
+.file-item {
+  position: relative;
+
+  /* delete action in the top right corner of the card */
+  & .file-delete {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    padding: 0;
+    width: 1.625rem;
+    height: 1.625rem;
+    color: var(--text-2);
+    font-size: 0.8rem;
+    line-height: 1;
+
+    &:hover:not([disabled]) {
+      border-color: var(--err);
+      background: var(--err-soft);
+      color: var(--err);
+    }
+  }
+
+  &[draggable="true"] {
+    cursor: grab;
+  }
+
+  &.dragging {
+    opacity: 0.4;
+  }
+
+  &.drop-target {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-ring);
+    background: var(--accent-soft);
+  }
+
+  & .tools {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.25rem;
+  }
+
+  /* subtle outline, so the buttons' padding reads as part of the button */
+  & .tools button {
+    border-color: var(--border);
+    border-radius: var(--radius-sm);
+    height: 1.625rem;
+    padding: 0 0.5rem;
+    width: auto;
+    color: var(--text-2);
+    line-height: 1;
+  }
+}
+
+/* while moving inside the library, folders and crumbs hint that they accept drops */
+.is-moving .file-folder,
+.is-moving .file-breadcrumb button {
+  outline: 1px dashed var(--border-strong);
+  outline-offset: 2px;
+}
+
+/* text input in modal dialogs (new folder, rename) */
+.modal-field {
+  flex: 1;
+
+  & .field {
+    margin: 0.75rem 0 0;
+  }
+
+  & .field span {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+}
+
+/* folder tree in the "Move to…" dialog */
+.folder-dialog {
+  width: min(32rem, calc(100vw - 2rem));
+}
+
+.folder-tree {
+  display: flex;
+  flex-direction: column;
+  max-height: 50dvh;
+  margin-top: 0.75rem;
+  padding: 0.35rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.folder-option {
+  justify-content: flex-start;
+  gap: 0.5rem;
+  height: 2.1rem;
+  padding: 0 0.6rem 0 calc(0.6rem + var(--depth) * 1.25rem);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-weight: 500;
+
+  &:hover:not([disabled]) {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+
+  & small {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+}
+
+/* Save button with unsaved changes: same amber as the "Unsaved" dot */
+button.save.unsaved {
+  border-color: transparent;
+  background: var(--warn);
+  color: oklch(20% 0.04 70);
+  box-shadow:
+    0 0 0 3px color-mix(in oklch, var(--warn) 25%, transparent),
+    var(--shadow-sm);
+
+  &:hover:not([disabled]) {
+    background: color-mix(in oklch, var(--warn) 88%, black);
+    border-color: transparent;
+  }
+}

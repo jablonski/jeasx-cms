@@ -1,0 +1,203 @@
+/** Page repository (server only). Input checks: page-validation.ts, history: revisions.ts. */
+import { createBlock, normalizeBlocks } from "@cms/content/block-data";
+import { type Block, PAGE_TYPES } from "@cms/content/blocks";
+import { defaults, sanitize, type ValidationError } from "@cms/content/fields";
+import { type PageInput, type PageValues, validatePage } from "@cms/content/page-validation";
+import { keepRevision } from "@cms/content/revisions";
+import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
+import { parseId } from "@cms/core/id";
+
+/** What every page consists of, saved or not. */
+interface PageContent {
+  type: string;
+  slug: string;
+  title: string;
+  status: "draft" | "published";
+  meta: Record<string, unknown>;
+  blocks: Block[];
+}
+
+/** A page being created in the editor. */
+export interface NewPage extends PageContent {
+  id?: undefined;
+  updatedAt?: undefined;
+  version?: undefined;
+}
+
+export interface StoredPage extends PageContent {
+  id: number;
+  updatedAt: string;
+  /** counts the saves of a page, to detect changes made by someone else */
+  version: number;
+}
+
+export type Page = NewPage | StoredPage;
+
+/** What the list of pages shows. */
+export type PageSummary = Pick<
+  StoredPage,
+  "id" | "type" | "slug" | "title" | "status" | "updatedAt"
+>;
+
+/** A row of the table "pages". */
+interface PageRow {
+  id: number;
+  type: string;
+  slug: string;
+  title: string;
+  status: Page["status"];
+  meta: string;
+  blocks: string;
+  version: number;
+  created_at: string;
+  updated_at: string;
+}
+
+const toPage = (row: PageRow): StoredPage => ({
+  id: row.id,
+  type: row.type,
+  slug: row.slug,
+  title: row.title,
+  status: row.status,
+  meta: JSON.parse(row.meta),
+  blocks: JSON.parse(row.blocks),
+  updatedAt: row.updated_at,
+  version: row.version,
+});
+
+export function listPages(): PageSummary[] {
+  const rows = queryAll<Pick<PageRow, "id" | "type" | "slug" | "title" | "status" | "updated_at">>(
+    "SELECT id, type, slug, title, status, updated_at FROM pages ORDER BY slug",
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    type: r.type,
+    slug: r.slug,
+    title: r.title,
+    status: r.status,
+    updatedAt: r.updated_at,
+  }));
+}
+
+export function getPage(id: number | null): StoredPage | undefined {
+  const row = queryOne<PageRow>("SELECT * FROM pages WHERE id = ?", id);
+  return row && toPage(row);
+}
+
+export function getPublishedPage(slug: string): StoredPage | undefined {
+  const row = queryOne<PageRow>(
+    "SELECT * FROM pages WHERE slug = ? AND status = 'published'",
+    slug,
+  );
+  return row && toPage(row);
+}
+
+/** An empty page of a page type, as the editor starts it; undefined for unknown types. */
+export function newPage(typeName: string): NewPage | undefined {
+  const type = PAGE_TYPES[typeName];
+  return (
+    type && {
+      type: typeName,
+      slug: "",
+      title: "",
+      status: "draft",
+      meta: defaults(type.fields),
+      blocks: (type.initialBlocks ?? []).map(createBlock),
+    }
+  );
+}
+
+/**
+ * A stored page in the current shape of its fields, for the editor: fields added to a
+ * block or page type since it was saved exist, so lists can be added to right away.
+ */
+export function normalizePage(page: StoredPage): StoredPage {
+  const type = PAGE_TYPES[page.type];
+  return {
+    ...page,
+    meta: type ? sanitize(type.fields, page.meta).value : page.meta,
+    blocks: normalizeBlocks(page.blocks),
+  };
+}
+
+/** The stored page, or why it was not stored. */
+export type SaveOutcome =
+  | { page: StoredPage; errors?: undefined; conflict?: undefined }
+  | { page?: undefined; errors: ValidationError[]; conflict?: boolean };
+
+/**
+ * Validates and stores a page. Returns the stored page or validation errors.
+ * With `baseVersion`, a page saved by someone else since that version is not
+ * replaced: the result has `conflict: true`.
+ * @param data untrusted page data from the editor
+ */
+export function savePage(data: unknown): SaveOutcome {
+  const input = (data ?? {}) as PageInput;
+  const typeName = typeof input.type === "string" ? input.type : "";
+  const type = PAGE_TYPES[typeName];
+  if (!type) {
+    return { errors: [{ message: "Unknown page type" }] };
+  }
+  const id = parseId(input.id);
+  if (input.id && id === null) {
+    return { errors: [{ message: "Page not found" }] };
+  }
+
+  const { values, errors } = validatePage(input, typeName, type, id);
+  if (errors.length) {
+    return { errors };
+  }
+
+  if (id) {
+    const current = queryOne<{ version: number }>("SELECT version FROM pages WHERE id = ?", id);
+    if (!current) {
+      return { errors: [{ message: "Page not found" }] };
+    }
+    if (input.baseVersion != null && current.version !== Number(input.baseVersion)) {
+      return { conflict: true, errors: [{ message: "The page was changed by someone else" }] };
+    }
+  }
+  try {
+    const page = getPage(transaction(() => (id ? updatePage(id, values) : insertPage(values))));
+    if (page) {
+      return { page };
+    }
+  } catch (e) {
+    // Details stay in the server log: database messages are not meant for editors.
+    console.error(e);
+  }
+  return { errors: [{ message: "The page could not be saved" }] };
+}
+
+function insertPage({ type, slug, title, status, meta, blocks }: PageValues): number {
+  return insert(
+    "INSERT INTO pages (type, slug, title, status, meta, blocks) VALUES (?, ?, ?, ?, ?, ?)",
+    type,
+    slug,
+    title,
+    status,
+    meta,
+    blocks,
+  );
+}
+
+/** Replaces an existing page and keeps the replaced version as a revision. */
+function updatePage(id: number, { type, slug, title, status, meta, blocks }: PageValues): number {
+  keepRevision(id, getPage(id));
+  execute(
+    `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, meta = ?, blocks = ?,
+     version = version + 1, updated_at = datetime('now') WHERE id = ?`,
+    type,
+    slug,
+    title,
+    status,
+    meta,
+    blocks,
+    id,
+  );
+  return id;
+}
+
+export function deletePage(id: number | null): boolean {
+  return execute("DELETE FROM pages WHERE id = ?", id) > 0;
+}

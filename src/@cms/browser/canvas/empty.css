@@ -1,0 +1,38 @@
+.cms-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 5rem;
+  padding: 1rem;
+  border: 2px dashed color-mix(in oklch, var(--cms-accent) 35%, var(--cms-border));
+  border-radius: var(--cms-radius-lg);
+  background: color-mix(in oklch, var(--cms-accent) 4%, transparent);
+  color: var(--cms-accent);
+  font: 600 0.9375rem/1 var(--cms-font-sans);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+
+  & span {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--cms-accent);
+    color: var(--cms-accent-text);
+  }
+
+  &:hover {
+    border-color: var(--cms-accent);
+    background: var(--cms-accent-soft);
+  }
+}
+
+.cms-empty-page {
+  min-height: 16rem;
+  font-size: 1.0625rem;
+}

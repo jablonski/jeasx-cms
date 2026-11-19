@@ -1,0 +1,17 @@
+/*
+ * Overlay styles for the visual editor canvas (loaded only inside the editor iframe,
+ * on top of the site's stylesheets). Everything is scoped to .cms-visual / .cms-*
+ * classes and uses its own --cms-* tokens, so the overlay looks the same on any site.
+ */
+
+/* Import order is the cascade order: keep it. */
+@import "./tokens.css";
+@import "./page.css";
+@import "./block-frame.css";
+@import "./icon-bar.css";
+@import "./insert.css";
+@import "./empty.css";
+@import "./inline-editing.css";
+@import "./drag-drop.css";
+@import "./containers.css";
+@import "./states.css";

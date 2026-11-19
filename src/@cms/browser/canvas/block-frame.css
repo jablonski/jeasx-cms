@@ -1,0 +1,27 @@
+.cms-block {
+  position: relative;
+  cursor: pointer;
+
+  /* outline drawn slightly outside the block, doesn't affect layout */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    z-index: 5;
+    border: 2px solid transparent;
+    border-radius: calc(var(--cms-radius-lg) + 8px);
+    pointer-events: none;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+
+  &.cms-hover::after {
+    border-color: color-mix(in oklch, var(--cms-accent) 45%, transparent);
+  }
+
+  &.cms-selected::after {
+    border-color: var(--cms-accent);
+    box-shadow: 0 0 0 4px var(--cms-accent-ring);
+  }
+}

@@ -1,0 +1,58 @@
+/* When the icon bar shows, the frame's top-left corner is square so bar and border join flush. */
+.cms-hover::after,
+.cms-selected:not(:has(.cms-hover))::after {
+  border-top-left-radius: 0;
+}
+
+/* Keyboard: the bar and insert buttons also show while focus is inside the block (Tab). */
+.cms-block:focus-within:not(:has(.cms-block:focus-within)) > :is(.cms-bar) {
+  display: flex;
+}
+
+.cms-block:focus-within:not(:has(.cms-block:focus-within)) > .cms-insert {
+  display: grid;
+}
+
+.cms-block:focus {
+  outline: none;
+}
+
+.cms-block:focus-visible::after {
+  border-color: var(--cms-accent);
+  box-shadow: 0 0 0 4px var(--cms-accent-ring);
+}
+
+/* Invisible bridge between the toolbar and its block: keeps the pointer "inside"
+   the block while moving up to the toolbar (it belongs to the block's DOM). */
+.cms-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 14px;
+}
+
+/* blocks with validation errors */
+.cms-block.cms-error::after {
+  border: 2px solid var(--cms-err);
+  border-style: solid;
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--cms-err) 18%, transparent);
+}
+
+/* A block whose type no longer exists. */
+.cms-unknown > p {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--cms-err);
+  border-radius: var(--cms-radius);
+  background: var(--cms-surface);
+  color: var(--cms-text);
+  font-family: var(--cms-font-sans);
+}
+
+.cms-preview-error {
+  padding: 1rem;
+  color: #b42318;
+  font-family: var(--cms-font-sans);
+}

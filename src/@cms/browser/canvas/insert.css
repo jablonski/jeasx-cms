@@ -1,0 +1,49 @@
+.cms-insert {
+  position: absolute;
+  left: 50%;
+  z-index: 25;
+  display: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid var(--cms-surface);
+  border-radius: 50%;
+  background: var(--cms-accent);
+  color: var(--cms-accent-text);
+  font: 600 16px/1 var(--cms-font-sans);
+  box-shadow: 0 4px 12px -4px oklch(0% 0 0 / 0.4);
+  cursor: pointer;
+  transition: transform 0.15s var(--cms-ease);
+
+  &:hover {
+    transform: translateX(-50%) scale(1.15);
+  }
+}
+
+.cms-insert-before {
+  top: -8px;
+  transform: translate(-50%, -50%);
+
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+.cms-insert-after {
+  bottom: -8px;
+  transform: translate(-50%, 50%);
+
+  &:hover {
+    transform: translate(-50%, 50%) scale(1.15);
+  }
+}
+
+.cms-hover > .cms-insert,
+.cms-selected > .cms-insert {
+  display: grid;
+}
+
+.cms-selected:has(.cms-hover) > .cms-insert {
+  display: none;
+}

@@ -1,0 +1,30 @@
+:root {
+  --cms-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cms-accent: oklch(55% 0.22 275);
+  --cms-accent-text: oklch(100% 0 0);
+  --cms-accent-soft: color-mix(in oklch, var(--cms-accent) 12%, white);
+  --cms-accent-ring: color-mix(in oklch, var(--cms-accent) 35%, transparent);
+  --cms-err: oklch(58% 0.21 25);
+  --cms-text: oklch(21% 0.02 270);
+  --cms-text-3: oklch(60% 0.015 270);
+  --cms-surface: oklch(100% 0 0);
+  --cms-border: oklch(91% 0.006 270);
+  --cms-border-strong: oklch(78% 0.01 270);
+  --cms-radius: 0.875rem;
+  --cms-radius-lg: 1.25rem;
+  --cms-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cms-accent: oklch(68% 0.18 275);
+    --cms-accent-text: oklch(15% 0.02 275);
+    --cms-accent-soft: color-mix(in oklch, var(--cms-accent) 18%, black);
+    --cms-err: oklch(70% 0.18 25);
+    --cms-text: oklch(96% 0.005 270);
+    --cms-text-3: oklch(62% 0.012 270);
+    --cms-surface: oklch(20% 0.012 270);
+    --cms-border: oklch(29% 0.014 270);
+    --cms-border-strong: oklch(42% 0.016 270);
+  }
+}
