@@ -1,4 +1,4 @@
-.cms-block {
+[data-block-id] {
   position: relative;
   cursor: pointer;
 

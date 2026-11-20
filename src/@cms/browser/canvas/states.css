@@ -5,19 +5,19 @@
 }
 
 /* Keyboard: the bar and insert buttons also show while focus is inside the block (Tab). */
-.cms-block:focus-within:not(:has(.cms-block:focus-within)) > :is(.cms-bar) {
+[data-block-id]:focus-within:not(:has([data-block-id]:focus-within)) > :is(.cms-bar) {
   display: flex;
 }
 
-.cms-block:focus-within:not(:has(.cms-block:focus-within)) > .cms-insert {
+[data-block-id]:focus-within:not(:has([data-block-id]:focus-within)) > .cms-insert {
   display: grid;
 }
 
-.cms-block:focus {
+[data-block-id]:focus {
   outline: none;
 }
 
-.cms-block:focus-visible::after {
+[data-block-id]:focus-visible::after {
   border-color: var(--cms-accent);
   box-shadow: 0 0 0 4px var(--cms-accent-ring);
 }
@@ -34,7 +34,7 @@
 }
 
 /* blocks with validation errors */
-.cms-block.cms-error::after {
+[data-block-id].cms-error::after {
   border: 2px solid var(--cms-err);
   border-style: solid;
   box-shadow: 0 0 0 4px color-mix(in oklch, var(--cms-err) 18%, transparent);

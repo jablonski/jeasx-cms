@@ -1,3 +1,4 @@
+import { blockClass } from "@cms/core/site";
 import { BlockBar, EmptyList, InsertButton, UnknownBlock } from "@cms/render/canvas-controls";
 import { normalizeBlocks } from "@cms/universal/block-data";
 import { type BlockLists, indexBlockLists, isContainer } from "@cms/universal/block-tree";
@@ -69,7 +70,7 @@ function EditableBlocks(
     }
     return (
       <div
-        class={isContainer(block.type) ? "block cms-block cms-container" : "block cms-block"}
+        class={`${blockClass(block)}${isContainer(block.type) ? " cms-container" : ""}`}
         role="group"
         {...at}
         data-block-id={block.id}

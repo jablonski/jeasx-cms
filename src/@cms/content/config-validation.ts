@@ -216,6 +216,13 @@ export function validateSite(config: unknown): string[] {
     errors.push('"files" must be a path like "/files" (no trailing slash)');
   }
   if (
+    site.blockClass !== undefined &&
+    typeof site.blockClass !== "string" &&
+    typeof site.blockClass !== "function"
+  ) {
+    errors.push('"blockClass" must be a class name or a function returning one');
+  }
+  if (
     site.reservedPaths !== undefined &&
     !(
       Array.isArray(site.reservedPaths) &&

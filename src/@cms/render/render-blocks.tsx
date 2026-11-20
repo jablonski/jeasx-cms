@@ -1,3 +1,4 @@
+import { blockClass } from "@cms/core/site";
 import { normalizeBlocks } from "@cms/universal/block-data";
 import { BLOCKS, type Block } from "@cms/universal/blocks";
 
@@ -19,7 +20,7 @@ function NormalizedBlocks({ blocks }: { blocks: Block[] }) {
   return (blocks ?? []).map((block) => {
     const def = BLOCKS[block.type];
     return def ? (
-      <div class="block" data-block-id={block.id}>
+      <div class={blockClass(block)} data-block-id={block.id}>
         <def.Component {...block.data} Blocks={NormalizedBlocks} field={NO_FIELD} />
       </div>
     ) : null;

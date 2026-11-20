@@ -54,6 +54,7 @@ export default {
   files: "/files",
   stylesheets: ["/styles/index.css"],
   blocks: BLOCKS,
+  blockClass: (block) => `block block--${block.type}`,
   pages: {
     page: {
       label: "Page",

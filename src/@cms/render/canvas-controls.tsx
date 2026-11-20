@@ -1,4 +1,5 @@
 /** The editor's controls around the blocks on the canvas (rendered on the server). */
+import { blockClass } from "@cms/core/site";
 import type { Block } from "@cms/universal/blocks";
 import {
   ChevronDownIcon,
@@ -36,7 +37,7 @@ export function EmptyList({ path }: { path: string }) {
 export function UnknownBlock({ block, at }: { block: Block; at: BlockAt }) {
   return (
     <div
-      class="block cms-block cms-unknown"
+      class={`${blockClass(block)} cms-unknown`}
       role="group"
       {...at}
       data-block-id={block.id}

@@ -26,7 +26,7 @@ export function bindCanvas(doc: Document, editor: Editor) {
     hovered?.classList.add("cms-hover");
   };
   doc.addEventListener("mouseover", (e) => {
-    const block = (e.target as HTMLElement).closest?.(".cms-block") ?? null;
+    const block = (e.target as HTMLElement).closest?.("[data-block-id]") ?? null;
     if (block === hovered) {
       return clearTimeout(pending);
     }
@@ -52,13 +52,13 @@ export function bindCanvas(doc: Document, editor: Editor) {
       await editor.runAction(button);
       return;
     }
-    const block = target.closest?.(".cms-block");
+    const block = target.closest?.("[data-block-id]");
     editor.select(block?.getAttribute("data-block-id") ?? null);
   });
 
   doc.addEventListener("dblclick", (e) => {
     const target = e.target as HTMLElement;
-    const block = target.closest?.(".cms-block");
+    const block = target.closest?.("[data-block-id]");
     if (!block || target.closest("[data-action], [data-cms-field]")) {
       return;
     }
@@ -69,7 +69,7 @@ export function bindCanvas(doc: Document, editor: Editor) {
   // Keyboard: Tab onto a block selects it (its bar becomes reachable).
   doc.addEventListener("focusin", (e) => {
     const target = e.target as HTMLElement;
-    if (target.classList?.contains("cms-block")) {
+    if (target.hasAttribute?.("data-block-id")) {
       editor.select(target.getAttribute("data-block-id"));
     }
   });

@@ -27,7 +27,7 @@ export function bindCanvasDrag(doc: Document, editor: Editor) {
       const check = checkDrop(page, drag, empty.getAttribute("data-path")!, 0);
       return check && { ...check, el: empty, position: "into" };
     }
-    let el: Element | null | undefined = start.closest?.(".cms-block");
+    let el: Element | null | undefined = start.closest?.("[data-block-id]");
     while (el) {
       const rect = el.getBoundingClientRect();
       const before = e.clientY < rect.top + rect.height / 2;
@@ -36,7 +36,7 @@ export function bindCanvasDrag(doc: Document, editor: Editor) {
       if (check) {
         return { ...check, el, position: before ? "before" : "after" };
       }
-      el = el.parentElement?.closest(".cms-block");
+      el = el.parentElement?.closest("[data-block-id]");
     }
     return null;
   }
@@ -50,7 +50,7 @@ export function bindCanvasDrag(doc: Document, editor: Editor) {
     const index = Number(grip.getAttribute("data-index"));
     const block = editor.blocksAt(path)[index];
     drag = { path, index, block };
-    const blockEl = grip.closest(".cms-block")!;
+    const blockEl = grip.closest("[data-block-id]")!;
     e.dataTransfer!.effectAllowed = "move";
     e.dataTransfer!.setData("text/plain", BLOCKS[block.type]?.label ?? "");
     e.dataTransfer!.setDragImage(blockEl, 24, 24);

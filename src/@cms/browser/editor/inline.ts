@@ -20,7 +20,7 @@ export function editableMode() {
 
 /** Path of an inline-editable element: block path + field name. */
 function inlinePath(el: Element) {
-  const block = el.closest(".cms-block")!;
+  const block = el.closest("[data-block-id]")!;
   return `${block.getAttribute("data-path")}.${block.getAttribute("data-index")}.data.${el.getAttribute("data-cms-field")}`;
 }
 
@@ -91,7 +91,7 @@ export function bindInlineEditing(doc: Document, editor: Editor) {
     if (isRichText(el)) {
       richText.focus(el);
     }
-    editor.select(el.closest(".cms-block")?.getAttribute("data-block-id") ?? null);
+    editor.select(el.closest("[data-block-id]")?.getAttribute("data-block-id") ?? null);
   });
 
   doc.addEventListener("input", (e) => {

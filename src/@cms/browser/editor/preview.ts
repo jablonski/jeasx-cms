@@ -28,7 +28,7 @@ export function createPreview({
 
   /** The rendered block on the canvas. */
   const blockEl = (blockId: string) =>
-    preview.contentDocument?.querySelector(`.cms-block[data-block-id="${CSS.escape(blockId)}"]`);
+    preview.contentDocument?.querySelector(`[data-block-id="${CSS.escape(blockId)}"]`);
 
   const scrollToBlock = (el: Element) => el.scrollIntoView({ behavior: "smooth", block: "center" });
 
@@ -49,15 +49,17 @@ export function createPreview({
   }
 
   // The canvas shows the page with the site's stylesheets plus the editor overlay.
+  // Site styles go into a cascade layer, the overlay stays unlayered: unlayered rules
+  // win over layered ones regardless of specificity, so site selectors can't restyle
+  // the editor controls (only site `!important` rules still could).
   const attr = (s: string) => s.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
-  const links = [
-    ...stylesheets,
-    new URL(`browser/canvas/index.css?v=${Date.now()}`, document.baseURI).href,
-  ]
-    .map((href) => `<link rel="stylesheet" href="${attr(href)}">`)
-    .join("");
+  // escape for a quoted CSS string inside <style> (no breaking out of the string or tag)
+  const str = (s: string) => s.replace(/["\\<\n]/g, (c) => `\\${c.charCodeAt(0).toString(16)} `);
+  const imports = stylesheets.map((href) => `@import url("${str(href)}") layer(site);`);
+  const overlay = new URL(`browser/canvas/index.css?v=${Date.now()}`, document.baseURI).href;
   preview.srcdoc = `<!DOCTYPE html><html><head>
-    ${links}
+    <style>${imports.join("")}</style>
+    <link rel="stylesheet" href="${attr(overlay)}">
     <base target="_blank">
     </head><body class="preview cms-visual"><main><article id="root"></article></main></body></html>`;
   // The canvas document exists (and may already be rendered) before "load" fires,
