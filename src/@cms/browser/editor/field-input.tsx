@@ -1,6 +1,6 @@
-import type { Field, ListField } from "@cms/universal/fields";
+import type { BlocksField, Field, ListField } from "@cms/universal/fields";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/universal/icons";
-import { plural } from "@cms/universal/text";
+import { BLOCKS, type Block } from "@cms/universal/blocks";
 import RichText from "@cms/universal/rich-text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
@@ -21,7 +21,7 @@ export default function FieldInput({ path, field, value }: FieldProps) {
         </label>
       );
     case "blocks":
-      return <NestedBlocksHint label={field.label} value={value} />;
+      return <BlocksInput path={path} field={field} value={value} />;
     case "list":
       return <ListInput path={path} field={field} value={value} />;
     default:
@@ -29,14 +29,99 @@ export default function FieldInput({ path, field, value }: FieldProps) {
   }
 }
 
-/** Nested blocks are edited directly on the page. */
-function NestedBlocksHint({ label, value }: { label: string; value: unknown }) {
-  const count = Array.isArray(value) ? value.length : 0;
+/**
+ * Nested blocks, edited in the drawer like list items. Uses the same actions as the
+ * canvas ("insert-block", "remove-block", "move-block"), which resolve the block list
+ * at any path; deeper nesting works recursively, as each block renders its fields.
+ */
+function BlocksInput({ path, field, value }: FieldProps<BlocksField>) {
+  const blocks: Block[] = Array.isArray(value) ? value.filter(isBlock) : [];
   return (
-    <div class="field">
-      <span class="field-label">{label}</span>
-      <p class="hint">{plural(count, "block")} · edit this content directly on the page.</p>
-    </div>
+    <fieldset class="field list">
+      <legend>{field.label}</legend>
+      {blocks.map((block, i) => {
+        const def = BLOCKS[block.type];
+        return (
+          <div class="list-item">
+            <div class="list-item-header">
+              <strong>{def?.label ?? `#${i + 1}`}</strong>
+              <EntryTools
+                path={path}
+                index={i}
+                count={blocks.length}
+                move="move-block"
+                remove="remove-block"
+              />
+            </div>
+            {def &&
+              Object.entries(def.fields).map(([name, itemField]) => (
+                <FieldInput
+                  path={`${path}.${i}.data.${name}`}
+                  field={itemField}
+                  value={block.data[name]}
+                />
+              ))}
+          </div>
+        );
+      })}
+      {!blocks.length && <p class="hint">No blocks yet.</p>}
+      <button type="button" class="add-item" data-action="insert-block" data-path={path} data-index={blocks.length}>
+        + Add block
+      </button>
+    </fieldset>
+  );
+}
+
+/** Is the value a stored block ({ id, type, data })? */
+const isBlock = (value: unknown): value is Block =>
+  typeof value === "object" &&
+  value !== null &&
+  "type" in value &&
+  typeof (value as Block).type === "string" &&
+  "data" in value &&
+  "id" in value;
+
+/** Move and remove buttons shared by list items and nested blocks. */
+function EntryTools({
+  path,
+  index,
+  count,
+  move,
+  remove,
+}: {
+  path: string;
+  index: number;
+  count: number;
+  move: string;
+  remove: string;
+}) {
+  const at = { "data-path": path, "data-index": index };
+  return (
+    <span class="tools">
+      <button
+        type="button"
+        data-action={move}
+        {...at}
+        data-dir="-1"
+        disabled={index === 0}
+        title="Move up"
+      >
+        <ChevronUpIcon />
+      </button>
+      <button
+        type="button"
+        data-action={move}
+        {...at}
+        data-dir="1"
+        disabled={index === count - 1}
+        title="Move down"
+      >
+        <ChevronDownIcon />
+      </button>
+      <button type="button" data-action={remove} {...at} title="Remove">
+        <XIcon />
+      </button>
+    </span>
   );
 }
 
@@ -49,7 +134,13 @@ function ListInput({ path, field, value }: FieldProps<ListField>) {
         <div class="list-item">
           <div class="list-item-header">
             <strong>{(field.itemLabel && item[field.itemLabel]) || `#${i + 1}`}</strong>
-            <ListItemTools path={path} index={i} count={items.length} />
+            <EntryTools
+              path={path}
+              index={i}
+              count={items.length}
+              move="move-item"
+              remove="remove-item"
+            />
           </div>
           {Object.entries(field.fields).map(([name, itemField]) => (
             <FieldInput path={`${path}.${i}.${name}`} field={itemField} value={item[name]} />
@@ -60,37 +151,6 @@ function ListInput({ path, field, value }: FieldProps<ListField>) {
         + Add item
       </button>
     </fieldset>
-  );
-}
-
-function ListItemTools({ path, index, count }: { path: string; index: number; count: number }) {
-  const at = { "data-path": path, "data-index": index };
-  return (
-    <span class="tools">
-      <button
-        type="button"
-        data-action="move-item"
-        {...at}
-        data-dir="-1"
-        disabled={index === 0}
-        title="Move up"
-      >
-        <ChevronUpIcon />
-      </button>
-      <button
-        type="button"
-        data-action="move-item"
-        {...at}
-        data-dir="1"
-        disabled={index === count - 1}
-        title="Move down"
-      >
-        <ChevronDownIcon />
-      </button>
-      <button type="button" data-action="remove-item" {...at} title="Remove">
-        <XIcon />
-      </button>
-    </span>
   );
 }
 
