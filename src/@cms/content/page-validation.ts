@@ -32,6 +32,12 @@ export interface PageValues {
 export const pageContent = (meta: Record<string, unknown>, blocks: unknown[]) =>
   JSON.stringify({ ...meta, blocks });
 
+/** The page fields and blocks of stored page JSON (see pageContent). */
+export function parsePageContent(content: string): Pick<Page, "meta" | "blocks"> {
+  const { blocks = [], ...meta } = JSON.parse(content);
+  return { meta, blocks };
+}
+
 /** Problems of a path built from `source`, except clashes with other pages. */
 function slugProblems(source: string, slug: string): ValidationError[] {
   const errors: ValidationError[] = [];

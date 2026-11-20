@@ -225,7 +225,7 @@ export function fileUsage(filename: string): FileUsage[] {
   const rows = queryAll<{ id: number; title: string; slug: string; historyOnly: number }>(
     `SELECT id, title, slug, NOT (content LIKE ?1) AS historyOnly FROM pages
      WHERE content LIKE ?1 OR EXISTS
-       (SELECT 1 FROM revisions r WHERE r.page_id = pages.id AND r.snapshot LIKE ?1)`,
+       (SELECT 1 FROM revisions r WHERE r.page_id = pages.id AND r.content LIKE ?1)`,
     pattern,
   );
   return rows.map((r) => ({ ...r, historyOnly: Boolean(r.historyOnly) }));

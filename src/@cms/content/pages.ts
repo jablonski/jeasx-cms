@@ -2,7 +2,12 @@
 import { createBlock, normalizeBlocks } from "@cms/universal/block-data";
 import { type Block, PAGE_TYPES } from "@cms/universal/blocks";
 import { defaults, sanitize, type ValidationError } from "@cms/universal/fields";
-import { type PageInput, type PageValues, validatePage } from "@cms/content/page-validation";
+import {
+  type PageInput,
+  type PageValues,
+  parsePageContent,
+  validatePage,
+} from "@cms/content/page-validation";
 import { keepRevision } from "@cms/content/revisions";
 import { normalizeSlug } from "@cms/universal/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
@@ -53,20 +58,16 @@ interface PageRow {
   updated_at: string;
 }
 
-const toPage = (row: PageRow): StoredPage => {
-  const { blocks = [], ...meta } = JSON.parse(row.content);
-  return {
-    id: row.id,
-    type: row.type,
-    slug: row.slug,
-    title: row.title,
-    status: row.status,
-    meta,
-    blocks,
-    updatedAt: row.updated_at,
-    version: row.version,
-  };
-};
+const toPage = (row: PageRow): StoredPage => ({
+  id: row.id,
+  type: row.type,
+  slug: row.slug,
+  title: row.title,
+  status: row.status,
+  ...parsePageContent(row.content),
+  updatedAt: row.updated_at,
+  version: row.version,
+});
 
 export function listPages(): PageSummary[] {
   const rows = queryAll<Pick<PageRow, "id" | "type" | "slug" | "title" | "status" | "updated_at">>(
@@ -196,7 +197,7 @@ function updatePage(id: number, { type, slug, title, status, content }: PageValu
   if (stored && (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])) {
     return id;
   }
-  keepRevision(id, getPage(id));
+  keepRevision(id);
   execute(
     `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, content = ?,
      version = version + 1, updated_at = datetime('now') WHERE id = ?`,

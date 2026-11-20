@@ -19,7 +19,14 @@ export const SCHEMA = `
   CREATE TABLE IF NOT EXISTS revisions (
     id         INTEGER PRIMARY KEY,
     page_id    INTEGER NOT NULL REFERENCES pages(id) ON DELETE CASCADE,
-    snapshot   TEXT NOT NULL,
+    -- the page as it was: same columns as in "pages"
+    type       TEXT NOT NULL,
+    slug       TEXT NOT NULL,
+    title      TEXT NOT NULL,
+    status     TEXT NOT NULL,
+    content    TEXT NOT NULL,
+    version    INTEGER NOT NULL,
+    updated_at TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
