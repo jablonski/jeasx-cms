@@ -19,7 +19,7 @@ export interface BlockDefinition {
   fields: Fields;
   /**
    * JSX component receiving the block data as props, plus
-   * - `Blocks`: the RenderBlocks component to render nested "blocks" fields
+   * - `Blocks`: the Blocks component to render nested "blocks" fields
    * - `field(name)`: attributes making an element inline-editable in the visual editor
    *   (empty object on the site). `field.editing` is true in the editor, e.g. to show
    *   optional elements that are empty. Supported for text, textarea and richtext fields;

@@ -21,14 +21,14 @@ const blocks = [
   },
 ];
 
-test("RenderBlocks renders known blocks and skips unknown ones", async () => {
+test("Blocks renders known blocks and skips unknown ones", async () => {
   const html = await jsxToString(Blocks({ blocks }) as any);
   assert.match(html, /data-block-id="a"/);
   assert.match(html, /data-block-id="c"/);
   assert.doesNotMatch(html, /data-block-id="b"/);
 });
 
-test("RenderBlocks accepts data that isn't a list of blocks", async () => {
+test("Blocks accepts data that isn't a list of blocks", async () => {
   assert.equal(await jsxToString(Blocks({ blocks: null }) as any), "");
   assert.equal(await jsxToString(Blocks({ blocks: "nonsense" }) as any), "");
 });
