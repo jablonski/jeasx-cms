@@ -16,7 +16,6 @@ const input = (slug: string, extra: object = {}) => ({
   type: "page",
   title: "Title",
   slug,
-  meta: {},
   blocks: [block("Hello")],
   ...extra,
 });
@@ -137,11 +136,10 @@ test("the editor gets fields added after a page was saved", () => {
     slug: "/old",
     title: "Old",
     status: "draft",
-    meta: {},
     blocks: [{ id: "s", type: "section", data: {} }],
   };
   const page = normalizePage(stored);
   assert.deepEqual(getAt(page, "blocks.0.data.blocks"), []);
-  assert.equal(page.meta.description, "");
+  assert.equal(page.description, ""); // page fields added since get their default
   assert.equal(page.id, 1);
 });

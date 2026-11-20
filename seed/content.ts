@@ -65,7 +65,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/",
       title: "Home",
-      meta: nav(
+      ...nav(
         0,
         "Jeasx CMS: build fast websites from blocks, edited right on the page.",
       ),
@@ -161,7 +161,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/product",
       title: "Product",
-      meta: nav(
+      ...nav(
         1,
         "How Jeasx CMS works: visual editing, flexible blocks and a file library.",
       ),
@@ -285,7 +285,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/pricing",
       title: "Pricing",
-      meta: nav(2, "Simple plans for websites of every size."),
+      ...nav(2, "Simple plans for websites of every size."),
       blocks: [
         block("hero", {
           heading: "Simple, honest pricing",
@@ -388,7 +388,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/about",
       title: "About",
-      meta: nav(3, "The people behind Jeasx CMS and what we believe in."),
+      ...nav(3, "The people behind Jeasx CMS and what we believe in."),
       blocks: [
         block("hero", {
           heading: "Small team, big ideas",
@@ -499,7 +499,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/resources",
       title: "Resources",
-      meta: nav(4, "Guides, data sheets and press material to download."),
+      ...nav(4, "Guides, data sheets and press material to download."),
       blocks: [
         block("hero", {
           heading: "Resources",
@@ -598,7 +598,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/blog",
       title: "Blog",
-      meta: nav(5, "Notes on building websites with blocks, JSX and SQLite."),
+      ...nav(5, "Notes on building websites with blocks, JSX and SQLite."),
       blocks: [
         block("hero", {
           heading: "Blog",
@@ -645,7 +645,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/getting-started-with-blocks",
       title: "Getting started with blocks",
-      meta: article(
+      ...article(
         "A tour of the editor: adding, editing and arranging blocks.",
         "Sam Lee",
         "2026-10-21",
@@ -715,7 +715,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/designing-with-sections",
       title: "Designing with sections",
-      meta: article(
+      ...article(
         "How sections and columns help you structure long pages.",
         "Jordan Kim",
         "2026-10-30",
@@ -759,7 +759,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/organizing-your-files",
       title: "Organizing your files",
-      meta: article(
+      ...article(
         "Folders, file types and downloads in the file library.",
         "Maya Okafor",
         "2026-11-05",
@@ -801,7 +801,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/restoring-earlier-versions",
       title: "Restoring earlier versions",
-      meta: article(
+      ...article(
         "Every save is kept, so mistakes are easy to undo.",
         "Leo Martin",
         "2026-11-10",
@@ -852,7 +852,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/writing-for-the-web",
       title: "Writing for the web",
-      meta: article(
+      ...article(
         "Five habits that make web pages easier to read.",
         "Sam Lee",
         "2026-11-14",
@@ -899,7 +899,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "article",
       slug: "/blog/building-a-custom-block",
       title: "Building a custom block",
-      meta: article(
+      ...article(
         "How developers add a new block with one JSX file.",
         "Maya Okafor",
         "2026-11-17",
@@ -939,7 +939,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/faq",
       title: "FAQ",
-      meta: {
+      ...{
         ...nav(6, "Answers to frequently asked questions."),
         inNav: false,
         inFooter: true,
@@ -1033,7 +1033,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/contact",
       title: "Contact",
-      meta: nav(7, "Get in touch with the Jeasx CMS team."),
+      ...nav(7, "Get in touch with the Jeasx CMS team."),
       blocks: [
         block("hero", {
           heading: "Let's talk",
@@ -1116,7 +1116,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/imprint",
       title: "Imprint",
-      meta: legal("Legal information about this website."),
+      ...legal("Legal information about this website."),
       blocks: [
         block("notice", {
           kind: "warning",
@@ -1146,7 +1146,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/privacy",
       title: "Privacy",
-      meta: legal("How this website handles personal data."),
+      ...legal("How this website handles personal data."),
       blocks: [
         block("notice", {
           kind: "warning",
@@ -1186,7 +1186,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       slug: "/spring-campaign",
       title: "Spring campaign (draft)",
       status: "draft",
-      meta: {
+      ...{
         description:
           "Spring offer: three months of the Team plan for the price of one.",
         inNav: false,

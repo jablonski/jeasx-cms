@@ -22,7 +22,7 @@ test("latestArticles accepts every number an editor can enter", () => {
 });
 
 test("page settings open for a page whose type is gone", async () => {
-  const page = { type: "gone", slug: "/old", title: "Old", status: "draft", meta: {}, blocks: [] };
+  const page = { type: "gone", slug: "/old", title: "Old", status: "draft", blocks: [] };
   const html = await jsxToString(SettingsDialog({ page: page as never }));
   assert.match(html, /Page settings/);
 });

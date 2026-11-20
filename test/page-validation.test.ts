@@ -50,7 +50,7 @@ test("validatePage reports a taken path, except for the page itself", () => {
 
 test("validatePage stores the page fields and blocks as one flat JSON", () => {
   const { values } = validatePage(
-    { title: "Json", meta: { description: "d" }, blocks: [] },
+    { title: "Json", description: "d", blocks: [] },
     "page",
     type,
     null,

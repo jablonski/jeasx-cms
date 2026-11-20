@@ -125,6 +125,19 @@ function checkBlockDefinition(
   }
 }
 
+/** Properties of a page that page fields can't be named like. */
+const RESERVED_PAGE_FIELDS = [
+  "id",
+  "type",
+  "slug",
+  "title",
+  "status",
+  "blocks",
+  "version",
+  "updatedAt",
+  "baseVersion",
+];
+
 function checkPageType(name: string, pageType: Unchecked, types: Set<string>, errors: string[]) {
   const where = `Page type "${name}"`;
   if (!NAME.test(name)) {
@@ -134,9 +147,11 @@ function checkPageType(name: string, pageType: Unchecked, types: Set<string>, er
     errors.push(`${where}: "label" is required`);
   }
   checkFields(pageType?.fields ?? {}, where, { blockTypes: types, allowBlocks: false, errors });
-  if (pageType?.fields && Object.hasOwn(pageType.fields, "blocks")) {
-    // stored next to the page fields (see pageContent)
-    errors.push(`${where}: the field name "blocks" is reserved for the page's blocks`);
+  // page fields sit beside the page's own properties (page.description, page.blocks)
+  for (const name of Object.keys(pageType?.fields ?? {})) {
+    if (RESERVED_PAGE_FIELDS.includes(name)) {
+      errors.push(`${where}: the field name "${name}" is reserved for the page itself`);
+    }
   }
   if (!Array.isArray(pageType?.blocks) || !pageType.blocks.length) {
     errors.push(`${where}: "blocks" must list the allowed block types`);

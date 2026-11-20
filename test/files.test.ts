@@ -54,7 +54,6 @@ const page = (slug: string, blocks: unknown[]) => ({
   type: "page",
   title: "T",
   slug,
-  meta: {},
   blocks,
 });
 

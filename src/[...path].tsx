@@ -10,7 +10,7 @@ export default function ({ request }: RouteProps) {
   }
 
   return (
-    <Layout title={page.title} description={String(page.meta.description ?? "")}>
+    <Layout title={page.title} description={String(page.description ?? "")}>
       <RenderBlocks blocks={page.blocks} />
     </Layout>
   );

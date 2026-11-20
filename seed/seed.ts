@@ -31,13 +31,16 @@ function seed(db: DatabaseSync) {
       "INSERT INTO pages (type, slug, title, status, content) VALUES (?, ?, ?, ?, ?)",
     );
     for (const page of pages(assets)) {
-      insert.run(
-        page.type,
-        page.slug,
-        page.title,
-        page.status ?? "published",
-        pageContent(page.meta, page.blocks),
-      );
+      // only some pages set a status (published by default); the rest are page fields
+      const {
+        type,
+        slug,
+        title,
+        status = "published",
+        blocks,
+        ...fields
+      }: Record<string, unknown> & typeof page = page;
+      insert.run(type, slug, title, status as string, pageContent(fields, blocks));
     }
   }, db);
   return true;

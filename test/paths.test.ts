@@ -17,15 +17,15 @@ import {
 const text = (id: string) => ({ id, type: "text", data: { heading: id, link: "" } });
 const draft = () => ({
   type: "page",
-  meta: { description: "Meta" },
+  description: "Meta",
   blocks: [text("a"), { id: "s", type: "section", data: { blocks: [text("b")] } }, text("c")],
 });
 
 test("getAt and setAt follow data paths", () => {
   const page = draft();
   assert.equal(getAt(page, "blocks.1.data.blocks.0.id"), "b");
-  setAt(page, "meta.description", "New");
-  assert.equal(page.meta.description, "New");
+  setAt(page, "description", "New");
+  assert.equal(page.description, "New");
 });
 
 test("locate finds nested blocks", () => {
@@ -33,9 +33,9 @@ test("locate finds nested blocks", () => {
   assert.equal(locate(draft(), "missing"), null);
 });
 
-test("fieldAt resolves meta, block and nested fields", () => {
+test("fieldAt resolves page, block and nested fields", () => {
   const page = draft();
-  assert.equal(fieldAt(page, "meta.description")?.label, "Description");
+  assert.equal(fieldAt(page, "description")?.label, "Description");
   assert.equal(fieldAt(page, "blocks.0.data.heading")?.label, "Heading");
   assert.equal(fieldAt(page, "blocks.1.data.blocks.0.data.link")?.type, "url");
   assert.deepEqual(allowedBlocksAt(page, "blocks"), ["text", "section"]);
@@ -49,7 +49,7 @@ test("blockOfPath finds the innermost block of a field", () => {
   });
   assert.deepEqual(blockOfPath("blocks.2.data.dataLabel"), { path: "blocks", index: 2 });
   assert.deepEqual(blockOfPath("blocks.3"), { path: "blocks", index: 3 });
-  assert.equal(blockOfPath("meta.description"), null);
+  assert.equal(blockOfPath("description"), null);
 });
 
 test("renewIds replaces the ids of nested blocks", () => {

@@ -1,6 +1,6 @@
 /**
  * Data paths into a page being edited, e.g. "blocks.0.data.columns.1.blocks.2.data.title"
- * or "meta.description". Pure functions without DOM access: the page is always passed in.
+ * or "description" (a page field). Pure functions without DOM access: the page is always passed in.
  */
 import { newId } from "@cms/universal/block-data";
 import { indexBlockLists, isBlock } from "@cms/universal/block-tree";
@@ -11,7 +11,13 @@ import type { BlocksField, Field, Fields } from "@cms/universal/fields";
 export interface DraftPage {
   type: string;
   blocks: Block[];
-  meta?: Record<string, unknown>;
+  [field: string]: unknown;
+}
+
+/** The values of the page type's fields of `page` (e.g. to restore them on Cancel). */
+export function pageFields(page: DraftPage): Record<string, unknown> {
+  const names = Object.keys(PAGE_TYPES[page.type]?.fields ?? {});
+  return Object.fromEntries(names.map((name) => [name, page[name]]));
 }
 
 /** Position of a block: the data path of its list and its index there. */
@@ -84,7 +90,7 @@ export function locate(page: DraftPage, blockId: string): BlockPosition | null {
 }
 
 /**
- * Resolves the field definition for a path, walking through meta fields, lists
+ * Resolves the field definition for a path, walking through page fields, lists
  * and (nested) blocks, e.g. "blocks.0.data.columns.1.blocks.2.data.items".
  * The page-level "blocks" resolves to a virtual blocks field of the page type.
  */
@@ -100,14 +106,12 @@ export function fieldAt(page: DraftPage, path: string): Field | undefined {
   if (keys[0] === "blocks") {
     field = { type: "blocks", label: "Blocks", blocks: type.blocks } satisfies BlocksField;
     node = page.blocks;
-  } else if (keys[0] === "meta") {
-    fields = type.fields;
-    node = page.meta;
   } else {
-    return undefined;
+    fields = type.fields; // a page field, e.g. "description" or "links.0.url"
+    node = page;
   }
 
-  for (let i = 1; i < keys.length; i++) {
+  for (let i = field ? 1 : 0; i < keys.length; i++) {
     const key = keys[i];
     if (field?.type === "blocks") {
       const block = child(node, key) as Block | undefined;

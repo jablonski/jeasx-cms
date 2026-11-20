@@ -1,6 +1,7 @@
 /** Opens the side dialogs for a block's fields and the page settings. */
 import BlockDialog from "@cms/browser/editor/block-dialog";
 import type { DrawerController } from "@cms/browser/editor/drawer";
+import { pageFields } from "@cms/browser/editor/paths";
 import SettingsDialog from "@cms/browser/editor/settings-dialog";
 import type { Editor } from "@cms/browser/editor/state";
 import { BLOCKS } from "@cms/universal/blocks";
@@ -47,7 +48,7 @@ export function createSideDialogs(
         structuredClone({
           title: state.page.title,
           slug: state.page.slug,
-          meta: state.page.meta,
+          ...pageFields(state.page),
         }),
       view: () => <SettingsDialog page={state.page} />,
       restore: (copy) => Object.assign(state.page, copy),

@@ -13,14 +13,17 @@ import { normalizeSlug } from "@cms/universal/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
 import { parseId } from "@cms/core/id";
 
-/** What every page consists of, saved or not. */
+/**
+ * What every page consists of, saved or not: its columns, the blocks and, beside them,
+ * the fields of its page type (e.g. `page.description`).
+ */
 interface PageContent {
   type: string;
   slug: string;
   title: string;
   status: "draft" | "published";
-  meta: Record<string, unknown>;
   blocks: Block[];
+  [field: string]: unknown;
 }
 
 /** A page being created in the editor. */
@@ -105,7 +108,7 @@ export function newPage(typeName: string): NewPage | undefined {
       slug: "",
       title: "",
       status: "draft",
-      meta: defaults(type.fields),
+      ...defaults(type.fields),
       blocks: (type.initialBlocks ?? []).map(createBlock),
     }
   );
@@ -119,7 +122,7 @@ export function normalizePage(page: StoredPage): StoredPage {
   const type = PAGE_TYPES[page.type];
   return {
     ...page,
-    meta: type ? sanitize(type.fields, page.meta).value : page.meta,
+    ...(type && sanitize(type.fields, page).value),
     blocks: normalizeBlocks(page.blocks),
   };
 }
@@ -234,13 +237,7 @@ export function duplicatePage(id: number | null): number | undefined {
   for (let n = 2; taken.has(slug); n++) {
     slug = `${base}-${n}`;
   }
-  const { page: copy, errors } = savePage({
-    type: page.type,
-    title,
-    slug,
-    status: "draft",
-    meta: page.meta,
-    blocks: page.blocks,
-  });
+  const { id: _, version, updatedAt, ...content } = page;
+  const { page: copy, errors } = savePage({ ...content, title, slug, status: "draft" });
   return copy?.id ?? (errors && console.error(errors), undefined);
 }

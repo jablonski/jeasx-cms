@@ -66,11 +66,11 @@ test("sanitize reports errors with their data paths", () => {
   const { errors } = sanitize(
     fields,
     { title: " ", link: "javascript:alert(1)", items: [{ name: "" }] },
-    { at: "meta" },
+    { at: "blocks.0.data" },
   );
   assert.deepEqual(
     errors.map((e) => e.path),
-    ["meta.title", "meta.link", "meta.items.0.name"],
+    ["blocks.0.data.title", "blocks.0.data.link", "blocks.0.data.items.0.name"],
   );
 });
 

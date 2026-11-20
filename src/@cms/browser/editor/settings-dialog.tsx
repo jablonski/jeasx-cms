@@ -4,7 +4,7 @@ import FieldInput from "@cms/browser/editor/field-input";
 import { PAGE_TYPES } from "@cms/universal/blocks";
 import type { Page } from "@cms/content/pages";
 
-/** Side dialog with the title, the path and the page type's meta fields. */
+/** Side dialog with the title, the path and the page type's fields. */
 export default function SettingsDialog({ page }: { page: Page }) {
   const type = PAGE_TYPES[page.type];
   return (
@@ -38,7 +38,7 @@ export default function SettingsDialog({ page }: { page: Page }) {
         value={page.slug}
       />
       {Object.entries(type?.fields ?? {}).map(([name, field]) => (
-        <FieldInput path={`meta.${name}`} field={field} value={page.meta[name]} />
+        <FieldInput path={name} field={field} value={page[name]} />
       ))}
     </DrawerLayout>
   );

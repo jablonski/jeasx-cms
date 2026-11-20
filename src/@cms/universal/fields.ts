@@ -99,7 +99,7 @@ export interface SanitizeOptions {
   prefix?: string;
   /** validator for "blocks" fields */
   nested?: NestedValidator;
-  /** data path of the data, e.g. "meta" or "blocks.0.data" */
+  /** data path of the data, e.g. "blocks.0.data" (empty: page fields) */
   at?: string;
 }
 

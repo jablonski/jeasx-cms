@@ -334,7 +334,11 @@ article: {
 },
 ```
 
-Page fields are available as `page.meta` in the core and shown in the editor's page settings.
+Page fields sit on the page itself, beside its title, path and blocks (`page.author`), and are
+shown in the editor's page settings. The page's own names (`id`, `type`, `slug`, `title`,
+`status`, `blocks`, `version`, `updatedAt`, `baseVersion`) can't be used as field names. In the
+database they are stored flat in the `content` column, so queries read them directly:
+`content ->> '$.author'`.
 
 ## The core (`src/@cms/`)
 

@@ -6,6 +6,7 @@ import type { Editor } from "@cms/browser/editor/state";
 import { alertDialog } from "@cms/browser/utils/dialog";
 import { request } from "@cms/browser/utils/http";
 import type { Page, StoredPage } from "@cms/content/pages";
+import { pageFields } from "@cms/browser/editor/paths";
 import type { Revision } from "@cms/content/revisions";
 
 export function createHistory({ state, select }: Editor, drawer: DrawerController) {
@@ -16,7 +17,7 @@ export function createHistory({ state, select }: Editor, drawer: DrawerControlle
     selected: number | null;
     loading: boolean;
     /** the editor's content when the dialog opened */
-    current: Pick<Page, "title" | "slug" | "meta" | "blocks">;
+    current: Partial<Page>;
     wasDirty: boolean;
   } | null = null;
 
@@ -33,7 +34,7 @@ export function createHistory({ state, select }: Editor, drawer: DrawerControlle
       structuredClone({
         title: state.page.title,
         slug: state.page.slug,
-        meta: state.page.meta,
+        ...pageFields(state.page),
         blocks: state.page.blocks,
       });
     const current = content();
@@ -85,8 +86,14 @@ export function createHistory({ state, select }: Editor, drawer: DrawerControlle
     if (!res.ok) {
       return alertDialog({ title: "Could not load version", message: res.error });
     }
-    const { title, slug, meta, blocks } = res.data;
-    Object.assign(state.page, { title, slug, meta, blocks });
+    const { title, slug, blocks } = res.data;
+    // the fields of the page type as they are now (the version may predate some)
+    Object.assign(state.page, {
+      title,
+      slug,
+      ...pageFields({ ...res.data, type: state.page.type }),
+      blocks,
+    });
     revisions.selected = Number(id);
     state.errors = [];
     state.dirty = true;

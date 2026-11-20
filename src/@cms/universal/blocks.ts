@@ -72,7 +72,7 @@ export interface Block {
 
 export interface PageType {
   label: string;
-  /** page-level (meta) fields */
+  /** fields of the page itself (beside title, slug and blocks: `page.description`) */
   fields: Fields;
   /** allowed block types */
   blocks: string[];
