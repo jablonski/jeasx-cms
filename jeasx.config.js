@@ -25,7 +25,6 @@ export default {
   /** @type {() => import("fastify").FastifyServerOptions} */
   FASTIFY_SERVER_OPTIONS: () => ({
     logger: { level: process.env.NODE_ENV === "development" ? "error" : "info" },
-    trustProxy: false,
   }),
 
   /** @type {() => import("@fastify/send").SendOptions} */
