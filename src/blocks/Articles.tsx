@@ -17,16 +17,16 @@ export default defineBlock({
       <section class="block-articles">
         <Heading text={heading} field={field} />
         <ul>
-          {articles.map(({ slug, title, meta }) => (
+          {articles.map(({ slug, title, description, image, author, date }) => (
             <li>
-              {meta.image && <img src={meta.image} alt="" loading="lazy" />}
+              {image && <img src={image} alt="" loading="lazy" />}
               <div>
-                {meta.date && <time datetime={meta.date}>{formatDate(meta.date)}</time>}
+                {date && <time datetime={date}>{formatDate(date)}</time>}
                 <h3>
                   <a href={slug}>{title}</a>
                 </h3>
-                <p>{meta.description}</p>
-                {meta.author && <small>By {meta.author}</small>}
+                <p>{description}</p>
+                {author && <small>By {author}</small>}
               </div>
             </li>
           ))}
