@@ -10,6 +10,7 @@ import {
 } from "@cms/browser/files/file-api";
 import { Breadcrumb, FileBrowser } from "@cms/browser/files/file-browser";
 import { toHtml } from "@cms/browser/utils/to-html";
+import { XIcon } from "@cms/universal/icons";
 
 /** The picker reopens in the folder used last (per page load). */
 let lastPickerFolder: number | null = null;
@@ -34,8 +35,8 @@ export async function pickFile({ imagesOnly = true } = {}): Promise<string | nul
             <button type="button" class="primary" data-upload>
               Upload…
             </button>
-            <button type="button" data-close>
-              Close
+            <button type="button" class="drawer-close" data-close title="Close" aria-label="Close">
+              <XIcon />
             </button>
           </span>
         </header>

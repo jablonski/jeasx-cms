@@ -217,6 +217,12 @@ button.file-thumb:hover {
     height: 2.125rem;
   }
 
+  & .tools button.drawer-close {
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+  }
+
   & .tools button.primary {
     background: var(--accent);
     color: var(--accent-text);

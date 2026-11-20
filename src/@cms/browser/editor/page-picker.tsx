@@ -3,6 +3,7 @@
 import type { PageSummary } from "@cms/content/pages";
 import { request } from "@cms/browser/utils/http";
 import { toHtml } from "@cms/browser/utils/to-html";
+import { XIcon } from "@cms/universal/icons";
 
 /** Resolves with the chosen page's path (slug) or null. */
 export async function pickPage(): Promise<string | null> {
@@ -18,11 +19,9 @@ export async function pickPage(): Promise<string | null> {
     <>
       <header>
         <h2 id="page-picker-title">Link to a page</h2>
-        <span class="tools">
-          <button type="button" data-close>
-            Close
-          </button>
-        </span>
+        <button type="button" class="drawer-close" data-close title="Close" aria-label="Close">
+          <XIcon />
+        </button>
       </header>
       {!res.ok && <p class="errors">{res.error}</p>}
       <input

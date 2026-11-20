@@ -56,6 +56,11 @@
     flex: none;
   }
 
+  /* the page and file pickers of url fields: outlines look heavy at this size */
+  & button.icon svg {
+    stroke-width: 1.25;
+  }
+
   &.dragover,
   &.uploading {
     outline: 2px dashed var(--accent);
