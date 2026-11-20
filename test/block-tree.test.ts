@@ -1,8 +1,8 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { isContainer } from "@cms/universal/block-tree";
 import { BLOCKS } from "@cms/universal/blocks";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 test("isContainer finds blocks at any depth of nested lists", (t) => {
   t.after(() => delete BLOCKS.deep);

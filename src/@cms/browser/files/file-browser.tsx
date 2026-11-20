@@ -3,9 +3,9 @@ import { GripIcon, XIcon } from "@cms/universal/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";
-import { formatSize, plural } from "@cms/universal/text";
 import type { StoredFile } from "@cms/media/files";
 import type { Folder, FolderSummary } from "@cms/media/folders";
+import { formatSize, plural } from "@cms/universal/text";
 
 /** Breadcrumb; every crumb is a drop target for moving files and folders. */
 export function Breadcrumb({ path }: { path: Folder[] }) {

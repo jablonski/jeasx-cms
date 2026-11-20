@@ -1,6 +1,3 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { applyMove, checkDrop } from "@cms/browser/editor/block-moves";
 import {
   allowedBlocksAt,
@@ -13,6 +10,9 @@ import {
   renewIds,
   setAt,
 } from "@cms/browser/editor/paths";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 const text = (id: string) => ({ id, type: "text", data: { heading: id, link: "" } });
 const draft = () => ({

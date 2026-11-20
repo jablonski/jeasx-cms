@@ -1,5 +1,5 @@
-import { formatTime } from "@cms/browser/utils/format-time";
 import { ROLE_LABELS, type User } from "@cms/browser/user-admin/user-roles";
+import { formatTime } from "@cms/browser/utils/format-time";
 
 /** What GET api/users answers. */
 export interface UserList {

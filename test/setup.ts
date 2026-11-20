@@ -1,8 +1,8 @@
 /** Configures the core with a small site and an in-memory database for the tests. */
 
 import { configureCms } from "@cms/configure";
-import type { BlockDefinition } from "@cms/universal/blocks";
 import { open } from "@cms/core/db";
+import type { BlockDefinition } from "@cms/universal/blocks";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";

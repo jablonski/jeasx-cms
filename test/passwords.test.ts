@@ -1,6 +1,6 @@
+import { hashPassword, hashPasswordSync, matchesHash } from "@cms/auth/passwords";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { hashPassword, hashPasswordSync, matchesHash } from "@cms/auth/passwords";
 
 test("a password matches its own hash and nothing else", async () => {
   const hash = await hashPassword("secret one");

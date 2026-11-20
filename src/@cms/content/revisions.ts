@@ -1,6 +1,6 @@
 /** Earlier versions of pages (server only, table "revisions"). */
-import type { Page, StoredPage } from "@cms/content/pages";
 import { parsePageContent } from "@cms/content/page-validation";
+import type { Page, StoredPage } from "@cms/content/pages";
 import { queryAll, queryOne } from "@cms/core/db";
 
 /**

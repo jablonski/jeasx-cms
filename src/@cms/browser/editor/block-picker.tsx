@@ -1,6 +1,6 @@
 import { openModal } from "@cms/browser/utils/dialog";
-import { XIcon } from "@cms/universal/icons";
 import { BLOCKS } from "@cms/universal/blocks";
+import { XIcon } from "@cms/universal/icons";
 
 /** Grid of block types to insert. */
 function BlockPicker({ allowed }: { allowed: readonly string[] }) {

@@ -1,6 +1,6 @@
+import { assertValid, validateBlocks, validateSite } from "@cms/content/config-validation";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assertValid, validateBlocks, validateSite } from "@cms/content/config-validation";
 
 const block = (extra: object = {}) => ({
   type: "text",

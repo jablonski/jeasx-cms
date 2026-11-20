@@ -1,6 +1,3 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import {
   cleanName,
   createFolder,
@@ -10,6 +7,9 @@ import {
   parseFolderId,
   updateFolder,
 } from "@cms/media/folders";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 const make = (name: string, parent: unknown = null) => {
   const result = createFolder(name, parent);

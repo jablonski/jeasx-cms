@@ -79,7 +79,12 @@ export function bindRichTextEditing(
       }
       madeList = null;
       const caretIn = blockAtCaret(doc, el);
-      if (e.key === "Backspace" && item?.isConnected && caretIn === item && !item.textContent?.trim()) {
+      if (
+        e.key === "Backspace" &&
+        item?.isConnected &&
+        caretIn === item &&
+        !item.textContent?.trim()
+      ) {
         e.preventDefault();
         doc.execCommand("insertUnorderedList"); // back to a paragraph
         doc.execCommand("insertText", false, "- ");

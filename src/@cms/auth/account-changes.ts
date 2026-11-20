@@ -5,8 +5,8 @@ import {
   createUser,
   deleteUser,
   getUser,
-  type User,
   updateUser,
+  type User,
 } from "@cms/auth/users";
 
 /** The HTTP status and message of why an account was left as it is. */

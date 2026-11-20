@@ -1,11 +1,11 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { Readable } from "node:stream";
-import { test } from "node:test";
 import db from "@cms/core/db";
 import download from "@cms/media/file-download";
 import { saveFile } from "@cms/media/files";
 import { detectType } from "@cms/media/mime";
+import assert from "node:assert/strict";
+import { Readable } from "node:stream";
+import { test } from "node:test";
+import "./setup";
 
 /** Calls the route and collects what it answers. */
 async function get(path: string, headers: Record<string, string> = {}, query: object = {}) {

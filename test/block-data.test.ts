@@ -1,7 +1,7 @@
-import "./setup";
+import { normalizeBlocks } from "@cms/universal/block-data";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { normalizeBlocks } from "@cms/universal/block-data";
+import "./setup";
 
 test("stored blocks get the fields added to their type later", () => {
   const [block] = normalizeBlocks([{ id: "a", type: "section", data: {} }]);

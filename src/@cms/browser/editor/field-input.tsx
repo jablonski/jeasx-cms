@@ -1,12 +1,6 @@
-import type { BlocksField, Field, ListField } from "@cms/universal/fields";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  FolderIcon,
-  PageIcon,
-  XIcon,
-} from "@cms/universal/icons";
 import { BLOCKS, type Block } from "@cms/universal/blocks";
+import type { BlocksField, Field, ListField } from "@cms/universal/fields";
+import { ChevronDownIcon, ChevronUpIcon, FolderIcon, PageIcon, XIcon } from "@cms/universal/icons";
 import RichText from "@cms/universal/rich-text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
@@ -71,7 +65,13 @@ function BlocksInput({ path, field, value }: FieldProps<BlocksField>) {
         );
       })}
       {!blocks.length && <p class="hint">No blocks yet.</p>}
-      <button type="button" class="add-item" data-action="insert-block" data-path={path} data-index={blocks.length}>
+      <button
+        type="button"
+        class="add-item"
+        data-action="insert-block"
+        data-path={path}
+        data-index={blocks.length}
+      >
         + Add block
       </button>
     </fieldset>

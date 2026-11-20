@@ -1,8 +1,8 @@
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { htmlToMarkdown, type NodeLike } from "@cms/browser/editor/rich-text-markdown";
 import RichText from "@cms/universal/rich-text";
 import { jsxToString } from "jsx-async-runtime";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 
 /** Minimal HTML parser for the tests (no DOM in Node): elements, attributes, text. */
 function parse(html: string): NodeLike {
@@ -30,7 +30,12 @@ function parse(html: string): NodeLike {
   )) {
     const top = stack[stack.length - 1];
     if (text !== undefined) {
-      top.childNodes.push({ nodeType: 3, nodeName: "#text", textContent: decode(text), childNodes: [] });
+      top.childNodes.push({
+        nodeType: 3,
+        nodeName: "#text",
+        textContent: decode(text),
+        childNodes: [],
+      });
     } else if (close) {
       stack.pop();
     } else {
@@ -80,7 +85,9 @@ test("markup from contenteditable becomes the format", () => {
   assert.equal(toMarkdown("loose text<p>para</p>"), "loose text\n\npara");
   assert.equal(toMarkdown("<p><b>b</b> <i>i</i></p>"), "**b** *i*");
   assert.equal(
-    toMarkdown('<p><span style="font-weight: 700;">b</span><span style="font-style: italic">i</span></p>'),
+    toMarkdown(
+      '<p><span style="font-weight: 700;">b</span><span style="font-style: italic">i</span></p>',
+    ),
     "**b***i*",
   );
   assert.equal(toMarkdown("<p>a&nbsp;b</p>"), "a b");

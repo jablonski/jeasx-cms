@@ -1,10 +1,10 @@
 /** Checks untrusted page data from the editor before it is stored (server only). */
+import type { Page } from "@cms/content/pages";
+import { queryOne } from "@cms/core/db";
 import { sanitizeBlocks } from "@cms/universal/block-data";
 import type { PageType } from "@cms/universal/blocks";
 import { sanitize, type ValidationError } from "@cms/universal/fields";
-import type { Page } from "@cms/content/pages";
 import { normalizeSlug } from "@cms/universal/slug";
-import { queryOne } from "@cms/core/db";
 
 /** Untrusted page data from the editor; the page type's fields sit beside the others. */
 export interface PageInput {

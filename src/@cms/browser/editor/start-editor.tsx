@@ -27,8 +27,8 @@ import type { Editor, EditorState } from "@cms/browser/editor/state";
 import Toolbar from "@cms/browser/editor/toolbar";
 import { createUploads } from "@cms/browser/editor/uploads";
 import { toHtml } from "@cms/browser/utils/to-html";
-import { registerBlocks, type Schema } from "@cms/universal/blocks";
 import type { Page } from "@cms/content/pages";
+import { registerBlocks, type Schema } from "@cms/universal/blocks";
 
 /** rendered into the page by src/@cms/[edit].tsx */
 export interface EditorData {

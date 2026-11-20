@@ -31,10 +31,7 @@ export interface RichTextToolbar {
 }
 
 /** @param leave called when focus leaves the link input for somewhere outside the field */
-export function createRichTextToolbar(
-  doc: Document,
-  leave: () => void,
-): RichTextToolbar {
+export function createRichTextToolbar(doc: Document, leave: () => void): RichTextToolbar {
   const bar = doc.createElement("div");
   bar.className = "cms-text-toolbar";
   bar.hidden = true;
@@ -51,16 +48,12 @@ export function createRichTextToolbar(
   const selection = () => doc.getSelection();
   const range = () => {
     const sel = selection();
-    return sel?.rangeCount && field?.contains(sel.anchorNode)
-      ? sel.getRangeAt(0)
-      : null;
+    return sel?.rangeCount && field?.contains(sel.anchorNode) ? sel.getRangeAt(0) : null;
   };
   /** Element holding the start of `r`. */
   const elementAt = (r: Range | null) => {
     const node = r?.startContainer;
-    return node?.nodeType === Node.TEXT_NODE
-      ? node.parentElement
-      : (node as Element | undefined);
+    return node?.nodeType === Node.TEXT_NODE ? node.parentElement : (node as Element | undefined);
   };
   const linkAt = (r: Range | null) => {
     const a = elementAt(r)?.closest("a");
@@ -96,12 +89,7 @@ export function createRichTextToolbar(
     // only lists inside the field: the field itself may sit in a list (e.g. a card grid)
     const list = elementAt(r)?.closest("ul, ol");
     const inList = !!(list && field?.contains(list));
-    const button = (
-      command: string,
-      label: string,
-      icon: JSX.Element,
-      active: boolean,
-    ) => (
+    const button = (command: string, label: string, icon: JSX.Element, active: boolean) => (
       <button
         type="button"
         data-command={command}
@@ -116,12 +104,7 @@ export function createRichTextToolbar(
     bar.innerHTML = toHtml(
       <>
         {button("bold", "Bold (Ctrl/⌘ + B)", <BoldIcon />, state("bold"))}
-        {button(
-          "italic",
-          "Italic (Ctrl/⌘ + I)",
-          <ItalicIcon />,
-          state("italic"),
-        )}
+        {button("italic", "Italic (Ctrl/⌘ + I)", <ItalicIcon />, state("italic"))}
         {button("link", "Link (Ctrl/⌘ + K)", <LinkIcon />, !!linkAt(r))}
         {button("list", "Bulleted list", <ListIcon />, inList)}
       </>,
@@ -156,12 +139,7 @@ export function createRichTextToolbar(
           <FolderIcon />
         </button>
         {existing && (
-          <button
-            type="button"
-            data-command="unlink"
-            title="Remove link"
-            aria-label="Remove link"
-          >
+          <button type="button" data-command="unlink" title="Remove link" aria-label="Remove link">
             <UnlinkIcon />
           </button>
         )}
@@ -224,9 +202,7 @@ export function createRichTextToolbar(
   function applyLink(url: string) {
     const input = bar.querySelector("input");
     if (url && !isSafeUrl(url)) {
-      input?.setCustomValidity(
-        "Use a path like /about, an http(s) or a mailto: URL.",
-      );
+      input?.setCustomValidity("Use a path like /about, an http(s) or a mailto: URL.");
       input?.reportValidity();
       return;
     }
@@ -290,9 +266,7 @@ export function createRichTextToolbar(
     e.preventDefault();
     applyLink(bar.querySelector("input")!.value.trim());
   });
-  bar.addEventListener("input", () =>
-    bar.querySelector("input")?.setCustomValidity(""),
-  );
+  bar.addEventListener("input", () => bar.querySelector("input")?.setCustomValidity(""));
   bar.addEventListener(
     "keydown",
     (e) => {

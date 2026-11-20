@@ -1,13 +1,13 @@
-import "./setup";
+import type { Session } from "@cms/auth/sessions";
+import { createUser } from "@cms/auth/users";
 import assert from "node:assert/strict";
 import { Readable } from "node:stream";
 import { test } from "node:test";
-import type { Session } from "@cms/auth/sessions";
-import { createUser } from "@cms/auth/users";
 import filesApi from "../src/@cms/api/[files]";
 import foldersApi from "../src/@cms/api/[folders]";
 import previewApi from "../src/@cms/api/[preview]";
 import usersApi from "../src/@cms/api/[users]";
+import "./setup";
 
 const JSON_TYPE = { "content-type": "application/json" };
 

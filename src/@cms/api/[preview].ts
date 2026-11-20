@@ -1,7 +1,7 @@
-import { PAGE_TYPES } from "@cms/universal/blocks";
 import { bodyOf, dispatch, fail, jsonOnly } from "@cms/core/http";
 import type { RouteProps } from "@cms/core/types";
 import { renderCanvas } from "@cms/render/render-canvas";
+import { PAGE_TYPES } from "@cms/universal/blocks";
 
 /**
  * Renders a draft for the editor canvas (block components run on the server only).

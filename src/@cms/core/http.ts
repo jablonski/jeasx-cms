@@ -1,7 +1,7 @@
 /** Helpers for the admin's JSON API routes (server only). */
 
-import { Readable } from "node:stream";
 import type { FastifyReply, FastifyRequest } from "fastify";
+import { Readable } from "node:stream";
 
 /** The query parameters; of a repeated parameter (?id=1&id=2), the first value counts. */
 export const queryOf = (request: FastifyRequest): Record<string, string> =>

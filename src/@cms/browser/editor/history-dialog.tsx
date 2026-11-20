@@ -1,7 +1,7 @@
 import DrawerLayout from "@cms/browser/editor/drawer-layout";
-import { RevertIcon } from "@cms/universal/icons";
 import { formatTime } from "@cms/browser/utils/format-time";
 import type { Revision } from "@cms/content/revisions";
+import { RevertIcon } from "@cms/universal/icons";
 
 /**
  * Side dialog listing the versions of a page. Choosing one loads it into the editor

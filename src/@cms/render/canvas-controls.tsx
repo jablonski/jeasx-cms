@@ -26,7 +26,8 @@ export function EmptyList({ path }: { path: string }) {
     >
       <span>
         <PlusIcon />
-      </span> {isPage ? "Add your first block" : "Add block"}
+      </span>{" "}
+      {isPage ? "Add your first block" : "Add block"}
     </button>
   );
 }

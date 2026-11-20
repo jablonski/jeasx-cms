@@ -3,9 +3,9 @@ import { safeNext } from "@cms/auth/safe-next";
 import { currentSession, isCrossSite, startSession } from "@cms/auth/sessions";
 import { ensureInitialUser, verifyCredentials } from "@cms/auth/users";
 import { queryOf } from "@cms/core/http";
-import { plural } from "@cms/universal/text";
 import type { RouteProps, ThisContext } from "@cms/core/types";
 import LoginPage from "@cms/render/login-page";
+import { plural } from "@cms/universal/text";
 
 /** GET /@cms/login shows the form, POST signs in. */
 export default async function (this: ThisContext, { request, reply }: RouteProps) {

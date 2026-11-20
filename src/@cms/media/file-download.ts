@@ -1,9 +1,9 @@
-import send from "@fastify/send"; // installed with Jeasx, which serves its static files with it
-import { STATUS_CODES } from "node:http";
-import { basename, dirname } from "node:path";
 import type { RouteProps } from "@cms/core/types";
 import { findFile, type StoredFile } from "@cms/media/files";
+import send from "@fastify/send"; // installed with Jeasx, which serves its static files with it
 import type { FastifyReply } from "fastify";
+import { STATUS_CODES } from "node:http";
+import { basename, dirname } from "node:path";
 
 /**
  * Any file type can be uploaded, so only types that can't run scripts on this site are

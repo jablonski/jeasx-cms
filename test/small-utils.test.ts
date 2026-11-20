@@ -1,7 +1,7 @@
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { formatTime } from "@cms/browser/utils/format-time";
 import { resultOf } from "@cms/core/result";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 
 test("resultOf names the item or explains what is missing", () => {
   assert.deepEqual(resultOf("page", { id: 1 }, "gone"), { page: { id: 1 } });

@@ -1,6 +1,6 @@
+import { defineBlock } from "@cms/universal/blocks";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { defineBlock } from "@cms/universal/blocks";
 
 test("defineBlock infers component props from the fields", () => {
   const block = defineBlock({

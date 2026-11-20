@@ -2,8 +2,8 @@
 import { startEditor } from "@cms/browser/editor/start-editor";
 import initFileLibrary from "@cms/browser/file-library/file-library";
 import initPageFilter from "@cms/browser/page-list";
-import { localizeTimes } from "@cms/browser/utils/format-time";
 import initUserAdmin from "@cms/browser/user-admin/user-admin";
+import { localizeTimes } from "@cms/browser/utils/format-time";
 
 localizeTimes();
 

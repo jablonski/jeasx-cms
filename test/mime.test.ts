@@ -1,6 +1,6 @@
+import { detectType } from "@cms/media/mime";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { detectType } from "@cms/media/mime";
 
 const hex = (s: string) => Buffer.from(s, "hex");
 const latin = (s: string) => Buffer.from(s, "latin1");

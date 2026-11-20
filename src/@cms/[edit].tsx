@@ -1,12 +1,12 @@
 import type { EditorData } from "@cms/browser/editor/start-editor";
-import { blockSchema } from "@cms/universal/blocks";
 import { getPage, newPage, normalizePage } from "@cms/content/pages";
+import { cacheBuster } from "@cms/core/cache-buster";
 import { queryOf } from "@cms/core/http";
 import { parseId } from "@cms/core/id";
 import { SITE } from "@cms/core/site";
 import type { RouteProps } from "@cms/core/types";
-import { cacheBuster } from "@cms/core/cache-buster";
 import Layout from "@cms/render/admin-layout";
+import { blockSchema } from "@cms/universal/blocks";
 import { html } from "jsx-async-runtime";
 
 /** Data for a <script> element: "<" is escaped, so the content can't end the element. */

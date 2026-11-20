@@ -1,7 +1,7 @@
 import type { BlockPosition } from "@cms/browser/editor/paths";
+import type { Page } from "@cms/content/pages";
 import type { Block } from "@cms/universal/blocks";
 import type { Field, ValidationError } from "@cms/universal/fields";
-import type { Page } from "@cms/content/pages";
 
 /** Everything the editor's parts share about the page being edited. */
 export interface EditorState {

@@ -1,10 +1,10 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import SettingsDialog from "@cms/browser/editor/settings-dialog";
 import { execute } from "@cms/core/db";
 import { jsxToString } from "jsx-async-runtime";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { latestArticles } from "../src/queries";
+import "./setup";
 
 for (const slug of ["/one", "/two", "/three"]) {
   execute(

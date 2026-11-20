@@ -1,9 +1,9 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { addAccount, changeAccount, removeAccount } from "@cms/auth/account-changes";
 import type { Session } from "@cms/auth/sessions";
 import { createUser, getUser, type User, verifyCredentials } from "@cms/auth/users";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 const PASSWORD = "correct-horse-battery";
 let users = 0;

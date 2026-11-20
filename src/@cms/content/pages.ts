@@ -1,16 +1,16 @@
 /** Page repository (server only). Input checks: page-validation.ts, history: revisions.ts. */
-import { createBlock, normalizeBlocks } from "@cms/universal/block-data";
-import { type Block, PAGE_TYPES } from "@cms/universal/blocks";
-import { defaults, sanitize, type ValidationError } from "@cms/universal/fields";
 import {
   type PageInput,
   type PageValues,
   parsePageContent,
   validatePage,
 } from "@cms/content/page-validation";
-import { normalizeSlug } from "@cms/universal/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
 import { parseId } from "@cms/core/id";
+import { createBlock, normalizeBlocks } from "@cms/universal/block-data";
+import { type Block, PAGE_TYPES } from "@cms/universal/blocks";
+import { defaults, sanitize, type ValidationError } from "@cms/universal/fields";
+import { normalizeSlug } from "@cms/universal/slug";
 
 /**
  * What every page consists of, saved or not: its columns, the blocks and, beside them,
@@ -196,7 +196,10 @@ function updatePage(id: number, { type, slug, title, status, content }: PageValu
     id,
   );
   const values: PageValues = { type, slug, title, status, content };
-  if (stored && (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])) {
+  if (
+    stored &&
+    (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])
+  ) {
     return id;
   }
   // the replaced version is kept by the trigger "pages_revision", updated_at is set by
@@ -229,9 +232,7 @@ export function duplicatePage(id: number | null): number | undefined {
     return undefined;
   }
   const title = `${page.title || "Untitled page"} (copy)`;
-  const taken = new Set(
-    queryAll<{ slug: string }>("SELECT slug FROM pages").map((r) => r.slug),
-  );
+  const taken = new Set(queryAll<{ slug: string }>("SELECT slug FROM pages").map((r) => r.slug));
   const base = normalizeSlug(`${page.slug}-copy`);
   let slug = base;
   for (let n = 2; taken.has(slug); n++) {

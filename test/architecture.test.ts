@@ -60,7 +60,6 @@ test("layers only depend on the layers below them", () => {
   assert.deepEqual(violations, []);
 });
 
-
 test("server code never imports browser code at runtime", () => {
   const violations = sources
     .filter(({ file }) => file.split("/")[0] !== "browser")

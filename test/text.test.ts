@@ -1,6 +1,6 @@
+import { trimTrailingSlashes } from "@cms/universal/text";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { trimTrailingSlashes } from "@cms/universal/text";
 
 test("trimTrailingSlashes removes only the slashes at the end", () => {
   assert.equal(trimTrailingSlashes("/about//"), "/about");

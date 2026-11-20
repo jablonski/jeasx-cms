@@ -1,15 +1,15 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
-import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/universal/account-limits";
 import { ROLE_LABELS } from "@cms/browser/user-admin/user-roles";
 import { toHtml } from "@cms/browser/utils/to-html";
 import { cacheBuster } from "@cms/core/cache-buster";
-import { shared } from "@cms/universal/global";
 import { dbPath, filesDir } from "@cms/core/storage";
 import RenderBlocks from "@cms/render/render-blocks";
 import { renderCanvas } from "@cms/render/render-canvas";
+import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/universal/account-limits";
+import { shared } from "@cms/universal/global";
 import { jsxToString } from "jsx-async-runtime";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 const blocks = [
   { id: "a", type: "text", data: { heading: "Hello" } },

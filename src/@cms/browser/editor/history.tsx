@@ -2,11 +2,11 @@
 
 import type { DrawerController } from "@cms/browser/editor/drawer";
 import HistoryDialog from "@cms/browser/editor/history-dialog";
+import { pageFields } from "@cms/browser/editor/paths";
 import type { Editor } from "@cms/browser/editor/state";
 import { alertDialog } from "@cms/browser/utils/dialog";
 import { request } from "@cms/browser/utils/http";
 import type { Page, StoredPage } from "@cms/content/pages";
-import { pageFields } from "@cms/browser/editor/paths";
 import type { Revision } from "@cms/content/revisions";
 
 export function createHistory({ state, select }: Editor, drawer: DrawerController) {

@@ -1,6 +1,3 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { limitedAttempt, lockedSeconds, recordFailure } from "@cms/auth/login-limit";
 import { safeNext } from "@cms/auth/safe-next";
 import {
@@ -20,6 +17,9 @@ import {
   verifyCredentials,
 } from "@cms/auth/users";
 import type { FastifyReply, FastifyRequest } from "fastify";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 const PASSWORD = "correct horse battery";
 

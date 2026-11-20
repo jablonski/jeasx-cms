@@ -13,8 +13,7 @@ function block(type: string, data: Record<string, unknown> = {}) {
   };
 }
 
-const text = (heading: string, body: string) =>
-  block("text", { heading, text: body });
+const text = (heading: string, body: string) => block("text", { heading, text: body });
 
 export function pages({ img, people, logos, docs }: SeedAssets) {
   const nav = (navOrder: number, description: string) => ({
@@ -29,12 +28,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
     navOrder: 0,
     inFooter: true,
   });
-  const article = (
-    description: string,
-    author: string,
-    date: string,
-    image: string,
-  ) => ({
+  const article = (description: string, author: string, date: string, image: string) => ({
     description,
     author,
     date,
@@ -65,10 +59,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/",
       title: "Home",
-      ...nav(
-        0,
-        "Jeasx CMS: build fast websites from blocks, edited right on the page.",
-      ),
+      ...nav(0, "Jeasx CMS: build fast websites from blocks, edited right on the page."),
       blocks: [
         block("hero", {
           heading: "Build pages from blocks",
@@ -161,10 +152,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       type: "page",
       slug: "/product",
       title: "Product",
-      ...nav(
-        1,
-        "How Jeasx CMS works: visual editing, flexible blocks and a file library.",
-      ),
+      ...nav(1, "How Jeasx CMS works: visual editing, flexible blocks and a file library."),
       blocks: [
         block("hero", {
           heading: "One editor for every page",
@@ -183,21 +171,9 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               "Visual editing",
               "Type on the page, drag blocks and see every change immediately.",
             ),
-            feature(
-              "🗂️",
-              "File library",
-              "Organize images, PDFs and any other file in folders.",
-            ),
-            feature(
-              "↺",
-              "Page history",
-              "Compare earlier versions and restore them at any time.",
-            ),
-            feature(
-              "🧩",
-              "Custom blocks",
-              "Add a block with one JSX file and a list of fields.",
-            ),
+            feature("🗂️", "File library", "Organize images, PDFs and any other file in folders."),
+            feature("↺", "Page history", "Compare earlier versions and restore them at any time."),
+            feature("🧩", "Custom blocks", "Add a block with one JSX file and a list of fields."),
           ],
         }),
         block("section", {
@@ -314,8 +290,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               price: "€29",
               period: "per month",
               description: "For teams who publish regularly.",
-              features:
-                "5 websites\nAll content blocks\nPage history\nEmail support",
+              features: "5 websites\nAll content blocks\nPage history\nEmail support",
               buttonLabel: "Choose Team",
               buttonUrl: "/contact",
               highlighted: true,
@@ -325,8 +300,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               price: "€99",
               period: "per month",
               description: "For organizations with custom needs.",
-              features:
-                "Unlimited websites\nCustom blocks\nTraining for editors\nPriority support",
+              features: "Unlimited websites\nCustom blocks\nTraining for editors\nPriority support",
               buttonLabel: "Talk to us",
               buttonUrl: "/contact",
               highlighted: false,
@@ -346,18 +320,15 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
             },
             {
               question: "Is there a contract?",
-              answer:
-                "No. All plans are billed monthly and can be canceled at any time.",
+              answer: "No. All plans are billed monthly and can be canceled at any time.",
             },
             {
               question: "Do you offer discounts for non-profits?",
-              answer:
-                "Yes. Non-profits and schools get the Team plan at half price.",
+              answer: "Yes. Non-profits and schools get the Team plan at half price.",
             },
             {
               question: "Which payment methods do you accept?",
-              answer:
-                "Credit card, SEPA direct debit and, for the Business plan, invoice.",
+              answer: "Credit card, SEPA direct debit and, for the Business plan, invoice.",
             },
           ],
         }),
@@ -409,28 +380,13 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               align: "start",
               columns: [
                 {
-                  blocks: [
-                    text(
-                      "Simplicity",
-                      "Fewer moving parts mean fewer things that break.",
-                    ),
-                  ],
+                  blocks: [text("Simplicity", "Fewer moving parts mean fewer things that break.")],
                 },
                 {
-                  blocks: [
-                    text(
-                      "Craft",
-                      "Details matter: typography, spacing and fast pages.",
-                    ),
-                  ],
+                  blocks: [text("Craft", "Details matter: typography, spacing and fast pages.")],
                 },
                 {
-                  blocks: [
-                    text(
-                      "Openness",
-                      "Everything is plain code you can read and change.",
-                    ),
-                  ],
+                  blocks: [text("Openness", "Everything is plain code you can read and change.")],
                 },
               ],
             }),
@@ -635,9 +591,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
         block("cta", {
           heading: "Have a topic in mind?",
           text: "Tell us what you'd like to read about next. We answer every message.",
-          buttons: [
-            { label: "Suggest a topic", url: "/contact", primary: true },
-          ],
+          buttons: [{ label: "Suggest a topic", url: "/contact", primary: true }],
         }),
       ],
     },
@@ -659,8 +613,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
         block("image", {
           src: img.sunset,
           alt: "Orange and pink abstract gradient",
-          caption:
-            "Images come from the file library and can be swapped with one click.",
+          caption: "Images come from the file library and can be swapped with one click.",
         }),
         text(
           "Opening a page",
@@ -684,8 +637,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           items: [
             {
               question: "Can visitors see my unsaved changes?",
-              answer:
-                "No. Visitors only see what you have saved on a published page.",
+              answer: "No. Visitors only see what you have saved on a published page.",
             },
             {
               question: "What if I delete the wrong block?",
@@ -748,8 +700,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           "Sections can contain columns, and columns can contain text, images, tables and more. Two levels are usually enough: if you find yourself nesting deeper, the page probably wants to be split into two.",
         ),
         block("quote", {
-          quote:
-            "Good structure is invisible. Readers just find what they came for.",
+          quote: "Good structure is invisible. Readers just find what they came for.",
           author: "Jordan Kim",
           role: "Design",
         }),
@@ -777,8 +728,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
         block("image", {
           src: img.forest,
           alt: "Green abstract gradient",
-          caption:
-            "Any file type can be stored: images, documents, audio, video and archives.",
+          caption: "Any file type can be stored: images, documents, audio, video and archives.",
         }),
         block("table", {
           heading: "How files are delivered",
@@ -955,8 +905,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           items: [
             {
               question: "How do I change a text?",
-              answer:
-                "Click the text on the page and start typing. Save with **Ctrl/⌘ + S**.",
+              answer: "Click the text on the page and start typing. Save with **Ctrl/⌘ + S**.",
             },
             {
               question: "When do changes go live?",
@@ -965,8 +914,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
             },
             {
               question: "Can I undo a change?",
-              answer:
-                "Yes. Every save is kept in the page's **History** and can be restored.",
+              answer: "Yes. Every save is kept in the page's **History** and can be restored.",
             },
             {
               question: "How do I add a page to the navigation?",
@@ -990,8 +938,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
             },
             {
               question: "Where is the content stored?",
-              answer:
-                "In one SQLite database; uploaded files are stored next to it.",
+              answer: "In one SQLite database; uploaded files are stored next to it.",
             },
             {
               question: "How do I back up a site?",
@@ -1009,13 +956,11 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           items: [
             {
               question: "Is there a free plan?",
-              answer:
-                "Yes. The [Starter plan](/pricing) is free for one website.",
+              answer: "Yes. The [Starter plan](/pricing) is free for one website.",
             },
             {
               question: "Can I cancel at any time?",
-              answer:
-                "Yes. All plans are billed monthly without a minimum term.",
+              answer: "Yes. All plans are billed monthly without a minimum term.",
             },
           ],
         }),
@@ -1048,16 +993,8 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               "Email",
               "[hello@example.com](mailto:hello@example.com)\n\nWe reply within one business day.",
             ),
-            feature(
-              "☎️",
-              "Phone",
-              "+49 30 0000 0000\n\nMonday to Friday, 9:00 to 17:00 CET.",
-            ),
-            feature(
-              "📍",
-              "Office",
-              "Example Street 1\n12345 Example City\nGermany",
-            ),
+            feature("☎️", "Phone", "+49 30 0000 0000\n\nMonday to Friday, 9:00 to 17:00 CET."),
+            feature("📍", "Office", "Example Street 1\n12345 Example City\nGermany"),
           ],
         }),
         block("columns", {
@@ -1103,8 +1040,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           background: "dark",
           blocks: [
             block("quote", {
-              quote:
-                "Fast answers, friendly people. We had our questions answered before lunch.",
+              quote: "Fast answers, friendly people. We had our questions answered before lunch.",
               author: "Priya Shah",
               role: "Editor, Fieldnote",
             }),
@@ -1123,10 +1059,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
           title: "Sample text",
           text: "This is placeholder content for a demo website. Replace it with your own legal information.",
         }),
-        text(
-          "Imprint",
-          "**Example Company GmbH**\nExample Street 1\n12345 Example City\nGermany",
-        ),
+        text("Imprint", "**Example Company GmbH**\nExample Street 1\n12345 Example City\nGermany"),
         text(
           "Contact",
           "Phone: +49 30 0000 0000\nEmail: [hello@example.com](mailto:hello@example.com)",
@@ -1187,8 +1120,7 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
       title: "Spring campaign (draft)",
       status: "draft",
       ...{
-        description:
-          "Spring offer: three months of the Team plan for the price of one.",
+        description: "Spring offer: three months of the Team plan for the price of one.",
         inNav: false,
         navOrder: 0,
         inFooter: false,
@@ -1216,16 +1148,8 @@ export function pages({ img, people, logos, docs }: SeedAssets) {
               "Fresh start",
               "Move your content over in a day with our migration checklist.",
             ),
-            feature(
-              "🎓",
-              "Free training",
-              "A one-hour session for your whole editorial team.",
-            ),
-            feature(
-              "💶",
-              "Save €58",
-              "Pay for one month of the Team plan, get three.",
-            ),
+            feature("🎓", "Free training", "A one-hour session for your whole editorial team."),
+            feature("💶", "Save €58", "Pay for one month of the Team plan, get three."),
           ],
         }),
         block("timeline", {

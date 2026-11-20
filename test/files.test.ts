@@ -1,9 +1,4 @@
-import "./setup";
-import assert from "node:assert/strict";
-import { test } from "node:test";
 import { savePage } from "@cms/content/pages";
-import { truncate } from "@cms/universal/text";
-import { fileSlug } from "@cms/universal/file-url";
 import {
   browse,
   deleteFile,
@@ -14,6 +9,11 @@ import {
   updateFile,
 } from "@cms/media/files";
 import { createFolder, deleteFolder, getFolder } from "@cms/media/folders";
+import { fileSlug } from "@cms/universal/file-url";
+import { truncate } from "@cms/universal/text";
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import "./setup";
 
 test("uploading a stored file again reports it and leaves it where it is", async () => {
   const content = Buffer.from("same content");

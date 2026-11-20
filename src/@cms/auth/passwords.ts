@@ -1,5 +1,5 @@
 /** Hashing and checking passwords with scrypt (server only). */
-import { randomBytes, type ScryptOptions, scrypt, scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, scrypt, scryptSync, timingSafeEqual, type ScryptOptions } from "node:crypto";
 
 const SCRYPT = { N: 32768, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
 const KEY_LENGTH = 32;

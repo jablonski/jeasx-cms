@@ -1,9 +1,9 @@
-import "./setup";
+import { validatePage } from "@cms/content/page-validation";
+import { savePage } from "@cms/content/pages";
+import type { PageType } from "@cms/universal/blocks";
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { PageType } from "@cms/universal/blocks";
-import { savePage } from "@cms/content/pages";
-import { validatePage } from "@cms/content/page-validation";
+import "./setup";
 
 const type: PageType = {
   label: "Page",

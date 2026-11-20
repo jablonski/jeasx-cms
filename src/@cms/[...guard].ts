@@ -5,8 +5,8 @@
  */
 import { currentSession } from "@cms/auth/sessions";
 import { splitUrl } from "@cms/core/http";
-import { trimTrailingSlashes } from "@cms/universal/text";
 import type { RouteProps, ThisContext } from "@cms/core/types";
+import { trimTrailingSlashes } from "@cms/universal/text";
 
 export default function (this: ThisContext, { request, reply }: RouteProps) {
   const cmsPath = request.route.slice(0, -"/[...guard]".length);

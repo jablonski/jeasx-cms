@@ -2,12 +2,12 @@
  * SQLite storage (server only) using the built-in node:sqlite module.
  * Every route is bundled separately, so all routes share one connection.
  */
+import { SCHEMA } from "@cms/core/schema";
+import { dbPath } from "@cms/core/storage";
+import { shared } from "@cms/universal/global";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
-import { SCHEMA } from "@cms/core/schema";
-import { shared } from "@cms/universal/global";
-import { dbPath } from "@cms/core/storage";
 
 export default function db(): DatabaseSync {
   return shared("__cmsDb", () => open());
