@@ -9,8 +9,8 @@ export const SCHEMA = `
     slug       TEXT NOT NULL UNIQUE,
     title      TEXT NOT NULL,
     status     TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-    meta       TEXT NOT NULL DEFAULT '{}',
-    blocks     TEXT NOT NULL DEFAULT '[]',
+    -- the page fields and, under "blocks", the blocks: {"description": "…", "blocks": […]}
+    content    TEXT NOT NULL DEFAULT '{"blocks":[]}',
     version    INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))

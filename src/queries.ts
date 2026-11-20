@@ -10,13 +10,13 @@ interface NavLink {
 
 /** Published pages with the page field `inNav`, by `navOrder`. */
 export const navigation = () =>
-  queryAll<NavLink>(/* sql */ `SELECT slug, title, meta ->> '$.navOrder' AS navOrder FROM pages
-     WHERE status = 'published' AND meta ->> '$.inNav' = 1 ORDER BY navOrder, title`);
+  queryAll<NavLink>(/* sql */ `SELECT slug, title, content ->> '$.navOrder' AS navOrder FROM pages
+     WHERE status = 'published' AND content ->> '$.inNav' = 1 ORDER BY navOrder, title`);
 
 /** Published pages with the page field `inFooter`. */
 export const footerNavigation = () =>
   queryAll<NavLink>(/* sql */ `SELECT slug, title FROM pages
-     WHERE status = 'published' AND meta ->> '$.inFooter' = 1 ORDER BY title`);
+     WHERE status = 'published' AND content ->> '$.inFooter' = 1 ORDER BY title`);
 
 /** The page fields of an article, as stored. */
 type ArticleMeta = FieldValues<(typeof config)["pages"]["article"]["fields"]>;
@@ -27,7 +27,7 @@ type ArticleMeta = FieldValues<(typeof config)["pages"]["article"]["fields"]>;
  */
 export const latestArticles = (count: number): (NavLink & { meta: ArticleMeta })[] =>
   queryAll<NavLink & { meta: string }>(
-    /* sql */ `SELECT slug, title, meta FROM pages WHERE type = 'article' AND status = 'published'
-     ORDER BY meta ->> '$.date' DESC, title LIMIT ?`,
+    /* sql */ `SELECT slug, title, json_remove(content, '$.blocks') AS meta FROM pages
+     WHERE type = 'article' AND status = 'published' ORDER BY content ->> '$.date' DESC, title LIMIT ?`,
     Math.min(Math.max(0, Math.trunc(count)), 15),
   ).map((row) => ({ ...row, meta: JSON.parse(row.meta) as ArticleMeta }));

@@ -37,6 +37,13 @@ test("validateBlocks reports every problem", () => {
   }
 });
 
+test("validateBlocks reserves the page field name \"blocks\"", () => {
+  const errors = validateBlocks([block()], {
+    page: { label: "Page", fields: { blocks: { type: "text", label: "Blocks" } }, blocks: ["text"] },
+  });
+  assert.ok(errors.some((e) => /"blocks" is reserved/.test(e)));
+});
+
 test("validateSite checks the stylesheets and assertValid lists problems", () => {
   assert.deepEqual(validateSite({ stylesheets: ["/a.css"], files: "/files" }), []);
   assert.equal(validateSite({ stylesheets: ["a.css"], files: "/files" }).length, 1);

@@ -48,13 +48,12 @@ test("validatePage reports a taken path, except for the page itself", () => {
   assert.deepEqual(validatePage({ title: "Validation Taken" }, "page", type, id).errors, []);
 });
 
-test("validatePage stores meta and blocks as JSON", () => {
+test("validatePage stores the page fields and blocks as one flat JSON", () => {
   const { values } = validatePage(
     { title: "Json", meta: { description: "d" }, blocks: [] },
     "page",
     type,
     null,
   );
-  assert.equal(JSON.parse(values.meta).description, "d");
-  assert.deepEqual(JSON.parse(values.blocks), []);
+  assert.deepEqual(JSON.parse(values.content), { description: "d", blocks: [] });
 });

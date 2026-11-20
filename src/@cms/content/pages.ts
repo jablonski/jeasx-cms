@@ -47,24 +47,26 @@ interface PageRow {
   slug: string;
   title: string;
   status: Page["status"];
-  meta: string;
-  blocks: string;
+  content: string;
   version: number;
   created_at: string;
   updated_at: string;
 }
 
-const toPage = (row: PageRow): StoredPage => ({
-  id: row.id,
-  type: row.type,
-  slug: row.slug,
-  title: row.title,
-  status: row.status,
-  meta: JSON.parse(row.meta),
-  blocks: JSON.parse(row.blocks),
-  updatedAt: row.updated_at,
-  version: row.version,
-});
+const toPage = (row: PageRow): StoredPage => {
+  const { blocks = [], ...meta } = JSON.parse(row.content);
+  return {
+    id: row.id,
+    type: row.type,
+    slug: row.slug,
+    title: row.title,
+    status: row.status,
+    meta,
+    blocks,
+    updatedAt: row.updated_at,
+    version: row.version,
+  };
+};
 
 export function listPages(): PageSummary[] {
   const rows = queryAll<Pick<PageRow, "id" | "type" | "slug" | "title" | "status" | "updated_at">>(
@@ -170,15 +172,14 @@ export function savePage(data: unknown): SaveOutcome {
   return { errors: [{ message: "The page could not be saved" }] };
 }
 
-function insertPage({ type, slug, title, status, meta, blocks }: PageValues): number {
+function insertPage({ type, slug, title, status, content }: PageValues): number {
   return insert(
-    "INSERT INTO pages (type, slug, title, status, meta, blocks) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO pages (type, slug, title, status, content) VALUES (?, ?, ?, ?, ?)",
     type,
     slug,
     title,
     status,
-    meta,
-    blocks,
+    content,
   );
 }
 
@@ -186,25 +187,24 @@ function insertPage({ type, slug, title, status, meta, blocks }: PageValues): nu
  * Replaces an existing page and keeps the replaced version as a revision. Saving it
  * unchanged changes nothing: no revision, same version and time of the last change.
  */
-function updatePage(id: number, { type, slug, title, status, meta, blocks }: PageValues): number {
+function updatePage(id: number, { type, slug, title, status, content }: PageValues): number {
   const stored = queryOne<PageValues>(
-    "SELECT type, slug, title, status, meta, blocks FROM pages WHERE id = ?",
+    "SELECT type, slug, title, status, content FROM pages WHERE id = ?",
     id,
   );
-  const values: PageValues = { type, slug, title, status, meta, blocks };
+  const values: PageValues = { type, slug, title, status, content };
   if (stored && (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])) {
     return id;
   }
   keepRevision(id, getPage(id));
   execute(
-    `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, meta = ?, blocks = ?,
+    `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, content = ?,
      version = version + 1, updated_at = datetime('now') WHERE id = ?`,
     type,
     slug,
     title,
     status,
-    meta,
-    blocks,
+    content,
     id,
   );
   return id;

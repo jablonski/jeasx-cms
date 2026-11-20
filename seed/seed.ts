@@ -11,6 +11,7 @@
  */
 
 import { configureCms } from "@cms/configure";
+import { pageContent } from "@cms/content/page-validation";
 import { open, transaction } from "@cms/core/db";
 import { dbPath } from "@cms/core/storage";
 import env from "jeasx/env.js";
@@ -27,7 +28,7 @@ function seed(db: DatabaseSync) {
   transaction(() => {
     const assets = seedFiles(db);
     const insert = db.prepare(
-      "INSERT INTO pages (type, slug, title, status, meta, blocks) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO pages (type, slug, title, status, content) VALUES (?, ?, ?, ?, ?)",
     );
     for (const page of pages(assets)) {
       insert.run(
@@ -35,8 +36,7 @@ function seed(db: DatabaseSync) {
         page.slug,
         page.title,
         page.status ?? "published",
-        JSON.stringify(page.meta),
-        JSON.stringify(page.blocks),
+        pageContent(page.meta, page.blocks),
       );
     }
   }, db);

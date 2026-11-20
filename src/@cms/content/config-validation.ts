@@ -134,6 +134,10 @@ function checkPageType(name: string, pageType: Unchecked, types: Set<string>, er
     errors.push(`${where}: "label" is required`);
   }
   checkFields(pageType?.fields ?? {}, where, { blockTypes: types, allowBlocks: false, errors });
+  if (pageType?.fields && Object.hasOwn(pageType.fields, "blocks")) {
+    // stored next to the page fields (see pageContent)
+    errors.push(`${where}: the field name "blocks" is reserved for the page's blocks`);
+  }
   if (!Array.isArray(pageType?.blocks) || !pageType.blocks.length) {
     errors.push(`${where}: "blocks" must list the allowed block types`);
   }

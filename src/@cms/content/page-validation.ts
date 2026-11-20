@@ -24,9 +24,13 @@ export interface PageValues {
   slug: string;
   title: string;
   status: Page["status"];
-  meta: string;
-  blocks: string;
+  /** JSON of the page fields with the blocks under "blocks" (see pageContent) */
+  content: string;
 }
+
+/** The stored JSON of a page: its fields, flat, with the blocks under "blocks". */
+export const pageContent = (meta: Record<string, unknown>, blocks: unknown[]) =>
+  JSON.stringify({ ...meta, blocks });
 
 /** Problems of a path built from `source`, except clashes with other pages. */
 function slugProblems(source: string, slug: string): ValidationError[] {
@@ -69,8 +73,7 @@ export function validatePage(
     slug,
     title,
     status: input.status === "published" ? "published" : "draft",
-    meta: JSON.stringify(meta.value),
-    blocks: JSON.stringify(blocks.value),
+    content: pageContent(meta.value, blocks.value),
   };
   return { values, errors };
 }

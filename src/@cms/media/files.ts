@@ -223,8 +223,8 @@ export function withLocation(file: StoredFile): UploadedFile {
 export function fileUsage(filename: string): FileUsage[] {
   const pattern = `%/${filename.split(".")[0]}/%`;
   const rows = queryAll<{ id: number; title: string; slug: string; historyOnly: number }>(
-    `SELECT id, title, slug, NOT (blocks LIKE ?1 OR meta LIKE ?1) AS historyOnly FROM pages
-     WHERE blocks LIKE ?1 OR meta LIKE ?1 OR EXISTS
+    `SELECT id, title, slug, NOT (content LIKE ?1) AS historyOnly FROM pages
+     WHERE content LIKE ?1 OR EXISTS
        (SELECT 1 FROM revisions r WHERE r.page_id = pages.id AND r.snapshot LIKE ?1)`,
     pattern,
   );
