@@ -1,6 +1,6 @@
 import { getPublishedPage } from "@cms/content/pages";
 import type { RouteProps } from "@cms/core/types";
-import RenderBlocks from "@cms/render/render-blocks";
+import Blocks from "@cms/render/render-blocks";
 import Layout from "./Layout";
 
 export default function ({ request }: RouteProps) {
@@ -11,7 +11,7 @@ export default function ({ request }: RouteProps) {
 
   return (
     <Layout title={page.title} description={String(page.description ?? "")}>
-      <RenderBlocks blocks={page.blocks} />
+      <Blocks blocks={page.blocks} />
     </Layout>
   );
 }

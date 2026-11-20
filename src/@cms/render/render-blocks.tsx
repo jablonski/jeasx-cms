@@ -11,7 +11,7 @@ const NO_FIELD = Object.assign(() => ({}), { editing: false });
  * (passed in instead of imported to avoid a circular import).
  * Used for the public site; the editor canvas uses render-canvas.tsx.
  */
-export default function RenderBlocks({ blocks }: { blocks: unknown }) {
+export default function Blocks({ blocks }: { blocks: unknown }) {
   // Stored data may predate the current fields of its blocks.
   return <NormalizedBlocks blocks={normalizeBlocks(blocks)} />;
 }

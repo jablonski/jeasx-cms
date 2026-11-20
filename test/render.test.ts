@@ -2,7 +2,7 @@ import { ROLE_LABELS } from "@cms/browser/user-admin/user-roles";
 import { toHtml } from "@cms/browser/utils/to-html";
 import { cacheBuster } from "@cms/core/cache-buster";
 import { dbPath, filesDir } from "@cms/core/storage";
-import RenderBlocks from "@cms/render/render-blocks";
+import Blocks from "@cms/render/render-blocks";
 import { renderCanvas } from "@cms/render/render-canvas";
 import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/universal/account-limits";
 import { shared } from "@cms/universal/global";
@@ -22,15 +22,15 @@ const blocks = [
 ];
 
 test("RenderBlocks renders known blocks and skips unknown ones", async () => {
-  const html = await jsxToString(RenderBlocks({ blocks }) as any);
+  const html = await jsxToString(Blocks({ blocks }) as any);
   assert.match(html, /data-block-id="a"/);
   assert.match(html, /data-block-id="c"/);
   assert.doesNotMatch(html, /data-block-id="b"/);
 });
 
 test("RenderBlocks accepts data that isn't a list of blocks", async () => {
-  assert.equal(await jsxToString(RenderBlocks({ blocks: null }) as any), "");
-  assert.equal(await jsxToString(RenderBlocks({ blocks: "nonsense" }) as any), "");
+  assert.equal(await jsxToString(Blocks({ blocks: null }) as any), "");
+  assert.equal(await jsxToString(Blocks({ blocks: "nonsense" }) as any), "");
 });
 
 test("renderCanvas renders editor controls for every block", async () => {
@@ -78,7 +78,7 @@ test("storage paths come from the environment with defaults", () => {
 });
 
 test("toHtml renders without awaiting", () => {
-  assert.equal(toHtml(RenderBlocks({ blocks: [] })), "");
+  assert.equal(toHtml(Blocks({ blocks: [] })), "");
 });
 
 test("constants for accounts are consistent", () => {
