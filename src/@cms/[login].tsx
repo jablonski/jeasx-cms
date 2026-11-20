@@ -2,7 +2,7 @@ import { limitedAttempt } from "@cms/auth/login-limit";
 import { safeNext } from "@cms/auth/safe-next";
 import { currentSession, isCrossSite, startSession } from "@cms/auth/sessions";
 import { ensureInitialUser, verifyCredentials } from "@cms/auth/users";
-import { queryOf } from "@cms/core/http";
+import { formOf, queryOf } from "@cms/core/http";
 import type { RouteProps, ThisContext } from "@cms/core/types";
 import LoginPage from "@cms/render/login-page";
 import { plural } from "@cms/universal/text";
@@ -24,7 +24,7 @@ export default async function (this: ThisContext, { request, reply }: RouteProps
     return reply.status(403).send("Forbidden");
   }
 
-  const form = new URLSearchParams(typeof request.body === "string" ? request.body : "");
+  const form = formOf(request);
   const next = safeNext(form.get("next"), cmsPath);
   const username = form.get("username") ?? "";
   const client = request.ip;

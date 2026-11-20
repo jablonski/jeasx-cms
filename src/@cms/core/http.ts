@@ -11,6 +11,10 @@ export const queryOf = (request: FastifyRequest): Record<string, string> =>
     ),
   );
 
+/** The parsed urlencoded form body (the string body produced by jeasx.config.js); empty if none. */
+export const formOf = (request: FastifyRequest): URLSearchParams =>
+  new URLSearchParams(typeof request.body === "string" ? request.body : "");
+
 /** A request URL in its parts: "/a?b=1" → { pathname: "/a", search: "?b=1" }. */
 export function splitUrl(url: string) {
   const start = url.indexOf("?");

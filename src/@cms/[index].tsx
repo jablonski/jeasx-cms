@@ -1,5 +1,6 @@
 import { isCrossSite } from "@cms/auth/sessions";
 import { duplicatePage, listPages } from "@cms/content/pages";
+import { formOf } from "@cms/core/http";
 import { parseId } from "@cms/core/id";
 import type { RouteProps, ThisContext } from "@cms/core/types";
 import Layout from "@cms/render/admin-layout";
@@ -13,7 +14,7 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
     if (isCrossSite(request)) {
       return reply.status(403).send("Forbidden");
     }
-    const form = new URLSearchParams(typeof request.body === "string" ? request.body : "");
+    const form = formOf(request);
     const copy = duplicatePage(parseId(form.get("duplicate")));
     // absolute: an HTTP Location header ignores the page's <base> tag;
     // the anchor scrolls back to the list position, onto the copy
