@@ -8,7 +8,6 @@ import {
   parsePageContent,
   validatePage,
 } from "@cms/content/page-validation";
-import { keepRevision } from "@cms/content/revisions";
 import { normalizeSlug } from "@cms/universal/slug";
 import { execute, insert, queryAll, queryOne, transaction } from "@cms/core/db";
 import { parseId } from "@cms/core/id";
@@ -200,10 +199,11 @@ function updatePage(id: number, { type, slug, title, status, content }: PageValu
   if (stored && (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])) {
     return id;
   }
-  keepRevision(id);
+  // the replaced version is kept by the trigger "pages_revision", updated_at is set by
+  // "pages_updated" (schema.ts)
   execute(
     `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, content = ?,
-     version = version + 1, updated_at = datetime('now') WHERE id = ?`,
+     version = version + 1 WHERE id = ?`,
     type,
     slug,
     title,

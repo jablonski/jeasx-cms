@@ -1,10 +1,13 @@
 /** Earlier versions of pages (server only, table "revisions"). */
 import type { Page, StoredPage } from "@cms/content/pages";
 import { parsePageContent } from "@cms/content/page-validation";
-import { execute, queryAll, queryOne } from "@cms/core/db";
+import { queryAll, queryOne } from "@cms/core/db";
 
-/** Earlier versions kept per page; older ones are removed when a page is saved. */
-export const MAX_REVISIONS = 50;
+/**
+ * Revisions are kept by the trigger "pages_revision" (schema.ts) whenever a page changes,
+ * up to MAX_REVISIONS per page.
+ */
+export { MAX_REVISIONS } from "@cms/core/schema";
 
 export interface Revision {
   id: number;
@@ -24,24 +27,6 @@ interface RevisionRow {
   content: string;
   version: number;
   updated_at: string;
-}
-
-/**
- * Stores the version of a page that is about to be replaced (a copy of its row) and
- * drops the oldest ones.
- */
-export function keepRevision(pageId: number): void {
-  execute(
-    `INSERT INTO revisions (page_id, type, slug, title, status, content, version, updated_at)
-     SELECT id, type, slug, title, status, content, version, updated_at FROM pages WHERE id = ?`,
-    pageId,
-  );
-  execute(
-    `DELETE FROM revisions WHERE page_id = ?1 AND id NOT IN
-     (SELECT id FROM revisions WHERE page_id = ?1 ORDER BY id DESC LIMIT ?2)`,
-    pageId,
-    MAX_REVISIONS,
-  );
 }
 
 /** Earlier versions of a page, newest first. Every save stores the version it replaces. */

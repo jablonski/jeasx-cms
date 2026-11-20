@@ -193,9 +193,10 @@ export async function updateUser(
   if (taken) {
     return { error: taken };
   }
+  // updated_at is set by the trigger "users_updated" (schema.ts)
   execute(
-    `UPDATE users SET username = ?, role = ?, password_hash = COALESCE(?, password_hash),
-     updated_at = datetime('now') WHERE id = ?`,
+    `UPDATE users SET username = ?, role = ?, password_hash = COALESCE(?, password_hash)
+     WHERE id = ?`,
     name,
     newRole as Role,
     hash,

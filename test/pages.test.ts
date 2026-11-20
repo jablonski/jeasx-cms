@@ -7,6 +7,7 @@ import {
   type StoredPage,
 } from "@cms/content/pages";
 import { getRevision, listRevisions, MAX_REVISIONS } from "@cms/content/revisions";
+import { execute } from "@cms/core/db";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import "./setup";
@@ -107,6 +108,16 @@ test("saving an unchanged page keeps no revision", () => {
   // publishing is a change, even without edits
   savePage({ ...page, status: "published" });
   assert.equal(listRevisions(page!.id).length, 1);
+});
+
+test("changes made outside the CMS keep a revision too", () => {
+  const { page } = savePage(input("/outside"));
+  execute("UPDATE pages SET title = title WHERE id = ?", page!.id); // same value: nothing
+  assert.equal(listRevisions(page!.id).length, 0);
+  execute("UPDATE pages SET title = 'Changed by SQL' WHERE id = ?", page!.id);
+  const [revision] = listRevisions(page!.id);
+  assert.equal(revision.title, "Title");
+  assert.equal(getRevision(page!.id, revision.id)?.version, page!.version);
 });
 
 test("only the latest revisions are kept", () => {
