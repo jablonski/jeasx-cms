@@ -100,7 +100,8 @@ export function createFieldBinding(
       return handleRichTextInput(rich);
     }
     const input = e.target as HTMLInputElement;
-    if (!input.name) {
+    // the formatting toolbar's link input isn't a field of the page
+    if (!input.name || richText.inToolbar(input)) {
       return;
     }
     setAt(input.name, inputValue(input));

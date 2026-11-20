@@ -158,3 +158,33 @@ export function GripIcon() {
     </svg>
   );
 }
+
+/** A document with lines of text (a page of the site). */
+export function PageIcon() {
+  return (
+    <Icon>
+      <path d="M3.25 1.75h6.25l3.25 3.25v9.25h-9.5z" />
+      <path d="M9.25 1.75V5.25h3.5M5.75 8.25h4.5M5.75 11h4.5" />
+    </Icon>
+  );
+}
+
+/** A folder (the file library). */
+export function FolderIcon() {
+  return (
+    <Icon>
+      <path d="M1.75 3.25h4.5l1.5 1.75h6.5v7.75H1.75z" />
+    </Icon>
+  );
+}
+
+/** A broken link (remove a link): the link icon with its middle taken out. */
+export function UnlinkIcon() {
+  return (
+    <Icon>
+      <path d="M10 9.5 13 6.5a3 3 0 0 0-4.25-4.25l-1 1" />
+      <path d="M6 6.5 3 9.5a3 3 0 0 0 4.25 4.25l1-1" />
+      <path d="M11 12v1.5M12 11h1.5M5 4V2.5M4 5H2.5" />
+    </Icon>
+  );
+}
