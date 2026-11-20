@@ -12,7 +12,7 @@
     "bundle": "esbuild --bundle --alias:@cms=./src/@cms --platform=node --format=esm --packages=external --log-level=warning --outdir=.build"
   },
   "dependencies": {
-    "jeasx": "3.0.1"
+    "jeasx": "3.0.2"
   },
   "devDependencies": {
     "typescript": "7.0.2"
