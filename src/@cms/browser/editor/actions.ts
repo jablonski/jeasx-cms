@@ -7,6 +7,7 @@ import * as paths from "@cms/browser/editor/paths";
 import type { Editor } from "@cms/browser/editor/state";
 import type { createUploads } from "@cms/browser/editor/uploads";
 import { chooseFiles } from "@cms/browser/files/file-api";
+import { pickPage } from "@cms/browser/editor/page-picker";
 import { pickFile } from "@cms/browser/files/file-picker";
 import { alertDialog, confirmDialog } from "@cms/browser/utils/dialog";
 import { request } from "@cms/browser/utils/http";
@@ -171,6 +172,10 @@ export function createActions({
     },
     "pick-file"({ path }) {
       pickFile({ imagesOnly: false }).then((url) => url && uploads.setFileUrl(path, url));
+      return "handled";
+    },
+    "pick-page"({ path }) {
+      pickPage().then((url) => url && uploads.setFileUrl(path, url));
       return "handled";
     },
     "pick-image"({ path }) {

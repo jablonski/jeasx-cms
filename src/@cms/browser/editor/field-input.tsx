@@ -1,5 +1,11 @@
 import type { BlocksField, Field, ListField } from "@cms/universal/fields";
-import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/universal/icons";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  FolderIcon,
+  PageIcon,
+  XIcon,
+} from "@cms/universal/icons";
 import { BLOCKS, type Block } from "@cms/universal/blocks";
 import RichText from "@cms/universal/rich-text";
 
@@ -231,7 +237,29 @@ function Control({
       );
     case "url":
       return (
-        <input id={id} type="text" name={path} value={value} placeholder="/path or https://…" />
+        <div class="image-input">
+          <input id={id} type="text" name={path} value={value} placeholder="/path or https://…" />
+          <button
+            type="button"
+            class="icon"
+            data-action="pick-page"
+            data-path={path}
+            title="Link to a page"
+            aria-label="Link to a page"
+          >
+            <PageIcon />
+          </button>
+          <button
+            type="button"
+            class="icon"
+            data-action="pick-file"
+            data-path={path}
+            title="Link to a file"
+            aria-label="Link to a file"
+          >
+            <FolderIcon />
+          </button>
+        </div>
       );
     default:
       return <input id={id} type="text" name={path} value={value} />;
