@@ -2,6 +2,7 @@ import { ROLE_LABELS } from "@cms/browser/user-admin/user-roles";
 import { toHtml } from "@cms/browser/utils/to-html";
 import { cacheBuster } from "@cms/core/cache-buster";
 import { dbPath, filesDir } from "@cms/core/storage";
+import Layout from "@cms/render/admin-layout";
 import Blocks from "@cms/render/render-blocks";
 import { renderCanvas } from "@cms/render/render-canvas";
 import { MAX_PASSWORD, MIN_PASSWORD } from "@cms/universal/account-limits";
@@ -84,4 +85,20 @@ test("toHtml renders without awaiting", () => {
 test("constants for accounts are consistent", () => {
   assert.ok(MIN_PASSWORD < MAX_PASSWORD);
   assert.deepEqual(Object.keys(ROLE_LABELS).sort(), ["admin", "editor"]);
+});
+
+test("the admin header highlights the section of the request", async () => {
+  const highlighted = async (path: string) => {
+    const ctx = { cmsPath: "/@cms", request: { path } } as any;
+    const html = await jsxToString.call(ctx, Layout.call(ctx, { title: "t" }) as any);
+    return html.match(/<a [^>]*aria-current="page"[^>]*>\s*(\w+)/)?.[1];
+  };
+
+  assert.equal(await highlighted("/@cms"), "Pages");
+  assert.equal(await highlighted("/@cms/"), "Pages");
+  assert.equal(await highlighted("/@cms/edit"), "Pages");
+  assert.equal(await highlighted("/@cms/files"), "Files");
+  assert.equal(await highlighted("/@cms/users"), "Account");
+  assert.equal(await highlighted("/@cms/filesystem"), undefined);
+  assert.equal(await highlighted("/@cms/unknown"), undefined);
 });

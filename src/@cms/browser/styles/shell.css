@@ -68,6 +68,12 @@ h2 {
       background: var(--surface-2);
       color: var(--text);
     }
+
+    /* the section the user is in (see aria-current in admin-layout.tsx) */
+    &[aria-current="page"] {
+      background: var(--surface-3);
+      color: var(--text);
+    }
   }
 }
 
