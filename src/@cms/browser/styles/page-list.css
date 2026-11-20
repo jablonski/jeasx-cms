@@ -52,6 +52,15 @@ table.pages {
     }
   }
 
+  /* the path also opens the editor: looks like the other paths, highlighted on hover */
+  & td a.page-path {
+    font-weight: inherit;
+
+    &:hover code {
+      color: var(--accent);
+    }
+  }
+
   & code {
     border-radius: 0.35rem;
     background: var(--surface-3);

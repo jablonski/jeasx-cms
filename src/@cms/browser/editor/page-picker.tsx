@@ -1,9 +1,13 @@
 /** Modal list of the site's pages to pick a link target from (with a filter). */
 
-import type { PageSummary } from "@cms/content/pages";
 import { request } from "@cms/browser/utils/http";
+import { loadText, storeText } from "@cms/browser/utils/tab-storage";
 import { toHtml } from "@cms/browser/utils/to-html";
+import type { PageSummary } from "@cms/content/pages";
 import { XIcon } from "@cms/universal/icons";
+
+/** The search is kept per browser tab, apart from the page list's filter. */
+const FILTER_KEY = "cms-page-picker-filter";
 
 /** Resolves with the chosen page's path (slug) or null. */
 export async function pickPage(): Promise<string | null> {
@@ -31,7 +35,7 @@ export async function pickPage(): Promise<string | null> {
       <input
         type="search"
         class="page-picker-filter"
-        placeholder="Filter by title or path…"
+        placeholder="Filter by path or title…"
         aria-label="Filter pages"
         autocomplete="off"
       />
@@ -52,7 +56,17 @@ export async function pickPage(): Promise<string | null> {
   );
   dialog.showModal();
   const filter = dialog.querySelector<HTMLInputElement>(".page-picker-filter")!;
+  const apply = () => {
+    const q = filter.value.trim().toLowerCase();
+    dialog.querySelectorAll<HTMLElement>("[data-search]").forEach((li) => {
+      li.hidden = !li.dataset.search!.includes(q);
+    });
+  };
+  // the last search of this tab (selected: typing replaces it)
+  filter.value = loadText(FILTER_KEY);
+  apply();
   filter.focus();
+  filter.select();
 
   return new Promise((resolve) => {
     const done = (value: string | null) => {
@@ -62,10 +76,8 @@ export async function pickPage(): Promise<string | null> {
     };
     dialog.addEventListener("cancel", () => done(null));
     filter.addEventListener("input", () => {
-      const q = filter.value.trim().toLowerCase();
-      dialog.querySelectorAll<HTMLElement>("[data-search]").forEach((li) => {
-        li.hidden = !li.dataset.search!.includes(q);
-      });
+      storeText(FILTER_KEY, filter.value);
+      apply();
     });
     // Enter in the filter picks the first visible page
     filter.addEventListener("keydown", (e) => {

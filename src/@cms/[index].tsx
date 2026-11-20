@@ -1,10 +1,10 @@
-import { PAGE_TYPES } from "@cms/universal/blocks";
+import { isCrossSite } from "@cms/auth/sessions";
 import { duplicatePage, listPages } from "@cms/content/pages";
 import { parseId } from "@cms/core/id";
-import { isCrossSite } from "@cms/auth/sessions";
-import { CopyIcon, PencilIcon } from "@cms/universal/icons";
-import Layout from "@cms/render/admin-layout";
 import type { RouteProps, ThisContext } from "@cms/core/types";
+import Layout from "@cms/render/admin-layout";
+import { PAGE_TYPES } from "@cms/universal/blocks";
+import { CopyIcon, PencilIcon } from "@cms/universal/icons";
 
 /** Page list; POST duplicates a page and returns to the list, which then shows the copy. */
 export default function (this: ThisContext, { request, reply }: RouteProps) {
@@ -29,7 +29,7 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
             type="search"
             id="page-filter"
             class="page-filter"
-            placeholder="Filter by title or path…"
+            placeholder="Filter by path or title…"
             aria-label="Filter pages"
             aria-controls="page-list"
             autocomplete="off"
@@ -48,8 +48,8 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
         <table class="pages" id="page-list">
           <thead>
             <tr>
-              <th>Title</th>
               <th>Path</th>
+              <th>Title</th>
               <th>Type</th>
               <th>Status</th>
               <th>Updated</th>
@@ -62,10 +62,13 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
             {pages.map((p) => (
               <tr id={`page-${p.id}`} data-search={`${p.title} ${p.slug}`.toLowerCase()}>
                 <td>
-                  <a href={`edit?id=${p.id}`}>{p.title}</a>
+                  {/* a second way into the editor: one tab stop per row (the title) is enough */}
+                  <a href={`edit?id=${p.id}`} class="page-path" tabindex="-1">
+                    <code>{p.slug}</code>
+                  </a>
                 </td>
                 <td>
-                  <code>{p.slug}</code>
+                  <a href={`edit?id=${p.id}`}>{p.title}</a>
                 </td>
                 <td>{PAGE_TYPES[p.type]?.label ?? p.type}</td>
                 <td>
