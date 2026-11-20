@@ -25,6 +25,15 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
       <main class="admin-main">
         <div class="toolbar">
           <h1>Pages</h1>
+          <input
+            type="search"
+            id="page-filter"
+            class="page-filter"
+            placeholder="Filter by title or path…"
+            aria-label="Filter pages"
+            aria-controls="page-list"
+            autocomplete="off"
+          />
           <form action="edit" method="get" class="inline-form">
             <select name="type" aria-label="Page type">
               {Object.entries(PAGE_TYPES).map(([key, { label }]) => (
@@ -36,7 +45,7 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
             </button>
           </form>
         </div>
-        <table class="pages">
+        <table class="pages" id="page-list">
           <thead>
             <tr>
               <th>Title</th>
@@ -51,7 +60,7 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
           </thead>
           <tbody>
             {pages.map((p) => (
-              <tr id={`page-${p.id}`}>
+              <tr id={`page-${p.id}`} data-search={`${p.title} ${p.slug}`.toLowerCase()}>
                 <td>
                   <a href={`edit?id=${p.id}`}>{p.title}</a>
                 </td>

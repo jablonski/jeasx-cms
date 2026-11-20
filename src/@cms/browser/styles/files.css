@@ -266,14 +266,34 @@ button.file-thumb:hover {
       text-align: left;
       white-space: normal;
 
-      & span:first-child {
+      /* title (at most two lines) above the path (one line): long ones are cut with "…" */
+      & .page-picker-text {
+        display: grid;
         flex: 1;
+        gap: 0.15rem;
+        min-width: 0;
+      }
+
+      & .page-picker-title {
+        display: -webkit-box;
+        overflow: hidden;
         font-weight: 550;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow-wrap: anywhere;
       }
 
       & code {
+        overflow: hidden;
         color: var(--text-3);
         font-size: 0.8125rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      & .badge {
+        flex: none;
       }
     }
   }

@@ -83,3 +83,21 @@ table.pages {
     }
   }
 }
+
+/* the page list's toolbar: heading, filter centered on its own, "New page" */
+.toolbar:has(> .page-filter) {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 20rem) 1fr;
+
+  & > .inline-form {
+    justify-self: end;
+  }
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr;
+
+    & > .inline-form {
+      justify-self: start;
+    }
+  }
+}

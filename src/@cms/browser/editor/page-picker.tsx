@@ -13,7 +13,11 @@ export async function pickPage(): Promise<string | null> {
   document.body.append(dialog);
 
   const res = await request<PageSummary[]>("GET", "api/pages");
-  const pages = res.ok ? res.data : [];
+  // by path, segment by segment: /blog/post right after /blog, before /blog-archive
+  const sortKey = (slug: string) => slug.replaceAll("/", "\u0000");
+  const pages = (res.ok ? res.data : []).sort((a, b) =>
+    sortKey(a.slug) < sortKey(b.slug) ? -1 : 1,
+  );
 
   dialog.innerHTML = toHtml(
     <>
@@ -34,9 +38,11 @@ export async function pickPage(): Promise<string | null> {
       <ul class="page-picker-list">
         {pages.map((p) => (
           <li data-search={`${p.title} ${p.slug}`.toLowerCase()}>
-            <button type="button" data-pick={p.slug}>
-              <span>{p.title}</span>
-              <code>{p.slug}</code>
+            <button type="button" data-pick={p.slug} title={`${p.title}\n${p.slug}`}>
+              <span class="page-picker-text">
+                <span class="page-picker-title">{p.title}</span>
+                <code>{p.slug}</code>
+              </span>
               {p.status !== "published" && <span class={`badge ${p.status}`}>{p.status}</span>}
             </button>
           </li>
