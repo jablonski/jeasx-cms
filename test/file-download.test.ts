@@ -16,7 +16,8 @@ async function get(path: string, headers: Record<string, string> = {}, query: ob
     header: (name: string, value: unknown) => ((res.headers[name.toLowerCase()] = value), reply),
     send: (body: unknown) => ((res.body = body), reply),
   };
-  const result = await download({ request: { method: "GET", path, headers, query }, reply } as any);
+  const raw = { method: "GET", headers };
+  const result = await download({ request: { ...raw, raw, path, query }, reply } as any);
   if (result instanceof Readable) {
     res.body = Buffer.concat(await result.toArray());
   } else if (result !== reply) {
@@ -73,7 +74,8 @@ test("uploaded JavaScript can't be loaded as a script", async () => {
     send: () => reply,
   };
   const path = new URL(file!.url, "http://x").pathname;
-  await download({ request: { method: "HEAD", path, headers: {}, query: {} }, reply } as any);
+  const raw = { method: "HEAD", headers: {} };
+  await download({ request: { ...raw, raw, path, query: {} }, reply } as any);
   assert.equal(type, "application/octet-stream");
 });
 

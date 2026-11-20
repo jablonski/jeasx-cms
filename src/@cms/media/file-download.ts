@@ -1,4 +1,6 @@
-import { createReadStream } from "node:fs";
+import send from "@fastify/send"; // installed with Jeasx, which serves its static files with it
+import { STATUS_CODES } from "node:http";
+import { basename, dirname } from "node:path";
 import type { RouteProps } from "@cms/core/types";
 import { findFile, type StoredFile } from "@cms/media/files";
 import type { FastifyReply } from "fastify";
@@ -23,32 +25,6 @@ function servedType(mime: string) {
   return mime.startsWith("text/") ? `${mime}; charset=utf-8` : mime;
 }
 
-/**
- * The byte range asked for by a Range header (media players need this to seek).
- * Returns null to send the whole file (no range, invalid or several ranges) and
- * "unsatisfiable" if the range lies outside the file.
- */
-function parseRange(header: string | undefined, size: number) {
-  const match = /^bytes=(\d*)-(\d*)$/.exec(header?.trim() ?? "");
-  if (!match || (!match[1] && !match[2])) {
-    return null;
-  }
-  const [, first, last] = match;
-  if (!first) {
-    // "bytes=-500": the last 500 bytes
-    const length = Number(last);
-    return length ? { start: Math.max(0, size - length), end: size - 1 } : "unsatisfiable";
-  }
-  const start = Number(first);
-  if (last && Number(last) < start) {
-    return null;
-  }
-  if (start >= size) {
-    return "unsatisfiable";
-  }
-  return { start, end: last ? Math.min(Number(last), size - 1) : size - 1 };
-}
-
 /** Names the file for browsers: a plain ASCII fallback, and the real name for all others. */
 function contentDisposition(disposition: "attachment" | "inline", name: string) {
   const ascii = name.replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_");
@@ -61,7 +37,6 @@ function setFileHeaders(reply: FastifyReply, file: StoredFile, download: boolean
   reply
     .type(servedType(file.mime))
     .header("Content-Disposition", contentDisposition(disposition, file.downloadName))
-    .header("Accept-Ranges", "bytes")
     .header("Cache-Control", "public, max-age=31536000, immutable")
     .header("X-Content-Type-Options", "nosniff");
   if (file.mime === "application/pdf") {
@@ -88,27 +63,29 @@ export default async function ({ request, reply }: RouteProps) {
     return reply.status(404).type("text/plain; charset=utf-8").send("Not found");
   }
 
-  const { size } = stored;
-  // Files never change under their URL, so a range always matches the cached version.
-  const range = request.method === "GET" ? parseRange(request.headers.range, size) : null;
-  if (range === "unsatisfiable") {
+  // Ranges (media players need them to seek), conditional requests and streaming from
+  // disk; the type and the other headers are set below from what was stored.
+  const result = await send(request.raw, `/${encodeURIComponent(basename(stored.diskPath))}`, {
+    root: dirname(stored.diskPath),
+    dotfiles: "allow",
+    contentType: false,
+    cacheControl: false,
+  });
+  if (result.type !== "file") {
+    // e.g. 416 for a range outside the file, 412 for a failed If-Match; send's error page is HTML
+    result.stream.destroy();
+    if (result.headers["Content-Range"]) {
+      reply.header("Content-Range", result.headers["Content-Range"]);
+    }
     return reply
-      .status(416)
-      .header("Content-Range", `bytes */${size}`)
+      .status(result.statusCode)
       .type("text/plain; charset=utf-8")
-      .send("Range not satisfiable");
+      .send(STATUS_CODES[result.statusCode] ?? "Error");
   }
-
+  reply.status(result.statusCode);
+  for (const [name, value] of Object.entries(result.headers)) {
+    reply.header(name, value);
+  }
   setFileHeaders(reply, stored.file, "download" in (request.query as object));
-
-  // Streamed from disk: a request only costs memory for the part being sent.
-  const { start, end } = range ?? { start: 0, end: size - 1 };
-  if (range) {
-    reply.status(206).header("Content-Range", `bytes ${start}-${end}/${size}`);
-  }
-  reply.header("Content-Length", end - start + 1);
-  if (request.method === "HEAD") {
-    return reply.send();
-  }
-  return createReadStream(stored.diskPath, { start, end });
+  return result.stream;
 }
