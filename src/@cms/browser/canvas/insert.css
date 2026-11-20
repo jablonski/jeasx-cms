@@ -1,7 +1,9 @@
 .cms-insert {
   position: absolute;
   left: 50%;
-  z-index: 25;
+  /* above the block bar (z-index 30): the bar can be wide enough to cover the
+     top-center insert button, which must stay clickable */
+  z-index: 35;
   display: none;
   place-items: center;
   width: 28px;
