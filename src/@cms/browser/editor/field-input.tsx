@@ -1,7 +1,8 @@
+import LinkPickerButtons from "@cms/browser/editor/link-picker-buttons";
 import { isBlock } from "@cms/universal/block-tree";
 import { BLOCKS, type Block } from "@cms/universal/blocks";
 import type { BlocksField, Field, ListField } from "@cms/universal/fields";
-import { ChevronDownIcon, ChevronUpIcon, FolderIcon, PageIcon, XIcon } from "@cms/universal/icons";
+import { ChevronDownIcon, ChevronUpIcon, XIcon } from "@cms/universal/icons";
 import RichText from "@cms/universal/rich-text";
 
 /** A field being edited: `path` points into the page state, e.g. "blocks.0.data.heading". */
@@ -225,26 +226,11 @@ function Control({
       return (
         <div class="image-input">
           <input id={id} type="text" name={path} value={value} placeholder="/path or https://…" />
-          <button
-            type="button"
+          <LinkPickerButtons
             class="icon"
-            data-action="pick-page"
-            data-path={path}
-            title="Link to a page"
-            aria-label="Link to a page"
-          >
-            <PageIcon />
-          </button>
-          <button
-            type="button"
-            class="icon"
-            data-action="pick-file"
-            data-path={path}
-            title="Link to a file"
-            aria-label="Link to a file"
-          >
-            <FolderIcon />
-          </button>
+            page={{ "data-action": "pick-page", "data-path": path }}
+            file={{ "data-action": "pick-file", "data-path": path }}
+          />
         </div>
       );
     default:

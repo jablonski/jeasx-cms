@@ -7,17 +7,16 @@
  * keeps the browser's own undo (Ctrl/⌘ + Z) working. The resulting HTML is turned into
  * the stored markdown by rich-text-markdown.ts.
  */
+import LinkPickerButtons from "@cms/browser/editor/link-picker-buttons";
 import { pickPage } from "@cms/browser/editor/page-picker";
 import { pickFile } from "@cms/browser/files/file-picker";
 import { toHtml } from "@cms/browser/utils/to-html";
 import { isSafeUrl } from "@cms/universal/fields";
 import {
   BoldIcon,
-  FolderIcon,
   ItalicIcon,
   LinkIcon,
   ListIcon,
-  PageIcon,
   UnlinkIcon,
 } from "@cms/universal/icons";
 
@@ -122,22 +121,10 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
           autocomplete="off"
           spellcheck="false"
         />
-        <button
-          type="button"
-          data-command="pick-page"
-          title="Link to a page"
-          aria-label="Link to a page"
-        >
-          <PageIcon />
-        </button>
-        <button
-          type="button"
-          data-command="pick-file"
-          title="Link to a file"
-          aria-label="Link to a file"
-        >
-          <FolderIcon />
-        </button>
+        <LinkPickerButtons
+          page={{ "data-command": "pick-page" }}
+          file={{ "data-command": "pick-file" }}
+        />
         {existing && (
           <button type="button" data-command="unlink" title="Remove link" aria-label="Remove link">
             <UnlinkIcon />
