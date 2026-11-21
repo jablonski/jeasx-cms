@@ -1,43 +1,43 @@
 .cms-bar {
+  display: none;
   position: absolute;
   top: -8px;
   left: -8px;
-  z-index: 30;
-  display: none;
   align-items: center;
   gap: 2px;
-  padding: 3px;
   transform: translateY(calc(-100% + 2px));
+  z-index: 30;
+  cursor: default;
+  box-shadow: 0 6px 16px -6px oklch(0% 0 0 / 0.35);
   border-radius: 10px 10px 10px 0;
   background: var(--cms-accent);
+  padding: 3px;
   color: var(--cms-accent-text);
   font: 500 12px/1 var(--cms-font-sans);
   letter-spacing: 0;
   white-space: nowrap;
-  box-shadow: 0 6px 16px -6px oklch(0% 0 0 / 0.35);
-  cursor: default;
 
   & .cms-label {
+    opacity: 0.9;
     padding: 0 8px 0 6px;
     font-weight: 650;
-    opacity: 0.9;
   }
 
   & button {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     gap: 4px;
-    min-width: 26px;
-    height: 26px;
-    padding: 0 7px;
+    transition: background-color 0.12s;
+    cursor: pointer;
     border: 0;
     border-radius: 7px;
     background: transparent;
+    padding: 0 7px;
+    min-width: 26px;
+    height: 26px;
     color: inherit;
     font: inherit;
-    cursor: pointer;
-    transition: background-color 0.12s;
 
     &:hover:not([disabled]) {
       background: oklch(100% 0 0 / 0.2);
@@ -46,11 +46,6 @@
     &[disabled] {
       opacity: 0.35;
       cursor: default;
-    }
-
-    &[data-action="edit-block"] {
-      background: oklch(100% 0 0 / 0.16);
-      font-weight: 650;
     }
   }
 }

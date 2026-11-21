@@ -95,7 +95,7 @@
 
   &::before {
     border-radius: 50%;
-    background: var(--warn);
+    background: var(--accent);
     width: 0.45rem;
     height: 0.45rem;
     content: "";

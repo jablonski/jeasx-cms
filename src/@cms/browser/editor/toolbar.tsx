@@ -31,7 +31,7 @@ export default function Toolbar({ state }: { state: EditorState }) {
         <div class="actions">
           <button
             type="button"
-            class={state.dirty ? "save unsaved" : "save"}
+            class={state.dirty ? "save primary" : "save"}
             data-action="save"
             // nothing to save until something changed (a new page can always be saved)
             disabled={state.busy || (!state.dirty && !!page.id)}

@@ -77,8 +77,8 @@ export function BlockBar({
         <GripIcon />
       </span>
       <span class="cms-label">{label}</span>
-      <button type="button" data-action="edit-block" {...at} title="Edit (double-click)">
-        <PencilIcon /> Edit
+      <button type="button" data-action="edit-block" {...at} title="Edit">
+        <PencilIcon />
       </button>
       <button
         type="button"
