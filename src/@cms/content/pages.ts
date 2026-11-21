@@ -154,14 +154,9 @@ export function savePage(data: unknown): SaveOutcome {
     return { errors };
   }
 
-  if (id) {
-    const current = queryOne<{ version: number }>("SELECT version FROM pages WHERE id = ?", id);
-    if (!current) {
-      return { errors: [{ message: "Page not found" }] };
-    }
-    if (input.baseVersion != null && current.version !== Number(input.baseVersion)) {
-      return { conflict: true, errors: [{ message: "The page was changed by someone else" }] };
-    }
+  const outdated = id ? checkVersion(id, input.baseVersion) : undefined;
+  if (outdated) {
+    return outdated;
   }
   try {
     const page = getPage(transaction(() => (id ? updatePage(id, values) : insertPage(values))));
@@ -173,6 +168,21 @@ export function savePage(data: unknown): SaveOutcome {
     console.error(e);
   }
   return { errors: [{ message: "The page could not be saved" }] };
+}
+
+/**
+ * Why a stored page can't be replaced: it's gone, or, with `baseVersion`, it was saved
+ * by someone else since that version. Undefined if it can.
+ */
+function checkVersion(id: number, baseVersion: unknown): SaveOutcome | undefined {
+  const current = queryOne<{ version: number }>("SELECT version FROM pages WHERE id = ?", id);
+  if (!current) {
+    return { errors: [{ message: "Page not found" }] };
+  }
+  if (baseVersion != null && current.version !== Number(baseVersion)) {
+    return { conflict: true, errors: [{ message: "The page was changed by someone else" }] };
+  }
+  return undefined;
 }
 
 /** The columns a save writes, in the order of the SQL below. */
