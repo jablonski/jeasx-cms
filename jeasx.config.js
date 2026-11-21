@@ -1,5 +1,7 @@
 // https://www.jeasx.dev/configuration
 
+import querystring from "node:querystring";
+
 export default {
   /** @type {() => import("esbuild").BuildOptions} */
   ESBUILD_SERVER_OPTIONS: () => ({
@@ -19,7 +21,7 @@ export default {
       .addContentTypeParser(
         "application/x-www-form-urlencoded",
         { parseAs: "string", bodyLimit: 8 * 1024 },
-        async (_request, body) => body,
+        async (_request, body) => querystring.parse(body),
       ),
 
   /** @type {() => import("fastify").FastifyServerOptions} */

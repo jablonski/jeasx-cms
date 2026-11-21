@@ -15,7 +15,7 @@ export default function (this: ThisContext, { request, reply }: RouteProps) {
       return reply.status(403).send("Forbidden");
     }
     const form = formOf(request);
-    const copy = duplicatePage(parseId(form.get("duplicate")));
+    const copy = duplicatePage(parseId(form.duplicate));
     // absolute: an HTTP Location header ignores the page's <base> tag;
     // the anchor scrolls back to the list position, onto the copy
     return reply.redirect(`${cmsPath}/${copy ? `#page-${copy}` : ""}`, 303);

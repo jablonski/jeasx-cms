@@ -25,12 +25,12 @@ export default async function (this: ThisContext, { request, reply }: RouteProps
   }
 
   const form = formOf(request);
-  const next = safeNext(form.get("next"), cmsPath);
-  const username = form.get("username") ?? "";
+  const next = safeNext(form.next ?? null, cmsPath);
+  const username = form.username ?? "";
   const client = request.ip;
 
   const attempt = await limitedAttempt(client, username, () =>
-    verifyCredentials(username, form.get("password") ?? ""),
+    verifyCredentials(username, form.password ?? ""),
   );
   if (attempt.outcome === "locked") {
     reply.status(429).header("Retry-After", attempt.retryAfter);

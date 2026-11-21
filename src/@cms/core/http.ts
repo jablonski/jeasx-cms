@@ -3,17 +3,22 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { Readable } from "node:stream";
 
-/** The query parameters; of a repeated parameter (?id=1&id=2), the first value counts. */
-export const queryOf = (request: FastifyRequest): Record<string, string> =>
+/** Flattens parsed parameters; of a repeated name (?id=1&id=2), the first value counts. */
+const firstValues = (params: unknown): Record<string, string> =>
   Object.fromEntries(
-    Object.entries((request.query ?? {}) as Record<string, string | string[]>).map(
-      ([name, value]) => [name, Array.isArray(value) ? value[0] : value],
-    ),
+    Object.entries((params ?? {}) as Record<string, string | string[]>).map(([name, value]) => [
+      name,
+      Array.isArray(value) ? value[0] : value,
+    ]),
   );
 
-/** The parsed urlencoded form body (the string body produced by jeasx.config.js); empty if none. */
-export const formOf = (request: FastifyRequest): URLSearchParams =>
-  new URLSearchParams(typeof request.body === "string" ? request.body : "");
+/** The query parameters; of a repeated parameter, the first value counts. */
+export const queryOf = (request: FastifyRequest): Record<string, string> =>
+  firstValues(request.query);
+
+/** The urlencoded form fields (parsed in jeasx.config.js); of a repeated field, the first value counts. */
+export const formOf = (request: FastifyRequest): Record<string, string> =>
+  firstValues(typeof request.body === "object" ? request.body : null);
 
 /** A request URL in its parts: "/a?b=1" → { pathname: "/a", search: "?b=1" }. */
 export function splitUrl(url: string) {
