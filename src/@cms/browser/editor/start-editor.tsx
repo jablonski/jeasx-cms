@@ -138,7 +138,11 @@ export function startEditor(root: HTMLElement, { page, schema, stylesheets }: Ed
     state,
     render,
     keepSlug: binding.keepSlug,
-    saved: (clean) => drawer.current?.saved(clean),
+    saved: (clean) => {
+      drawer.current?.saved(clean);
+      // A save shows the saved state on the canvas, even behind a modal drawer.
+      preview.updatePreview();
+    },
   });
 
   binding.bindEditing(top);
