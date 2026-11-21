@@ -1,0 +1,55 @@
+/* articles */
+
+.block-articles {
+  & ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 1.25rem;
+  }
+
+  & li {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+
+    & > div {
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+  }
+
+  & img {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  & time,
+  & small {
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+
+  & h3 {
+    margin: 0.25rem 0 0.4rem;
+    font-size: 1.25rem;
+  }
+
+  & h3 a {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+    }
+  }
+
+  & p {
+    margin: 0 0 0.75rem;
+    color: var(--text-2);
+    font-size: 0.9375rem;
+  }
+}

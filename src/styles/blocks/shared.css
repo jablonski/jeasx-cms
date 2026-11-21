@@ -1,0 +1,33 @@
+/* shared headings */
+
+:is(
+    .block-download,
+    .block-gallery,
+    .block-accordion,
+    .block-stats,
+    .block-pricing,
+    .block-team,
+    .block-timeline,
+    .block-logos,
+    .block-table,
+    .block-articles
+  )
+  > h2 {
+  margin-bottom: 1.75rem;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+:is(
+    .block-download,
+    .block-gallery,
+    .block-team,
+    .block-logos,
+    .block-articles,
+    .block-pricing,
+    .block-timeline
+  )
+  :is(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

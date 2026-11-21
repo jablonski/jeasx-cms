@@ -1,0 +1,24 @@
+/* notice */
+
+.block-notice {
+  --notice: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--notice) 35%, var(--border));
+  border-left: 4px solid var(--notice);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--notice) 8%, var(--surface));
+  padding: 1rem 1.25rem;
+  max-width: 48rem;
+
+  &.success {
+    --notice: var(--ok);
+  }
+
+  &.warning {
+    --notice: var(--warn);
+  }
+
+  & p {
+    margin: 0.2rem 0 0;
+    color: var(--text-2);
+  }
+}

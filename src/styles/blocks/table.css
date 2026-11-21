@@ -1,0 +1,36 @@
+/* table */
+
+.block-table {
+  & .scroll {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+  }
+
+  & table {
+    border-collapse: collapse;
+    background: var(--surface);
+    width: 100%;
+    font-size: 0.9375rem;
+  }
+
+  & caption {
+    padding: 0.75rem 1rem;
+    caption-side: bottom;
+    color: var(--text-3);
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  & :is(th, td) {
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  & th {
+    background: var(--surface-2);
+    font-weight: 600;
+  }
+}

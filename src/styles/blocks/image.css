@@ -1,0 +1,22 @@
+/* image */
+
+.block-image {
+  margin: 0;
+  max-width: 52rem;
+
+  &.wide {
+    max-width: none;
+  }
+
+  & img {
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
+    width: 100%;
+  }
+
+  & figcaption {
+    margin-top: 0.85rem;
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+}

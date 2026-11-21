@@ -1,0 +1,75 @@
+/* features */
+
+.block-features {
+  & > h2 {
+    margin-bottom: 1.75rem;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
+  & .grid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, calc(66rem / var(--columns) - 2rem)), 1fr)
+    );
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  & .card {
+    position: relative;
+    transition:
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      border-color 0.25s;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    padding: 1.75rem;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-strong);
+    }
+
+    & h3 {
+      margin: 0 0 0.4rem;
+      font-size: 1.125rem;
+      letter-spacing: -0.015em;
+    }
+
+    /* whole card clickable when linked */
+    & h3 a {
+      color: inherit;
+      text-decoration: none;
+
+      &::after {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        content: "";
+      }
+    }
+
+    & p {
+      margin: 0;
+      color: var(--text-2);
+      font-size: 0.9375rem;
+    }
+  }
+
+  & .icon {
+    display: grid;
+    place-items: center;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius);
+    background: var(--accent-soft);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.35rem;
+  }
+}

@@ -1,0 +1,20 @@
+/* accordion */
+
+.block-accordion {
+  max-width: 48rem;
+
+  & details {
+    border-bottom: 1px solid var(--border);
+  }
+
+  & summary {
+    cursor: pointer;
+    padding: 1.1rem 0;
+    font-weight: 600;
+  }
+
+  & p {
+    margin: 0 0 1.1rem;
+    color: var(--text-2);
+  }
+}

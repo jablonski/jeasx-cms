@@ -81,6 +81,18 @@ main {
   color: var(--text-3);
   font-size: 0.875rem;
   text-align: center;
+
+  & nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1.25rem;
+    margin-bottom: 0.5rem;
+
+    & a {
+      color: inherit;
+    }
+  }
 }
 
 /* buttons */
@@ -117,18 +129,6 @@ main {
       var(--shadow-sm);
     background: var(--surface);
     color: var(--text);
-  }
-}
-
-.site-footer nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.25rem 1.25rem;
-  margin-bottom: 0.5rem;
-
-  & a {
-    color: inherit;
   }
 }
 

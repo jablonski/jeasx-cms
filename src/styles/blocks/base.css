@@ -1,0 +1,11 @@
+/* Shared rhythm and layout, used by every block. */
+
+/* one rule set per block type: blocks stack with a consistent rhythm */
+.block + .block {
+  margin-top: clamp(3rem, 7vw, 5.5rem);
+}
+
+/* readable measure for text-like blocks */
+:is(.block-text, .block-quote) {
+  max-width: 44rem;
+}

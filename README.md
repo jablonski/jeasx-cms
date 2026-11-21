@@ -164,6 +164,7 @@ src/
   blocks/*.tsx     one file per block
   Layout.tsx       page frame of the public site
   styles/          stylesheets (index.css is linked in Layout.tsx and listed in cms.config.ts for the editor canvas)
+  styles/blocks/   styles of the blocks, one file per block
 seed/              demo content for an empty database (npm run seed)
 ```
 
@@ -274,7 +275,8 @@ export default {
 
 2. Add it to `blocks` in `src/cms.config.ts`. The order there is the order in the block picker.
 3. The page type `page` allows every block. For other page types and container blocks, add it to their `blocks`.
-4. Style it in `src/styles/blocks.css`.
+4. Style it in a file in `src/styles/blocks/` (one file per block) and import it in
+   `src/styles/blocks.css`.
 
 The editor dialog, validation, inline editing and preview pick it up automatically.
 

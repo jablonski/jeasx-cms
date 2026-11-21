@@ -3,8 +3,9 @@
  * All options: SiteConfig in src/@cms/core/site.ts.
  *
  * Add a block: create it in ./blocks, list it in `blocks` (the page type "page" allows
- * all of them) and style it in ./styles/blocks.css. Blocks run on the server only (the
- * editor canvas is rendered there, too), so they may use server-side code.
+ * all of them) and style it in a file in ./styles/blocks, imported by ./styles/blocks.css.
+ * Blocks run on the server only (the editor canvas is rendered there, too), so they may
+ * use server-side code.
  */
 import type { SiteConfig } from "@cms/core/site";
 import Accordion from "./blocks/Accordion";

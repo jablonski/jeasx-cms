@@ -1,0 +1,28 @@
+/* columns (container) */
+
+.block-columns {
+  display: grid;
+  grid-template-columns: var(--template);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+
+  &.align-center {
+    align-items: center;
+  }
+
+  & .column {
+    min-width: 0;
+  }
+
+  & .block + .block {
+    margin-top: 1.75rem;
+  }
+
+  /* nested content fills its column */
+  & :is(.block-text, .block-image, .block-quote) {
+    max-width: none;
+  }
+
+  @media (max-width: 44rem) {
+    grid-template-columns: 1fr;
+  }
+}
