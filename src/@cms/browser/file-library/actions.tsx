@@ -5,7 +5,7 @@ import { chooseFiles, folderIdOf } from "@cms/browser/files/file-api";
 import { chooseFolder } from "@cms/browser/files/folder-dialog";
 import { deleteWithUsageCheck } from "@cms/browser/utils/confirm-usage";
 import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/utils/dialog";
-import { json, request } from "@cms/browser/utils/http";
+import { type ApiResponse, json, request } from "@cms/browser/utils/http";
 import { MAX_FILE_NAME } from "@cms/universal/file-url";
 import { plural } from "@cms/universal/text";
 
@@ -17,9 +17,9 @@ export function createLibraryActions({
   reload,
   upload,
 }: Library) {
-  /** Sends a change; problems are shown in a dialog. The folder is reloaded either way. */
-  const change = async (method: string, url: string, body: unknown, failure: string) => {
-    const res = await json(method, url, body);
+  /** Awaits a sent change; problems are shown in a dialog. The folder is reloaded either way. */
+  const change = async (sent: Promise<ApiResponse<unknown>>, failure: string) => {
+    const res = await sent;
     if (!res.ok) {
       await alertDialog({ title: failure, message: res.error });
     }
@@ -27,10 +27,10 @@ export function createLibraryActions({
   };
 
   const moveFile = (id: number | string, folder: number | null) =>
-    change("PATCH", `api/files?id=${id}`, { folder }, "Could not move file");
+    change(json("PATCH", `api/files?id=${id}`, { folder }), "Could not move file");
 
   const moveFolder = (id: number | string, parent: number | null) =>
-    change("PATCH", `api/folders?id=${id}`, { parent }, "Could not move folder");
+    change(json("PATCH", `api/folders?id=${id}`, { parent }), "Could not move folder");
 
   const folderById = (id: string | null) =>
     listing().folders.find((f) => String(f.id) === String(id));
@@ -40,7 +40,8 @@ export function createLibraryActions({
   const createFolder = async () => {
     const name = await promptDialog({ title: "New folder", label: "Name", confirmLabel: "Create" });
     if (name) {
-      await change("POST", "api/folders", { name, parent: current() }, "Could not create folder");
+      const created = json("POST", "api/folders", { name, parent: current() });
+      await change(created, "Could not create folder");
     }
   };
 
@@ -55,7 +56,8 @@ export function createLibraryActions({
     if (!name || name === folder.name) {
       return;
     }
-    await change("PATCH", `api/folders?id=${folder.id}`, { name }, "Could not rename folder");
+    const renamed = json("PATCH", `api/folders?id=${folder.id}`, { name });
+    await change(renamed, "Could not rename folder");
   };
 
   const deleteFolder = async (id: string) => {
@@ -74,11 +76,7 @@ export function createLibraryActions({
     if (!ok) {
       return;
     }
-    const res = await request("DELETE", `api/folders?id=${folder.id}`);
-    if (!res.ok) {
-      await alertDialog({ title: "Could not delete folder", message: res.error });
-    }
-    await reload();
+    await change(request("DELETE", `api/folders?id=${folder.id}`), "Could not delete folder");
   };
 
   const renameFile = async (id: string) => {
@@ -93,7 +91,7 @@ export function createLibraryActions({
     if (!name || name === file.name) {
       return;
     }
-    await change("PATCH", `api/files?id=${file.id}`, { name }, "Could not rename file");
+    await change(json("PATCH", `api/files?id=${file.id}`, { name }), "Could not rename file");
   };
 
   const chooseFileTarget = async (id: string) => {
