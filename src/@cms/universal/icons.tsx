@@ -188,3 +188,23 @@ export function UnlinkIcon() {
     </Icon>
   );
 }
+
+/** A house (the top level of the file library); drawn a little lighter than the others. */
+export function HomeIcon({ class: className }: { class?: string }) {
+  return (
+    <svg
+      class={className}
+      aria-hidden="true"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.25"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M1.5 7.5 8 2l6.5 5.5" />
+      <path d="M3.5 6.8V14h9V6.8" />
+      <path d="M6.5 14V9.5h3V14" />
+    </svg>
+  );
+}

@@ -1,5 +1,5 @@
 /** The folder browser, shared by the library page and the picker dialog. */
-import { GripIcon, XIcon } from "@cms/universal/icons";
+import { GripIcon, HomeIcon, XIcon } from "@cms/universal/icons";
 
 import type { FolderView } from "@cms/browser/files/file-api";
 import FileIcon from "@cms/browser/files/file-icon";
@@ -18,20 +18,7 @@ export function Breadcrumb({ path }: { path: Folder[] }) {
         title="All files"
         aria-label="All files"
       >
-        <svg
-          class="crumb-home"
-          aria-hidden="true"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.25"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M1.5 7.5 8 2l6.5 5.5" />
-          <path d="M3.5 6.8V14h9V6.8" />
-          <path d="M6.5 14V9.5h3V14" />
-        </svg>
+        <HomeIcon class="crumb-home" />
       </button>
       {path.map((f, i) => (
         <>
@@ -112,25 +99,13 @@ function FolderItem({ folder: f, manage }: { folder: FolderSummary; manage: bool
         <small>{folderContents(f)}</small>
       </div>
       {manage && (
-        <div class="tools">
-          <button type="button" data-move-folder={f.id} title="Move to folder">
-            Move
-          </button>
-          <button type="button" data-rename-folder={f.id} title="Rename">
-            Rename
-          </button>
-        </div>
-      )}
-      {manage && (
-        <button
-          type="button"
-          class="file-delete"
-          data-delete-folder={f.id}
-          title="Delete folder"
-          aria-label={`Delete folder ${f.name}`}
-        >
-          <XIcon />
-        </button>
+        <ItemTools
+          move={{ "data-move-folder": f.id }}
+          rename={{ "data-rename-folder": f.id }}
+          remove={{ "data-delete-folder": f.id }}
+          removeTitle="Delete folder"
+          removeLabel={`Delete folder ${f.name}`}
+        />
       )}
     </li>
   );
@@ -165,27 +140,55 @@ function FileItem({ file, manage }: { file: StoredFile; manage: boolean }) {
         <small>{formatSize(file.size)}</small>
       </div>
       {manage && (
-        <div class="tools">
-          <button type="button" data-move={file.id} title="Move to folder">
-            Move
-          </button>
-          <button type="button" data-rename-file={file.id} title="Rename">
-            Rename
-          </button>
-        </div>
-      )}
-      {manage && (
-        <button
-          type="button"
-          class="file-delete"
-          data-delete={file.id}
-          title="Delete"
-          aria-label={`Delete ${file.name}`}
-        >
-          <XIcon />
-        </button>
+        <ItemTools
+          move={{ "data-move": file.id }}
+          rename={{ "data-rename-file": file.id }}
+          remove={{ "data-delete": file.id }}
+          removeTitle="Delete"
+          removeLabel={`Delete ${file.name}`}
+        />
       )}
     </li>
+  );
+}
+
+/** The data attribute a button's click is handled by (see file-library/actions.tsx). */
+type ActionAttribute = Record<`data-${string}`, number>;
+
+/** Move, rename and delete buttons of a file or folder card (manage mode). */
+function ItemTools({
+  move,
+  rename,
+  remove,
+  removeTitle,
+  removeLabel,
+}: {
+  move: ActionAttribute;
+  rename: ActionAttribute;
+  remove: ActionAttribute;
+  removeTitle: string;
+  removeLabel: string;
+}) {
+  return (
+    <>
+      <div class="tools">
+        <button type="button" {...move} title="Move to folder">
+          Move
+        </button>
+        <button type="button" {...rename} title="Rename">
+          Rename
+        </button>
+      </div>
+      <button
+        type="button"
+        class="file-delete"
+        {...remove}
+        title={removeTitle}
+        aria-label={removeLabel}
+      >
+        <XIcon />
+      </button>
+    </>
   );
 }
 
