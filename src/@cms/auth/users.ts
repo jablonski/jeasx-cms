@@ -144,6 +144,20 @@ function passwordProblem(password: unknown) {
 const roleProblem = (role: unknown) =>
   ROLES.includes(role as Role) ? null : "Please choose a valid role";
 
+/**
+ * Hashes the password (null without one), unless the username is taken by then:
+ * hashing takes a while, so the name is checked again afterwards.
+ */
+async function hashUnlessTaken(
+  name: string,
+  password: unknown,
+  exceptId: number | null = null,
+): Promise<{ hash: string | null; error?: undefined } | { error: string }> {
+  const hash = password ? await hashPassword(password as string) : null;
+  const error = usernameProblem(name, exceptId);
+  return error ? { error } : { hash };
+}
+
 export async function createUser({
   username,
   password,
@@ -154,16 +168,14 @@ export async function createUser({
   if (error) {
     return { error };
   }
-  const hash = await hashPassword(password as string);
-  // The name may have been taken while hashing.
-  const taken = usernameProblem(name);
-  if (taken) {
-    return { error: taken };
+  const hashed = await hashUnlessTaken(name, password);
+  if (hashed.error !== undefined) {
+    return { error: hashed.error };
   }
   const id = insert(
     "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
     name,
-    hash,
+    hashed.hash,
     role as Role,
   );
   return resultOf("user", getUser(id), "User not found");
@@ -187,11 +199,9 @@ export async function updateUser(
   if (error) {
     return { error };
   }
-  const hash = password ? await hashPassword(password as string) : null;
-  // The name may have been taken while hashing.
-  const taken = usernameProblem(name, user.id);
-  if (taken) {
-    return { error: taken };
+  const hashed = await hashUnlessTaken(name, password, user.id);
+  if (hashed.error !== undefined) {
+    return { error: hashed.error };
   }
   // updated_at is set by the trigger "users_updated" (schema.ts)
   execute(
@@ -199,7 +209,7 @@ export async function updateUser(
      WHERE id = ?`,
     name,
     newRole as Role,
-    hash,
+    hashed.hash,
     user.id,
   );
   return resultOf("user", getUser(user.id), "User not found");
