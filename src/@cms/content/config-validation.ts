@@ -89,11 +89,16 @@ function checkNestedBlocks(
   if (!allowBlocks) {
     errors.push(`${at}: "blocks" fields aren't supported in page fields`);
   }
-  if (!Array.isArray(field.blocks) || field.blocks.length === 0) {
+  checkAllowedBlocks(field.blocks, at, blockTypes, errors);
+}
+
+/** Checks a list of allowed block types: not empty, and only known types. */
+function checkAllowedBlocks(blocks: unknown, at: string, types: Set<string>, errors: string[]) {
+  if (!Array.isArray(blocks) || blocks.length === 0) {
     errors.push(`${at}: "blocks" must list the allowed block types`);
   }
-  for (const type of field.blocks ?? []) {
-    if (!blockTypes.has(type)) {
+  for (const type of Array.isArray(blocks) ? blocks : []) {
+    if (!types.has(type)) {
       errors.push(`${at}: allows unknown block type "${type}"`);
     }
   }
@@ -153,14 +158,7 @@ function checkPageType(name: string, pageType: Unchecked, types: Set<string>, er
       errors.push(`${where}: the field name "${name}" is reserved for the page itself`);
     }
   }
-  if (!Array.isArray(pageType?.blocks) || !pageType.blocks.length) {
-    errors.push(`${where}: "blocks" must list the allowed block types`);
-  }
-  for (const type of pageType?.blocks ?? []) {
-    if (!types.has(type)) {
-      errors.push(`${where}: allows unknown block type "${type}"`);
-    }
-  }
+  checkAllowedBlocks(pageType?.blocks, where, types, errors);
   for (const type of pageType?.initialBlocks ?? []) {
     if (!pageType.blocks?.includes(type)) {
       errors.push(`${where}: initial block "${type}" is not in its allowed blocks`);
