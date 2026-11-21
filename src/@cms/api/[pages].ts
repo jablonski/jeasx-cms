@@ -3,6 +3,7 @@ import {
   getPage,
   listPages,
   normalizePage,
+  pageUsage,
   savePage,
 } from "@cms/content/pages";
 import { getRevision, listRevisions } from "@cms/content/revisions";
@@ -15,6 +16,7 @@ import type { RouteProps } from "@cms/core/types";
  *   GET    /@cms/api/pages[?id=1]
  *   GET    /@cms/api/pages?id=1&revisions       earlier versions, newest first
  *   GET    /@cms/api/pages?id=1&revision=5      one earlier version (a full page)
+ *   GET    /@cms/api/pages?id=1&usage           other pages linking to its saved path
  *   POST   /@cms/api/pages   (create or update, JSON body; 409 if `baseVersion` is outdated)
  *   DELETE /@cms/api/pages?id=1[&force=1]   409 with usage if linked by other pages
  *
@@ -34,6 +36,9 @@ export default function ({ request, reply }: RouteProps) {
       const page = getPage(id);
       if (!page) {
         return notFound(reply);
+      }
+      if ("usage" in query) {
+        return pageUsage(page.slug, page.id);
       }
       if ("revisions" in query) {
         return listRevisions(id);

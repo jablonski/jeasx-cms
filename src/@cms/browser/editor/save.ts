@@ -1,9 +1,10 @@
 /** Saving the page being edited. */
 
 import type { EditorState } from "@cms/browser/editor/state";
+import { confirmUsage } from "@cms/browser/utils/confirm-usage";
 import { confirmDialog } from "@cms/browser/utils/dialog";
-import { json } from "@cms/browser/utils/http";
-import type { StoredPage } from "@cms/content/pages";
+import { json, request } from "@cms/browser/utils/http";
+import type { StoredPage, Usage } from "@cms/content/pages";
 
 export function createSave({
   state,
@@ -27,6 +28,26 @@ export function createSave({
       danger: true,
     });
 
+  /** The path as saved: changing it breaks links of other pages to the page. */
+  let savedSlug = state.page.slug;
+
+  /** Asks before saving a new path while other pages link to the saved one. */
+  async function confirmPathChange() {
+    if (!state.page.id || state.page.slug === savedSlug) {
+      return true;
+    }
+    const res = await request<Usage[]>("GET", `api/pages?id=${state.page.id}&usage`);
+    if (!res.ok || !res.data.length) {
+      return true; // a server that can't be reached is reported by the save itself
+    }
+    return confirmUsage({
+      title: "Page is linked",
+      intro: `${savedSlug} is linked from these pages. Their links will break when the path changes to ${state.page.slug}:`,
+      usage: res.data,
+      confirmLabel: "Change path anyway",
+    });
+  }
+
   /** Takes over the stored page. @param sent the page as it was when saving started */
   function applySaved(stored: StoredPage, sent: string) {
     const isNew = !state.page.id;
@@ -41,6 +62,7 @@ export function createSave({
       Object.assign(state.page, { id, status, version, updatedAt });
       state.page.slug ||= stored.slug;
     }
+    savedSlug = stored.slug;
     saved(clean);
     state.errors = [];
     keepSlug();
@@ -63,6 +85,11 @@ export function createSave({
     }
     state.busy = true;
     render();
+    if (!overwrite && !(await confirmPathChange())) {
+      state.busy = false;
+      render();
+      return;
+    }
     const sent = JSON.stringify(state.page);
     const res = await json<StoredPage>("POST", "api/pages", {
       ...state.page,
