@@ -5,6 +5,7 @@ import { type Result, resultOf } from "@cms/core/result";
 import { SITE } from "@cms/core/site";
 import { filesDir } from "@cms/core/storage";
 import {
+  checkNameLength,
   cleanName,
   type Folder,
   folderExists,
@@ -133,11 +134,9 @@ export function updateFile(
     return { error: "File not found" };
   }
   const name = "name" in changes ? cleanName(changes.name) : file.name;
-  if (!name) {
-    return { error: "Please enter a name" };
-  }
-  if (name.length > MAX_FILE_NAME) {
-    return { error: `Name is too long (max. ${MAX_FILE_NAME} characters)` };
+  const invalid = checkNameLength(name, MAX_FILE_NAME);
+  if (invalid) {
+    return invalid;
   }
   const folder = "folder" in changes ? parseFolderId(changes.folder) : file.folderId;
   if (!folderExists(folder)) {

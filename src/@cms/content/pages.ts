@@ -60,29 +60,29 @@ interface PageRow {
   updated_at: string;
 }
 
-const toPage = (row: PageRow): StoredPage => ({
+/** The columns of a page summary. */
+type SummaryRow = Pick<PageRow, "id" | "type" | "slug" | "title" | "status" | "updated_at">;
+
+const toSummary = (row: SummaryRow): PageSummary => ({
   id: row.id,
   type: row.type,
   slug: row.slug,
   title: row.title,
   status: row.status,
+  updatedAt: row.updated_at,
+});
+
+const toPage = (row: PageRow): StoredPage => ({
+  ...toSummary(row),
   ...parsePageContent(row.content),
   updatedAt: row.updated_at,
   version: row.version,
 });
 
 export function listPages(): PageSummary[] {
-  const rows = queryAll<Pick<PageRow, "id" | "type" | "slug" | "title" | "status" | "updated_at">>(
+  return queryAll<SummaryRow>(
     "SELECT id, type, slug, title, status, updated_at FROM pages ORDER BY slug",
-  );
-  return rows.map((r) => ({
-    id: r.id,
-    type: r.type,
-    slug: r.slug,
-    title: r.title,
-    status: r.status,
-    updatedAt: r.updated_at,
-  }));
+  ).map(toSummary);
 }
 
 export function getPage(id: number | null): StoredPage | undefined {
@@ -175,14 +175,15 @@ export function savePage(data: unknown): SaveOutcome {
   return { errors: [{ message: "The page could not be saved" }] };
 }
 
-function insertPage({ type, slug, title, status, content }: PageValues): number {
+/** The columns a save writes, in the order of the SQL below. */
+const COLUMNS = ["type", "slug", "title", "status", "content"] as const;
+
+const columnValues = (values: PageValues) => COLUMNS.map((column) => values[column]);
+
+function insertPage(values: PageValues): number {
   return insert(
-    "INSERT INTO pages (type, slug, title, status, content) VALUES (?, ?, ?, ?, ?)",
-    type,
-    slug,
-    title,
-    status,
-    content,
+    `INSERT INTO pages (${COLUMNS.join(", ")}) VALUES (${COLUMNS.map(() => "?").join(", ")})`,
+    ...columnValues(values),
   );
 }
 
@@ -190,28 +191,17 @@ function insertPage({ type, slug, title, status, content }: PageValues): number 
  * Replaces an existing page and keeps the replaced version as a revision. Saving it
  * unchanged changes nothing: no revision, same version and time of the last change.
  */
-function updatePage(id: number, { type, slug, title, status, content }: PageValues): number {
-  const stored = queryOne<PageValues>(
-    "SELECT type, slug, title, status, content FROM pages WHERE id = ?",
-    id,
-  );
-  const values: PageValues = { type, slug, title, status, content };
-  if (
-    stored &&
-    (Object.keys(values) as (keyof PageValues)[]).every((k) => stored[k] === values[k])
-  ) {
+function updatePage(id: number, values: PageValues): number {
+  const stored = queryOne<PageValues>(`SELECT ${COLUMNS.join(", ")} FROM pages WHERE id = ?`, id);
+  if (stored && COLUMNS.every((column) => stored[column] === values[column])) {
     return id;
   }
   // the replaced version is kept by the trigger "pages_revision", updated_at is set by
   // "pages_updated" (schema.ts)
   execute(
-    `UPDATE pages SET type = ?, slug = ?, title = ?, status = ?, content = ?,
+    `UPDATE pages SET ${COLUMNS.map((column) => `${column} = ?`).join(", ")},
      version = version + 1 WHERE id = ?`,
-    type,
-    slug,
-    title,
-    status,
-    content,
+    ...columnValues(values),
     id,
   );
   return id;
@@ -281,7 +271,11 @@ export function duplicatePage(id: number | null): number | undefined {
   for (let n = 2; taken.has(slug); n++) {
     slug = `${base}-${n}`;
   }
-  const { id: _, version, updatedAt, ...content } = page;
+  const { id: _id, version: _version, updatedAt: _updatedAt, ...content } = page;
   const { page: copy, errors } = savePage({ ...content, title, slug, status: "draft" });
-  return copy?.id ?? (errors && console.error(errors), undefined);
+  if (!copy) {
+    console.error(errors);
+    return undefined;
+  }
+  return copy.id;
 }

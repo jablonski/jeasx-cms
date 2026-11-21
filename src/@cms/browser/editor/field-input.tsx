@@ -1,3 +1,4 @@
+import { isBlock } from "@cms/universal/block-tree";
 import { BLOCKS, type Block } from "@cms/universal/blocks";
 import type { BlocksField, Field, ListField } from "@cms/universal/fields";
 import { ChevronDownIcon, ChevronUpIcon, FolderIcon, PageIcon, XIcon } from "@cms/universal/icons";
@@ -78,15 +79,6 @@ function BlocksInput({ path, field, value }: FieldProps<BlocksField>) {
   );
 }
 
-/** Is the value a stored block ({ id, type, data })? */
-const isBlock = (value: unknown): value is Block =>
-  typeof value === "object" &&
-  value !== null &&
-  "type" in value &&
-  typeof (value as Block).type === "string" &&
-  "data" in value &&
-  "id" in value;
-
 /** Move and remove buttons shared by list items and nested blocks. */
 function EntryTools({
   path,
@@ -102,28 +94,22 @@ function EntryTools({
   remove: string;
 }) {
   const at = { "data-path": path, "data-index": index };
+  const MoveButton = ({ dir }: { dir: -1 | 1 }) => (
+    <button
+      type="button"
+      data-action={move}
+      {...at}
+      data-dir={String(dir)}
+      disabled={dir < 0 ? index === 0 : index === count - 1}
+      title={dir < 0 ? "Move up" : "Move down"}
+    >
+      {dir < 0 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+    </button>
+  );
   return (
     <span class="tools">
-      <button
-        type="button"
-        data-action={move}
-        {...at}
-        data-dir="-1"
-        disabled={index === 0}
-        title="Move up"
-      >
-        <ChevronUpIcon />
-      </button>
-      <button
-        type="button"
-        data-action={move}
-        {...at}
-        data-dir="1"
-        disabled={index === count - 1}
-        title="Move down"
-      >
-        <ChevronDownIcon />
-      </button>
+      <MoveButton dir={-1} />
+      <MoveButton dir={1} />
       <button type="button" data-action={remove} {...at} title="Remove">
         <XIcon />
       </button>

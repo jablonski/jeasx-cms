@@ -72,11 +72,9 @@ function checkName(
   parentId: number | null,
   exceptId: number | null = null,
 ): { error: string } | null {
-  if (!name) {
-    return { error: "Please enter a name" };
-  }
-  if (name.length > MAX_FOLDER_NAME) {
-    return { error: `Name is too long (max. ${MAX_FOLDER_NAME} characters)` };
+  const invalid = checkNameLength(name, MAX_FOLDER_NAME);
+  if (invalid) {
+    return invalid;
   }
   const clash = queryOne(
     "SELECT id FROM folders WHERE parent_id IS ? AND name = ? COLLATE NOCASE AND id IS NOT ?",
@@ -85,6 +83,14 @@ function checkName(
     exceptId,
   );
   return clash ? { error: `A folder named »${name}« already exists here` } : null;
+}
+
+/** The problem with a cleaned name of a file or folder: empty or longer than `max`. */
+export function checkNameLength(name: string, max: number): { error: string } | null {
+  if (!name) {
+    return { error: "Please enter a name" };
+  }
+  return name.length > max ? { error: `Name is too long (max. ${max} characters)` } : null;
 }
 
 export const cleanName = (name: unknown) =>
@@ -121,10 +127,8 @@ export function updateFolder(
   if (!folderExists(parentId)) {
     return { error: "Target folder not found" };
   }
-  for (let p = parentId; p != null; p = getFolder(p)?.parentId ?? null) {
-    if (p === folder.id) {
-      return { error: "A folder can't be moved into itself" };
-    }
+  if (isInside(parentId, folder.id)) {
+    return { error: "A folder can't be moved into itself" };
   }
   const newName = name === undefined ? folder.name : cleanName(name);
   const problem = checkName(newName, parentId, folder.id);
@@ -133,6 +137,16 @@ export function updateFolder(
   }
   moveFolder(folder.id, newName, parentId);
   return resultOf("folder", getFolder(folder.id), "Folder not found");
+}
+
+/** Is `id` the folder `ancestorId` or one of its subfolders (at any depth)? */
+function isInside(id: number | null, ancestorId: number): boolean {
+  for (let p = id; p != null; p = getFolder(p)?.parentId ?? null) {
+    if (p === ancestorId) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /** Deletes a folder; its files and subfolders move up to the parent folder (nothing is lost). */

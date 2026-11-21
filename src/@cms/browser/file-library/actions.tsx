@@ -3,7 +3,7 @@
 import type { Library } from "@cms/browser/file-library/library";
 import { chooseFiles, folderIdOf } from "@cms/browser/files/file-api";
 import { chooseFolder } from "@cms/browser/files/folder-dialog";
-import { confirmUsage } from "@cms/browser/utils/confirm-usage";
+import { deleteWithUsageCheck } from "@cms/browser/utils/confirm-usage";
 import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/utils/dialog";
 import { json, request } from "@cms/browser/utils/http";
 import { MAX_FILE_NAME } from "@cms/universal/file-url";
@@ -127,17 +127,12 @@ export function createLibraryActions({
     if (!ok) {
       return;
     }
-    let res = await request("DELETE", `api/files?id=${id}`);
-    if (!res.ok && res.status === 409) {
-      const force = await confirmUsage({
-        title: "File is in use",
-        intro: `»${name}« is used on these pages. Their images and links will break:`,
-        usage: res.usage ?? [],
-      });
-      if (!force) {
-        return;
-      }
-      res = await request("DELETE", `api/files?id=${id}&force=1`);
+    const res = await deleteWithUsageCheck(`api/files?id=${id}`, {
+      title: "File is in use",
+      intro: `»${name}« is used on these pages. Their images and links will break:`,
+    });
+    if (!res) {
+      return;
     }
     setMessages(res.ok ? [] : [res.error]);
     await reload();

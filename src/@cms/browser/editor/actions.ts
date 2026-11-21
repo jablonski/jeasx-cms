@@ -9,9 +9,8 @@ import type { Editor } from "@cms/browser/editor/state";
 import type { createUploads } from "@cms/browser/editor/uploads";
 import { chooseFiles } from "@cms/browser/files/file-api";
 import { pickFile } from "@cms/browser/files/file-picker";
-import { confirmUsage } from "@cms/browser/utils/confirm-usage";
+import { deleteWithUsageCheck } from "@cms/browser/utils/confirm-usage";
 import { alertDialog, confirmDialog } from "@cms/browser/utils/dialog";
-import { request } from "@cms/browser/utils/http";
 import { createBlock } from "@cms/universal/block-data";
 import { innerLevels, isContainer } from "@cms/universal/block-tree";
 import { BLOCKS } from "@cms/universal/blocks";
@@ -81,6 +80,17 @@ export function createActions({
     render,
     save,
   } = editor;
+
+  /** Puts the chosen file or link into the field at `path` (nothing if none was chosen). */
+  const fillWith = (choose: Promise<string | null | undefined>, path: string): ActionResult => {
+    choose.then((url) => url && uploads.setFileUrl(path, url));
+    return "handled";
+  };
+  /** Uploads the chosen file into the field at `path`. */
+  const uploadInto = (choose: Promise<File[]>, path: string): ActionResult => {
+    choose.then(([file]) => file && uploads.upload(path, file));
+    return "handled";
+  };
 
   const moveEntry = ({ path, index, dir }: ActionData): ActionResult => {
     paths.move(itemsAt(path), Number(index), Number(index) + Number(dir));
@@ -163,26 +173,11 @@ export function createActions({
       return "page-changed";
     },
     "move-item": moveEntry,
-    "upload-image"({ path }) {
-      chooseFiles({ accept: "image/*" }).then(([file]) => file && uploads.upload(path, file));
-      return "handled";
-    },
-    "upload-file"({ path }) {
-      chooseFiles().then(([file]) => file && uploads.upload(path, file));
-      return "handled";
-    },
-    "pick-file"({ path }) {
-      pickFile({ imagesOnly: false }).then((url) => url && uploads.setFileUrl(path, url));
-      return "handled";
-    },
-    "pick-page"({ path }) {
-      pickPage().then((url) => url && uploads.setFileUrl(path, url));
-      return "handled";
-    },
-    "pick-image"({ path }) {
-      pickFile().then((url) => url && uploads.setFileUrl(path, url));
-      return "handled";
-    },
+    "upload-image": ({ path }) => uploadInto(chooseFiles({ accept: "image/*" }), path),
+    "upload-file": ({ path }) => uploadInto(chooseFiles(), path),
+    "pick-image": ({ path }) => fillWith(pickFile(), path),
+    "pick-file": ({ path }) => fillWith(pickFile({ imagesOnly: false }), path),
+    "pick-page": ({ path }) => fillWith(pickPage(), path),
     "goto-error"({ path }) {
       gotoError(path);
       return "handled";
@@ -230,17 +225,12 @@ export function createActions({
       if (!confirmed) {
         return "handled";
       }
-      let res = await request("DELETE", `api/pages?id=${state.page.id}`);
-      if (!res.ok && res.status === 409) {
-        const force = await confirmUsage({
-          title: "Page is linked",
-          intro: `»${state.page.title}« is linked from these pages. Their links will break:`,
-          usage: res.usage ?? [],
-        });
-        if (!force) {
-          return "handled";
-        }
-        res = await request("DELETE", `api/pages?id=${state.page.id}&force=1`);
+      const res = await deleteWithUsageCheck(`api/pages?id=${state.page.id}`, {
+        title: "Page is linked",
+        intro: `»${state.page.title}« is linked from these pages. Their links will break:`,
+      });
+      if (!res) {
+        return "handled";
       }
       if (res.ok) {
         state.dirty = false;
