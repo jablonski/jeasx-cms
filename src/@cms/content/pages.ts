@@ -217,6 +217,49 @@ function updatePage(id: number, { type, slug, title, status, content }: PageValu
   return id;
 }
 
+/** A page referencing a file or page in its current content. */
+export interface Usage {
+  id: number;
+  title: string;
+  slug: string;
+}
+
+/** Escapes LIKE wildcards (with `ESCAPE '\\'`). */
+const likeLiteral = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`);
+
+/**
+ * Other pages linking to `slug` in their current content. Matches the stored JSON: a field holding the path ("/blog",
+ * optionally followed by #… or ?…) or a rich text link to it ([label](/blog)).
+ * The end of the link is part of each pattern, so "/blog" doesn't match "/blog/post".
+ */
+export function pageUsage(slug: string, excludeId: number): Usage[] {
+  const path = likeLiteral(slug);
+  const patterns = [
+    ['"', '"'],
+    ["](", ")"],
+  ].flatMap(([start, end]) => [end, "#", "?"].map((after) => `%${start}${path}${after}%`));
+  const match = patterns.map((_, i) => `content LIKE ?${i + 2} ESCAPE '\\'`).join(" OR ");
+  return queryAll<Usage>(
+    `SELECT id, title, slug FROM pages WHERE id <> ?1 AND (${match}) ORDER BY slug`,
+    excludeId,
+    ...patterns,
+  );
+}
+
+/**
+ * Deletes a page unless other pages link to it. Returns those pages, which keep the
+ * page; empty if it was deleted.
+ * @param force deletes the page even if other pages link to it
+ */
+export function deleteUnlinkedPage(page: StoredPage, force: boolean): Usage[] {
+  const usage = page.slug ? pageUsage(page.slug, page.id) : [];
+  if (usage.length && !force) {
+    return usage;
+  }
+  deletePage(page.id);
+  return [];
+}
+
 export function deletePage(id: number | null): boolean {
   return execute("DELETE FROM pages WHERE id = ?", id) > 0;
 }

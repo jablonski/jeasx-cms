@@ -100,13 +100,13 @@ test("updateFile applies nothing if one change is invalid", async () => {
   assert.equal(getFile(file!.id)?.name, "before.txt");
 });
 
-test("fileUsage reports files only used by earlier versions", async () => {
+test("fileUsage ignores files only used by earlier versions", async () => {
   const { file } = await saveFile(Buffer.from("old version"), "old.png");
   const blocks = [{ id: "a1", type: "text", data: { heading: "h", link: file!.url } }];
   const { page: saved } = savePage(page("/usage", blocks));
-  assert.equal(fileUsage(file!.filename)[0].historyOnly, false);
+  assert.equal(fileUsage(file!.filename).length, 1);
   savePage({ ...saved, blocks: [] });
-  assert.equal(fileUsage(file!.filename)[0].historyOnly, true);
+  assert.deepEqual(fileUsage(file!.filename), []);
 });
 
 test("a subfolder keeps its name when a folder of the same name is deleted", () => {

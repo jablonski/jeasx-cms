@@ -1,8 +1,11 @@
 import { getAt } from "@cms/browser/editor/paths";
 import {
   deletePage,
+  deleteUnlinkedPage,
+  getPage,
   getPublishedPage,
   normalizePage,
+  pageUsage,
   savePage,
   type StoredPage,
 } from "@cms/content/pages";
@@ -153,4 +156,36 @@ test("the editor gets fields added after a page was saved", () => {
   assert.deepEqual(getAt(page, "blocks.0.data.blocks"), []);
   assert.equal(page.description, ""); // page fields added since get their default
   assert.equal(page.id, 1);
+});
+
+/** A text block; the heading holds rich text links, `link` is a URL field. */
+const linking = (heading: string, link = "") => [
+  { id: "a1", type: "text", data: { heading, link } },
+];
+
+test("pageUsage finds links to a page, not to pages below its path", () => {
+  const target = savePage(input("/linked")).page!;
+  const viaText = savePage(
+    input("/links-text", { blocks: linking("See [it](/linked#top).") }),
+  ).page!;
+  const viaField = savePage(input("/links-field", { blocks: linking("h", "/linked") })).page!;
+  savePage(input("/links-child", { blocks: linking("[child](/linked/child)", "/linked-2") }));
+
+  const ids = pageUsage("/linked", target.id).map((p) => p.id);
+  assert.deepEqual(ids.sort(), [viaField.id, viaText.id].sort());
+
+  savePage({ ...viaText, blocks: linking("No link") });
+  assert.deepEqual(
+    pageUsage("/linked", target.id).map((p) => p.id),
+    [viaField.id],
+  );
+});
+
+test("linked pages are only deleted when forced", () => {
+  const target = savePage(input("/delete-linked")).page!;
+  savePage(input("/delete-linker", { blocks: linking("[a](/delete-linked)") }));
+  assert.equal(deleteUnlinkedPage(target, false).length, 1);
+  assert.ok(getPage(target.id));
+  assert.deepEqual(deleteUnlinkedPage(target, true), []);
+  assert.equal(getPage(target.id), undefined);
 });

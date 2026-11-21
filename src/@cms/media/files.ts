@@ -1,4 +1,5 @@
 /** File storage (server only, table "files"): files on disk, metadata in SQLite. */
+import type { Usage } from "@cms/content/pages";
 import { execute, insert, queryAll, queryOne } from "@cms/core/db";
 import { type Result, resultOf } from "@cms/core/result";
 import { SITE } from "@cms/core/site";
@@ -38,14 +39,6 @@ export interface Listing {
   path: Folder[];
   folders: FolderSummary[];
   files: StoredFile[];
-}
-
-/** A page referencing a file; `historyOnly`: just in earlier versions that could be restored. */
-export interface FileUsage {
-  id: number;
-  title: string;
-  slug: string;
-  historyOnly: boolean;
 }
 
 /** An upload as answered by the API; a file stored already says where it is. */
@@ -216,19 +209,13 @@ export function withLocation(file: StoredFile): UploadedFile {
   return { ...file, duplicate: true, folderName };
 }
 
-/**
- * Pages that reference the file (its URL contains /<hash>/), in their current
- * content or, with `historyOnly`, just in earlier versions that could be restored.
- */
-export function fileUsage(filename: string): FileUsage[] {
+/** Pages that reference the file (its URL contains /<hash>/) in their current content. */
+export function fileUsage(filename: string): Usage[] {
   const pattern = `%/${filename.split(".")[0]}/%`;
-  const rows = queryAll<{ id: number; title: string; slug: string; historyOnly: number }>(
-    `SELECT id, title, slug, NOT (content LIKE ?1) AS historyOnly FROM pages
-     WHERE content LIKE ?1 OR EXISTS
-       (SELECT 1 FROM revisions r WHERE r.page_id = pages.id AND r.content LIKE ?1)`,
+  return queryAll<Usage>(
+    "SELECT id, title, slug FROM pages WHERE content LIKE ? ORDER BY slug",
     pattern,
   );
-  return rows.map((r) => ({ ...r, historyOnly: Boolean(r.historyOnly) }));
 }
 
 /**
@@ -236,7 +223,7 @@ export function fileUsage(filename: string): FileUsage[] {
  * empty if it was deleted.
  * @param force deletes the file even if pages reference it
  */
-export async function deleteUnusedFile(file: StoredFile, force: boolean): Promise<FileUsage[]> {
+export async function deleteUnusedFile(file: StoredFile, force: boolean): Promise<Usage[]> {
   const usage = fileUsage(file.filename);
   if (usage.length && !force) {
     return usage;

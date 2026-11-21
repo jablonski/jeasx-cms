@@ -1,4 +1,4 @@
-import type { FileUsage } from "@cms/media/files";
+import type { Usage } from "@cms/content/pages";
 import type { ValidationError } from "@cms/universal/fields";
 
 export interface ApiSuccess<T> {
@@ -15,8 +15,8 @@ export interface ApiFailure {
   error: string;
   /** what is wrong with a page that could not be saved */
   errors?: ValidationError[];
-  /** pages using a file that could not be deleted */
-  usage?: FileUsage[];
+  /** pages using a file or page that could not be deleted */
+  usage?: Usage[];
 }
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;

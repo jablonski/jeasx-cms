@@ -3,6 +3,7 @@
 import type { Library } from "@cms/browser/file-library/library";
 import { chooseFiles, folderIdOf } from "@cms/browser/files/file-api";
 import { chooseFolder } from "@cms/browser/files/folder-dialog";
+import { confirmUsage } from "@cms/browser/utils/confirm-usage";
 import { alertDialog, confirmDialog, promptDialog } from "@cms/browser/utils/dialog";
 import { json, request } from "@cms/browser/utils/http";
 import { MAX_FILE_NAME } from "@cms/universal/file-url";
@@ -128,24 +129,10 @@ export function createLibraryActions({
     }
     let res = await request("DELETE", `api/files?id=${id}`);
     if (!res.ok && res.status === 409) {
-      const usage = res.usage ?? [];
-      const force = await confirmDialog({
+      const force = await confirmUsage({
         title: "File is in use",
-        message: (
-          <>
-            <p>»{name}« is used on these pages. Their images and links will break:</p>
-            <ul>
-              {usage.map((p) => (
-                <li>
-                  <a href={`edit?id=${p.id}`}>{p.title}</a> <code>{p.slug}</code>
-                  {p.historyOnly && <small> (earlier versions only)</small>}
-                </li>
-              ))}
-            </ul>
-          </>
-        ),
-        confirmLabel: "Delete anyway",
-        danger: true,
+        intro: `»${name}« is used on these pages. Their images and links will break:`,
+        usage: res.usage ?? [],
       });
       if (!force) {
         return;

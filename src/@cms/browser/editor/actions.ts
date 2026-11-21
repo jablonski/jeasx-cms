@@ -9,6 +9,7 @@ import type { Editor } from "@cms/browser/editor/state";
 import type { createUploads } from "@cms/browser/editor/uploads";
 import { chooseFiles } from "@cms/browser/files/file-api";
 import { pickFile } from "@cms/browser/files/file-picker";
+import { confirmUsage } from "@cms/browser/utils/confirm-usage";
 import { alertDialog, confirmDialog } from "@cms/browser/utils/dialog";
 import { request } from "@cms/browser/utils/http";
 import { createBlock } from "@cms/universal/block-data";
@@ -229,7 +230,18 @@ export function createActions({
       if (!confirmed) {
         return "handled";
       }
-      const res = await request("DELETE", `api/pages?id=${state.page.id}`);
+      let res = await request("DELETE", `api/pages?id=${state.page.id}`);
+      if (!res.ok && res.status === 409) {
+        const force = await confirmUsage({
+          title: "Page is linked",
+          intro: `»${state.page.title}« is linked from these pages. Their links will break:`,
+          usage: res.usage ?? [],
+        });
+        if (!force) {
+          return "handled";
+        }
+        res = await request("DELETE", `api/pages?id=${state.page.id}&force=1`);
+      }
       if (res.ok) {
         state.dirty = false;
         location.href = new URL(document.baseURI).pathname.slice(0, -1);
