@@ -175,11 +175,16 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
   });
   doc.defaultView?.addEventListener("resize", () => !bar.hidden && position());
 
+  /** Leaves the link input and forgets the selection saved for it. */
+  function closeLinkInput() {
+    bar.classList.remove("editing-link");
+    saved = null;
+  }
+
   function hide() {
     field?.classList.remove("cms-formatting");
     bar.hidden = true;
-    bar.classList.remove("editing-link");
-    saved = null;
+    closeLinkInput();
   }
 
   function openLink() {
@@ -226,8 +231,7 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
   }
 
   function finishLink() {
-    bar.classList.remove("editing-link");
-    saved = null;
+    closeLinkInput();
     renderButtons();
     position();
   }
@@ -296,8 +300,7 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
     if (field?.contains(to)) {
       // back into the text (e.g. a click on it): the link input closes, the buttons follow
       // the new selection
-      bar.classList.remove("editing-link");
-      saved = null;
+      closeLinkInput();
       const r = range();
       return r && (!r.collapsed || linkAt(r)) ? finishLink() : hide();
     }
@@ -320,9 +323,6 @@ export function createRichTextToolbar(doc: Document, leave: () => void): RichTex
       const host = field?.closest("dialog") ?? doc.body;
       if (field && bar.parentElement !== host) {
         host.append(bar);
-      }
-      if (bar.classList.contains("editing-link")) {
-        return; // the link input has focus
       }
       const r = range();
       if (!field || !r || (r.collapsed && !linkAt(r))) {
